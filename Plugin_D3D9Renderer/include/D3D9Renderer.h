@@ -6,6 +6,7 @@
 #include "TitanCommon.h"
 #include "TitanColor.h"
 #include "Singleton.h"
+#include "TitanMatrix4.h"
 
 namespace Titan
 {

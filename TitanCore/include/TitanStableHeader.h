@@ -23,6 +23,8 @@
 #include "Camera.h"
 #include "SceneNode.h"
 #include "SceneObject.h"
+#include "TitanResource.h"
+
 
 #endif
 

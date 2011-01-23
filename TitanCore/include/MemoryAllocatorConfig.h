@@ -52,7 +52,7 @@ namespace Titan
 	}
 }
 
-#if DEBUG
+#if _DEBUG
 
 /// Allocate a block of raw memory, and indicate the category of usage
 #	define TITAN_MALLOC(bytes, category) ::Titan::CategorisedAllocPolicy<category>::allocateBytes(bytes, __FILE__, __LINE__, __FUNCTION__)

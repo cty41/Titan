@@ -14,12 +14,6 @@
 
 namespace Titan
 {
-
-#if _MSC_VER >1300 && !defined(_STLP_MSVC)
-#	define	HashMap stdext::hash_map
-#	define HashSet stdext::hash_set
-#endif
-
 	typedef unsigned int uint32;
 	typedef unsigned short uint16;
 	typedef unsigned char uint8;
@@ -73,6 +67,9 @@ namespace Titan
 	class IndexData;
 	class RenderData;
 	class Renderable;
+	class Resource;
+	class ResourceMgr;
+	class ResourceGroupMgr;
 	class SceneMgr;
 	class SceneMgrFactory;
 	class SceneMgrSelector;
@@ -151,6 +148,53 @@ namespace Titan
 		typedef typename std::multimap<K, V, P> type; 
 #endif
 	}; 
+
+//hash_map
+#if _MSC_VER >1300 && !defined(_STLP_MSVC)
+		template <typename K, typename V, typename P = stdext::hash_compare<K, std::less<K> >, typename A = STLAllocator<std::pair<const K, V>, GeneralAllocPolicy> > 
+		struct hash_map 
+		{ 
+	#if TITAN_CONTAINERS_USE_CUSTOM_MEMORY_ALLOCATOR
+			typedef typename stdext::hash_map<K, V, P, A> type; 
+	#else
+			typedef typename stdext::hash_map<K, V, P> type; 
+	#endif
+		};
+#else
+	template <typename K, typename V, typename P = std::less<K>, typename A = STLAllocator<std::pair<const K, V>, GeneralAllocPolicy> > 
+	struct hash_map 
+	{ 
+#if TITAN_CONTAINERS_USE_CUSTOM_MEMORY_ALLOCATOR
+		typedef typename std::map<K, V, P, A> type; 
+#else
+		typedef typename std::map<K, V, P> type; 
+#endif
+	};
+#endif
+
+	//hash_map
+#if _MSC_VER >1300 && !defined(_STLP_MSVC)
+	template <typename K, typename V, typename P = stdext::hash_compare<K, std::less<K> >, typename A = STLAllocator<std::pair<const K, V>, GeneralAllocPolicy> > 
+	struct hash_set 
+	{ 
+#if TITAN_CONTAINERS_USE_CUSTOM_MEMORY_ALLOCATOR
+		typedef typename stdext::hash_set<K, V, P, A> type; 
+#else
+		typedef typename stdext::hash_set<K, V, P> type; 
+#endif
+	};
+#else
+	template <typename K, typename V, typename P = std::less<K>, typename A = STLAllocator<std::pair<const K, V>, GeneralAllocPolicy> > 
+	struct hash_set 
+	{ 
+#if TITAN_CONTAINERS_USE_CUSTOM_MEMORY_ALLOCATOR
+		typedef typename std::set<K, V, P, A> type; 
+#else
+		typedef typename std::set<K, V, P> type; 
+#endif
+	};
+#endif
+
 
 #if TITAN_WCHAR
 	typedef std::wstring _StringBase;

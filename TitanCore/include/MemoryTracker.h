@@ -32,7 +32,7 @@ class _DllExport MemoryTracker
 
 		std::string mLeakFileName;
 		bool mDumpToStdOut;
-		typedef HashMap<void*, Alloc> AllocationMap;
+		typedef hash_map<void*, Alloc>::type AllocationMap;
 		AllocationMap mAllocations;
 
 		size_t mTotalAllocations;

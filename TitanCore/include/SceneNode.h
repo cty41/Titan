@@ -11,8 +11,8 @@ namespace Titan
 	class _DllExport SceneNode : public GeneralAlloc
 	{
 	public:
-		typedef HashMap<String, SceneNode*>	SceneNodeMap;
-		typedef HashMap<String, SceneObject*>	SceneObjectMap;
+		typedef hash_map<String, SceneNode*>::type SceneNodeMap;
+		typedef hash_map<String, SceneObject*>::type SceneObjectMap;
 		typedef MapIterator<SceneObjectMap> ObjectIterator;
 		typedef ConstMapIterator<SceneObjectMap> ConstObjectIterator;
 		typedef MapIterator<SceneNodeMap> ChildIterator;
