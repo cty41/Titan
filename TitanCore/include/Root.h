@@ -6,6 +6,7 @@
 #include "Singleton.h"
 #include "TitanCommon.h"
 #include "SceneMgr.h"
+#include "FileSystemManager.h"
 
 namespace Titan
 {
@@ -74,6 +75,8 @@ namespace Titan
 
 		typedef map<String, SceneObjectFactory*>::type	SceneObjectFactoryMap;
 		SceneObjectFactoryMap		mSceneObjectFactoryMap;
+
+		FileSystemManager*	mFileSystemManager;
 
 
 	};

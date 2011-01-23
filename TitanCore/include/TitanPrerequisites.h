@@ -29,6 +29,10 @@ namespace Titan
 	class Root;
 	class Exception;
 	class ConsoleDebugger;
+	class FileSystem;
+	class FileSystemFactory;
+	class CommonFileSystem;
+	class CommonFileSystemFactory;
 	class Renderer;
 	class RenderTarget;
 	class RenderWindow;

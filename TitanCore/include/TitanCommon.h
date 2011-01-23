@@ -4,6 +4,7 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanAny.h"
+#include "TitanSharedPtr.h"
 
 namespace Titan
 {
@@ -158,6 +159,21 @@ namespace Titan
 	typedef map<String, Any>::type AnyMap;		//woo, it's a nice name:)
 
 	typedef	map<String, RenderTarget*>::type	RenderTargetMap;
+
+	typedef vector<String>::type StringVector;
+
+	class _DllExport StringVectorPtr : public SharedPtr<StringVector>
+	{
+	public:
+		StringVectorPtr(): SharedPtr<StringVector>()
+		{};
+
+		explicit StringVectorPtr(StringVector* vec)
+			:SharedPtr<StringVector>(vec)
+		{}
+	};
+
+
 }
 
 #endif
