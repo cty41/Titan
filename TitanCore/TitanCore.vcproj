@@ -192,6 +192,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\src\CommonFileSystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\ConfigFile.cpp"
 				>
 			</File>
@@ -201,6 +205,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Exception.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FileSystemManager.cpp"
 				>
 			</File>
 			<File
@@ -374,6 +382,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\CommonFileSystem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\ConfigFile.h"
 				>
 			</File>
@@ -383,6 +395,14 @@
 			</File>
 			<File
 				RelativePath=".\include\Exception.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\FileSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\FileSystemManager.h"
 				>
 			</File>
 			<File
