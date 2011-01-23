@@ -7,7 +7,7 @@ namespace Titan
 
 	extern "C" void _D3D9DllExport dllStartPlugin(void) throw()
 	{
-		plugin = new D3D9Plugin();
+		plugin = TITAN_NEW D3D9Plugin();
 		Root::getSingleton().installPlugin(plugin);
 	}
 

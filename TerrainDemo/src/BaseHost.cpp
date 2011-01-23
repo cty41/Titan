@@ -1,6 +1,7 @@
 #include "BaseHost.h"
 #include "Timer.h"
 #include "Camera.h"
+#include "ConfigFile.h"
 
 using namespace Titan;
 

@@ -83,15 +83,6 @@ namespace Titan
 		if(of == 0)
 			TITAN_EXCEPT(Exception::EXCEP_CANNOT_WRITE_TO_FILE, "can not write config text", "Root::saveConfig()");
 	
-		
-#if 0
-		if(mRenderer)
-			of<<"Renderer = "<< mRenderer->getName()<<endl;
-		else
-			of<<"Renderer = "<<endl;
-
-		of<< std::endl;
-#endif
 
 		const ConfigOptionMap& com = mActiveRenderer->getConfigOptionMap();
 		for(ConfigOptionMap::const_iterator it = com.begin();it != com.end(); ++it)

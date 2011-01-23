@@ -3,10 +3,10 @@
 
 INT WINAPI wWinMain( HINSTANCE hInst, HINSTANCE, LPWSTR, INT )
 {
-	BaseHost* pHost = new BaseHost();
+	BaseHost* pHost = TITAN_NEW BaseHost();
 	pHost->setup();
 	pHost->Run();
-	delete pHost;
+	TITAN_DELETE pHost;
 
 	return 0;
 }

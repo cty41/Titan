@@ -22,7 +22,7 @@ namespace Titan
 		HINSTANCE hInst = GetModuleHandle("Plugin_D3D9Render.dll");
 #endif
 
-		mRenderer = new D3D9Renderer(hInst);
+		mRenderer = TITAN_NEW D3D9Renderer(hInst);
 
 		Root::getSingleton().addRenderer(mRenderer);
 	}

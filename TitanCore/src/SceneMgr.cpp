@@ -139,7 +139,7 @@ namespace Titan
 			SceneObjectMap* objectMap;
 			if(it == mCollection.begin())
 			{
-				objectMap = TITAN_NEW SceneObjectMap();
+				objectMap = TITAN_NEW_T(SceneObjectMap, MEMCATEGORY_GENERAL)();
 				mCollection.insert(SceneObjectCollection::value_type(typeName, objectMap));
 			}
 			else
@@ -185,6 +185,7 @@ namespace Titan
 				++i;
 			}
 			objectMap->clear();
+			TITAN_DELETE_T(objectMap, SceneObjectMap, MEMCATEGORY_GENERAL);
 			++it;
 		}
 		mCollection.clear();

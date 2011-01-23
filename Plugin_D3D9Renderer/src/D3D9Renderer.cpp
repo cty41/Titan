@@ -138,7 +138,7 @@ namespace Titan
 	//-------------------------------------------------------------//
 	RenderWindow* D3D9Renderer::createRenderWindow(const String& caption, uint width, uint height, bool fullscreen)
 	{
-		mWindow = new D3D9RenderWindow(mhInstance);
+		mWindow = TITAN_NEW D3D9RenderWindow(mhInstance);
 		mWindow->create(caption, width, height, fullscreen);
 		mTargetMap.insert(RenderTargetMap::value_type(caption, mWindow));
 
