@@ -192,6 +192,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\src\ConfigFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\ConsoleDebugger.cpp"
 				>
 			</File>
@@ -300,6 +304,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TitanResource.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanResourceGroupManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanResourceManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanStableHeader.cpp"
 				>
 				<FileConfiguration
@@ -355,6 +371,10 @@
 			</File>
 			<File
 				RelativePath=".\include\Camera.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\ConfigFile.h"
 				>
 			</File>
 			<File
@@ -543,6 +563,18 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanRay.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanResource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanResourceGroupManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanResourceManager.h"
 				>
 			</File>
 			<File

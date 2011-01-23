@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib DxErr.lib"
+				AdditionalDependencies="d3d9.lib d3dx9.lib DxErr.lib .\..\lib\Debug\TitanCore_d.lib"
 				OutputFile="..\bin\$(ConfigurationName)\Plugin_D3D9Renderer_d.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
