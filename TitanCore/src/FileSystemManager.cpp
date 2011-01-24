@@ -36,6 +36,7 @@ namespace Titan
 			if(fit == mFileSystemMap.end())
 			{
 				pFile = it->second->createInstance(name, type);
+				pFile->load();
 				mFileSystemMap.insert(FileSystemMap::value_type(name, pFile));
 				
 			}
@@ -103,4 +104,10 @@ namespace Titan
 				"FileSystemManager::addFileSystemFactory");
 		}
 	}
+	//-------------------------------------------------------------//
+	FileSystemMapIterator FileSystemManager::getFileSystemMapIterator()
+	{
+		return FileSystemMapIterator(mFileSystemMap.begin(), mFileSystemMap.end());
+	}
+
 }

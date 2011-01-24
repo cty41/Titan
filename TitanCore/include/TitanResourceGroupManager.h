@@ -2,10 +2,11 @@
 #define _TITAN_RESOURCEGROUPMANAGER__HH
 
 #include "TitanPrerequisites.h"
+#include "Singleton.h"
 
 namespace Titan
 {
-	class _DllExport ResourceGroupManager: public GeneralAlloc
+	class _DllExport ResourceGroupManager: public Singleton<ResourceGroupManager>, public GeneralAlloc
 	{
 	public:
 		struct ResourceGroup
@@ -26,7 +27,11 @@ namespace Titan
 
 		virtual ~ResourceGroupManager();
 
+		FileSystem*	addResourceLocation(const String& name, const String& type, const String& group, bool recursive = false);
 
+		static ResourceGroupManager*	getSingltonPtr();
+
+		static ResourceGroupManager&	getSingleton();
 
 	protected:
 	};

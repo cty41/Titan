@@ -79,14 +79,14 @@ namespace Titan
 		fp.close();
 	}
 	//-------------------------------------------------------------//
-	ConfigFile::SectionMapIterator	ConfigFile::getSectionMapIterator()
+	SectionMapIterator	ConfigFile::getSectionMapIterator()
 	{
-		return ConfigFile::SectionMapIterator(mSectionMap.begin(), mSectionMap.end());
+		return SectionMapIterator(mSectionMap.begin(), mSectionMap.end());
 	}
 	//-------------------------------------------------------------//
-	ConfigFile::PropertyMapIterator ConfigFile::getPropertyMapIterator(const String& sectionName)
+	PropertyMapIterator ConfigFile::getPropertyMapIterator(const String& sectionName)
 	{
 		SectionMap::iterator it = mSectionMap.find(sectionName);
-		return ConfigFile::PropertyMapIterator(it->second->begin(), it->second->end());
+		return PropertyMapIterator(it->second->begin(), it->second->end());
 	}
 }

@@ -4,10 +4,14 @@
 #include "TitanPrerequisites.h"
 #include "FileSystem.h"
 #include "Singleton.h"
+#include "TitanIteratorWrapper.h"
 
 namespace Titan
 {
-	class _DllExport FileSystemManager : public Singleton<FileSystemManager>
+	typedef map<String, FileSystemFactory*>::type FileSystemFactoryMap;
+	typedef map<String, FileSystem*>::type FileSystemMap;
+	typedef MapIterator<FileSystemMap> FileSystemMapIterator;
+	class _DllExport FileSystemManager : public Singleton<FileSystemManager>, public GeneralAlloc
 	{
 	public:
 		FileSystemManager();
@@ -22,14 +26,13 @@ namespace Titan
 
 		void	addFileSystemFactory(FileSystemFactory* factory);
 
+		FileSystemMapIterator	getFileSystemMapIterator();
 
 		static FileSystemManager* getSingletonPtr();
 
 		static FileSystemManager& getSingleton();
 
-	public:
-		typedef map<String, FileSystemFactory*>::type FileSystemFactoryMap;
-		typedef map<String, FileSystem*>::type FileSystemMap;
+
 	
 	protected:
 		FileSystemMap	mFileSystemMap;

@@ -26,6 +26,9 @@ public:
 
 
 protected:
+	virtual void initResources();
+
+	virtual void loadResources();
 
 	//we create buffed keyboard and mouse
 	virtual void initInputDevice();

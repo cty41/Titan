@@ -5,6 +5,8 @@
 
 #include "ConsoleDebugger.h"
 #include "TitanMath.h"
+#include "TitanResourceGroupManager.h"
+#include "FileSystemManager.h"
 
 #include "Exception.h"
 

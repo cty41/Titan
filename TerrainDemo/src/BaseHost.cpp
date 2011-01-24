@@ -41,6 +41,32 @@ void BaseHost::destroy()
 
 }
 //-------------------------------------------------------------//
+void BaseHost::initResources()
+{
+	ConfigFile resConfig;
+	resConfig.load("resources.cfg");
+
+	SectionMapIterator sit = resConfig.getSectionMapIterator();
+	while (sit.hasMoreElements())
+	{
+		String group = sit.peekNextKey();
+		PropertyMapIterator pit = resConfig.getPropertyMapIterator(group);
+		while (pit.hasMoreElements())
+		{
+			String type = pit.peekNextKey(), name = pit.peekNextValue();
+			ResourceGroupManager::getSingltonPtr()->addResourceLocation(name, type, group);
+			pit.next();
+		}
+		sit.next();
+	}
+
+}
+//-------------------------------------------------------------//
+void BaseHost::loadResources()
+{
+
+}
+//-------------------------------------------------------------//
 void BaseHost::initInputDevice()
 {
 	OIS::ParamList pl;
@@ -67,6 +93,8 @@ void BaseHost::setup()
 	mRoot->loadConfig();
 	mWindow = mRoot->initialise();
 	assert(mWindow);
+
+	initResources();
 
 	initInputDevice();
 

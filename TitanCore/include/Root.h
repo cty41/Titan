@@ -76,7 +76,8 @@ namespace Titan
 		typedef map<String, SceneObjectFactory*>::type	SceneObjectFactoryMap;
 		SceneObjectFactoryMap		mSceneObjectFactoryMap;
 
-		FileSystemManager*	mFileSystemManager;
+		FileSystemManager*		mFileSystemMgr;
+		ResourceGroupManager*	mResourceGroupMgr;
 
 
 	};

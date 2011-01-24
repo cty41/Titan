@@ -5,6 +5,8 @@
 #include "TitanDynLib.h"
 #include "SceneMgrSelector.h"
 #include "ManualObject.h"
+#include "CommonFileSystem.h"
+#include "TitanResourceGroupManager.h"
 
 namespace Titan
 {
@@ -25,7 +27,8 @@ namespace Titan
 	//-------------------------------------------------------------//
 	Root::Root(const String& configName)
 		:mWindow(0), mConsoleDebugger(0), mActiveRenderer(0),
-		mConfigFileName(configName), mSceneMgrSelector(0)
+		mConfigFileName(configName), mSceneMgrSelector(0), mFileSystemMgr(0),
+		mResourceGroupMgr(0)
 	{
 		mConsoleDebugger = TITAN_NEW ConsoleDebugger();
 
@@ -40,10 +43,18 @@ namespace Titan
 //#endif
 		mActiveRenderer = mRendererVector[0];
 
+		mFileSystemMgr = TITAN_NEW FileSystemManager();
+		mFileSystemMgr->addFileSystemFactory(TITAN_NEW CommonFileSystemFactory());
+
+		mResourceGroupMgr = TITAN_NEW ResourceGroupManager();
+
 	}
 	//-------------------------------------------------------------//
 	Root::~Root()
 	{
+		TITAN_DELETE mResourceGroupMgr;
+		TITAN_DELETE mFileSystemMgr;
+
 		TITAN_DELETE mSceneMgrSelector;
 		removeAllSceneObjectFactory();
 

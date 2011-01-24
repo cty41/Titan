@@ -73,7 +73,7 @@ namespace Titan
 	class Renderable;
 	class Resource;
 	class ResourceMgr;
-	class ResourceGroupMgr;
+	class ResourceGroupManager;
 	class SceneMgr;
 	class SceneMgrFactory;
 	class SceneMgrSelector;

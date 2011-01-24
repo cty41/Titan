@@ -1,10 +1,11 @@
 #ifndef _TITAN_ITERATOR_WRAPPER_HH
 #define _TITAN_ITERATOR_WRAPPER_HH
+#include "TitanPrerequisites.h"
 
 namespace Titan
 {
 	template <typename T, typename IteratorType, typename ValType>
-	class IteratorWrapper
+	class IteratorWrapper :public GeneralAlloc
 	{
 	private:
 		IteratorWrapper();
