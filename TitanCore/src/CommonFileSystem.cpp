@@ -23,15 +23,16 @@ namespace Titan
 	{
 		StringVectorPtr stringPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)());
 
-		String pathName(mName);
+		String pathName(mName + wildcard);
 
 		_finddata_t findData;
-		intptr_t handle = _findfirst(wildcard.c_str(), &findData);
+		intptr_t handle = _findfirst(pathName.c_str(), &findData);
 		int ret = 0;
 		//there has file!
 		while (handle != -1 && ret != -1)
 		{
-			if(!(findData.attrib && _A_SUBDIR))
+			//only add file not floders
+			if((findData.attrib & _A_SUBDIR) == 0)
 			{
 				stringPtr->push_back(mName + findData.name);
 			}

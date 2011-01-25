@@ -9,18 +9,24 @@ namespace Titan
 	class _DllExport ResourceGroupManager: public Singleton<ResourceGroupManager>, public GeneralAlloc
 	{
 	public:
-		struct ResourceGroup
+		struct ResourceGroup : public GeneralAlloc
 		{
 			enum Status
 			{
-				RGS_UNLOADED = 0,
-				RGS_LOADING	 = 1,
-				RGS_LOADED	 = 2
+				RGS_UNINITIALISED	= 0,
+				RGS_INITIALISING	= 1,
+				RGS_INITIALISED		= 2,
+				RGS_LOADING			= 3,
+				RGS_LOADED			= 4
 			};
-			String	name;
+			String	groupName;
 			Status	state;
-			typedef list<Resource*>::type ResourceList;
+			typedef map<String, FileSystem*>::type	FileLocationMap;
+			FileLocationMap fileLocationMap;
+
+			void insertFileLocation(const String& name, FileSystem* fileSystem);
 		};
+
 		typedef map<String, ResourceGroup*>::type ResourceGroupMap;
 	public:
 		ResourceGroupManager();
@@ -34,6 +40,8 @@ namespace Titan
 		static ResourceGroupManager&	getSingleton();
 
 	protected:
+
+		ResourceGroupMap		mResourceGroupMap;
 	};
 }
 #endif
