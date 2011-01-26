@@ -4,6 +4,7 @@
 namespace Titan
 {
 	ResourceMgr::ResourceMgr()
+		:mNextHandle(0)
 	{
 
 	}
@@ -13,8 +14,9 @@ namespace Titan
 
 	}
 	//-------------------------------------------------------------//
-	ResourcePtr ResourceMgr::create(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams /* = 0 */)
+	ResourcePtr ResourceMgr::create(const String& name, const String& group, AnyMap* extraParams /* = 0 */)
 	{
+		ResourceHandle id = getNextHandle();
 		Resource* res= createImpl(name, id, group, extraParams);
 		ResourcePtr pRes(res);
 		addImpl(&pRes);

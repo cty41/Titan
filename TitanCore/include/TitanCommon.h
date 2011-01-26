@@ -168,8 +168,8 @@ namespace Titan
 		StringVectorPtr(): SharedPtr<StringVector>()
 		{};
 
-		explicit StringVectorPtr(StringVector* vec)
-			:SharedPtr<StringVector>(vec)
+		explicit StringVectorPtr(StringVector* vec, SharedPtrFreeMethod freeMethod = SPFM_DELETE)
+			:SharedPtr<StringVector>(vec, freeMethod)
 		{}
 	};
 

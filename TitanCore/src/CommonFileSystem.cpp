@@ -21,23 +21,25 @@ namespace Titan
 	//-------------------------------------------------------------//
 	StringVectorPtr CommonFileSystem::find(const String& wildcard, bool recursive)
 	{
-		StringVectorPtr stringPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)());
+		StringVectorPtr stringPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
 
 		String pathName(mName + wildcard);
 
 		_finddata_t findData;
 		intptr_t handle = _findfirst(pathName.c_str(), &findData);
 		int ret = 0;
-		//there has file!
+		//woo,there has files!
 		while (handle != -1 && ret != -1)
 		{
-			//only add file not floders
+			//only add file not folders
 			if((findData.attrib & _A_SUBDIR) == 0)
 			{
-				stringPtr->push_back(mName + findData.name);
+				stringPtr->push_back(findData.name);
 			}
 			ret = _findnext(handle, &findData);
 		}
+		if(handle != -1)
+			_findclose(handle);
 
 		return stringPtr;
 	}

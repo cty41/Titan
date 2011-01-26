@@ -20,7 +20,7 @@ namespace Titan
 
 		~ResourceMgr();
 
-		ResourcePtr create(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams = 0);
+		ResourcePtr create(const String& name, const String& group, AnyMap* extraParams = 0);
 
 		void	remove(const String& name);
 
@@ -41,6 +41,8 @@ namespace Titan
 		void	unloadAll();
 
 		void	unloadUnreferencedResources();
+
+		ResourceHandle	getNextHandle(){ return ++mNextHandle; }
 	protected:
 
 		virtual Resource* createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams = 0) = 0;
@@ -51,6 +53,7 @@ namespace Titan
 		String			mType;
 		ResourceMap		mResourceMap;
 		ResourceHandleMap	mResourceHandleMap;
+		ResourceHandle	mNextHandle;
 	};
 
 }

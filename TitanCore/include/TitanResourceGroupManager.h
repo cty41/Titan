@@ -28,12 +28,33 @@ namespace Titan
 		};
 
 		typedef map<String, ResourceGroup*>::type ResourceGroupMap;
+
+		static String	GENERAL_RESOURCE_GROUP;
 	public:
 		ResourceGroupManager();
 
 		virtual ~ResourceGroupManager();
 
+		//for first editon of Titan, we should write all assets paths into config file
 		FileSystem*	addResourceLocation(const String& name, const String& type, const String& group, bool recursive = false);
+		//test that whether we made it right
+		ResourceGroup*	getResourceGroup(const String& group);
+
+		ResourceGroup*	createResourceGroup(const String& group);
+
+		//no use now
+		void initResourceGroup(const String& group);
+		//no use now
+		void initAllResourceGroup();
+
+		void destroyResourceGroup(const String& group);
+
+		void destroyAllResourceGroup();
+
+		void loadResourceGroup(const String& group);
+
+		void unloadResourceGroup(const String& group);
+
 
 		static ResourceGroupManager*	getSingltonPtr();
 

@@ -60,6 +60,8 @@ void BaseHost::initResources()
 		sit.next();
 	}
 
+	ResourceGroupManager::getSingltonPtr()->getResourceGroup("General");
+
 }
 //-------------------------------------------------------------//
 void BaseHost::loadResources()
