@@ -154,6 +154,14 @@ namespace Titan
 		VET_COLOR_ABGR = 11
 	};
 
+	enum PixelFormat
+	{
+		PF_UNKNOWN	= 0,
+		PF_A8		= 1,
+		PF_A8R8G8B8	= 2,
+			
+	};
+
 	typedef map<String, ConfigOption>::type ConfigOptionMap;
 
 	typedef map<String, Any>::type AnyMap;		//woo, it's a nice name:)

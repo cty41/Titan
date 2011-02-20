@@ -1,5 +1,6 @@
 #include "TitanStableHeader.h"
 #include "TitanResourceManager.h"
+#include "TitanResourceGroupManager.h"
 
 namespace Titan
 {
@@ -20,6 +21,8 @@ namespace Titan
 		Resource* res= createImpl(name, id, group, extraParams);
 		ResourcePtr pRes(res);
 		addImpl(&pRes);
+
+		ResourceGroupManager::getSingltonPtr()->addCreatedResource(group, *res);
 
 		return pRes;
 	}
@@ -117,6 +120,11 @@ namespace Titan
 	void ResourceMgr::unloadUnreferencedResources()
 	{
 
+	}
+	//-------------------------------------------------------------//
+	void ResourceMgr::addImpl(ResourcePtr* res)
+	{
+		
 	}
 
 

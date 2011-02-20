@@ -206,6 +206,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\D3D9Texture.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\D3D9TextureManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\D3D9VertexBuffer.cpp"
 				>
 			</File>
@@ -245,6 +253,14 @@
 			</File>
 			<File
 				RelativePath=".\include\D3D9RenderWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\D3D9Texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\D3D9TextureMgr.h"
 				>
 			</File>
 			<File

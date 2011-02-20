@@ -3,6 +3,7 @@
 
 #include "TitanPrerequisites.h"
 #include "Singleton.h"
+#include "TitanResource.h"
 
 namespace Titan
 {
@@ -23,6 +24,9 @@ namespace Titan
 			Status	state;
 			typedef map<String, FileSystem*>::type	FileLocationMap;
 			FileLocationMap fileLocationMap;
+			typedef list<ResourcePtr>::type ResourceList;
+			typedef map<int, ResourceList*>::type ResourceOrderListMap;
+			ResourceOrderListMap	resourceOrderListMap;
 
 			void insertFileLocation(const String& name, FileSystem* fileSystem);
 		};
@@ -55,13 +59,16 @@ namespace Titan
 
 		void unloadResourceGroup(const String& group);
 
+		void addCreatedResource(const String& group, Resource& res);
+
 
 		static ResourceGroupManager*	getSingltonPtr();
 
 		static ResourceGroupManager&	getSingleton();
 
 	protected:
-
+		//to boost the speed
+		ResourceGroup*			mCurrentGroup;
 		ResourceGroupMap		mResourceGroupMap;
 	};
 }

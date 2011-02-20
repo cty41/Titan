@@ -1,5 +1,6 @@
 #include "TitanStableHeader.h"
 #include "TitanResourceGroupManager.h"
+#include "TitanResourceManager.h"
 #include "FileSystemManager.h"
 
 namespace Titan
@@ -32,6 +33,7 @@ namespace Titan
 	}
 
 	ResourceGroupManager::ResourceGroupManager()
+		:mCurrentGroup(0)
 	{
 
 	}
@@ -117,6 +119,7 @@ namespace Titan
 			//if we need to implement script
 			//add content here
 			it->second->state = ResourceGroup::RGS_INITIALISED;
+			mCurrentGroup = it->second;
 		}
 		else
 		{
@@ -158,6 +161,41 @@ namespace Titan
 	void ResourceGroupManager::unloadResourceGroup(const String& group)
 	{
 
+	}
+	//-------------------------------------------------------------//
+	void ResourceGroupManager::addCreatedResource(const String& group, Resource& res)
+	{
+		ResourceGroup* rg;
+		if(mCurrentGroup->groupName == group)
+		{
+			rg = mCurrentGroup;
+		}
+		else
+		{
+			ResourceGroupMap::iterator it = mResourceGroupMap.find(group);
+			if(it != mResourceGroupMap.end())
+			{
+				rg = it->second;
+			}
+			else
+			{
+				rg = createResourceGroup(group);
+			}
+		}
+
+		int order = res.getCreator()->getLoadOrder();
+		ResourceGroup::ResourceOrderListMap::iterator it = rg->resourceOrderListMap.find(order);
+		if(it != rg->resourceOrderListMap.end())
+		{
+			ResourcePtr resPtr(&res);
+			it->second->push_back(resPtr);
+		}
+		else
+		{
+			rg->resourceOrderListMap[order] = TITAN_NEW_T(ResourceGroup::ResourceList, MEMCATEGORY_GENERAL)();
+			ResourcePtr resPtr(&res);
+			rg->resourceOrderListMap[order]->push_back(resPtr);
+		}
 	}
 
 }

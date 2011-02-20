@@ -24,9 +24,11 @@ namespace Titan
 
 		virtual ~Resource();
 
-		void	load();
+		virtual void	load();
 
-		void	unload();
+		virtual	void	unload();
+
+		bool	isLoaded(){ return (mLoadState == LS_LOADED); }
 
 		void	changeGroup(const String& newGroup);
 
@@ -35,6 +37,14 @@ namespace Titan
 		const String&	getGroup() const { return mGroup; }
 
 		ResourceHandle	getID() const { return mID; }
+
+		ResourceMgr*	getCreator() const { return mMgr; } 
+
+	protected:
+		virtual void loadImpl() = 0;
+
+		virtual	void unloadImpl() = 0;
+
 
 	protected:
 		ResourceMgr*		mMgr;

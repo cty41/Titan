@@ -336,6 +336,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\src\TitanTexture.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanTextureMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanVector2.cpp"
 				>
 			</File>
@@ -607,6 +615,14 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanStableHeader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanTexture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanTextureMgr.h"
 				>
 			</File>
 			<File
