@@ -148,13 +148,16 @@ void BaseHost::Run()
 	{
 		if(PeekMessage(&msg,0,0, 0, PM_REMOVE) == TRUE)
 		{
-			if (msg.message == WM_QUIT)
+			if (msg.message == WM_QUIT || msg.message == WM_DESTROY )
 				break;
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		updateOneFrame();
+		else
+		{
+			updateOneFrame();
+		}
 	}
 }
 //-------------------------------------------------------------//
