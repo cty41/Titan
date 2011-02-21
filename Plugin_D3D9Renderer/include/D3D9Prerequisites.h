@@ -23,6 +23,8 @@ namespace Titan
 	class D3D9VertexBuffer;
 	class D3D9VertexDeclaration;
 	class D3D9HardwareBufferManager;
+	class D3D9Texture;
+	class D3D9TextureMgr;
 }
 
 #ifdef PLUGIN_D3D9RENDERER_EXPORTS

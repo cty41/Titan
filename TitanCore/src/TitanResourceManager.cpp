@@ -20,6 +20,7 @@ namespace Titan
 		ResourceHandle id = getNextHandle();
 		Resource* res= createImpl(name, id, group, extraParams);
 		ResourcePtr pRes(res);
+		//add to 
 		addImpl(&pRes);
 
 		ResourceGroupManager::getSingltonPtr()->addCreatedResource(group, *res);

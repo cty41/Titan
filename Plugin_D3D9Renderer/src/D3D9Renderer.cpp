@@ -8,6 +8,7 @@
 #include "D3D9IndexBuffer.h"
 #include "D3D9VertexBuffer.h"
 #include "D3D9VertexDeclaration.h"
+#include "D3D9TextureMgr.h"
 
 namespace Titan
 {
@@ -26,7 +27,7 @@ namespace Titan
 	D3D9Renderer::D3D9Renderer(HINSTANCE hInstance)
 		: Renderer(),mhInstance(0),
 		mhWnd(0), mpD3D9(0), mpD3dDevice(0),
-		mHardwareBufferManager(0),
+		mHardwareBufferManager(0), mTextureMgr(0),
 		mLastVertexSourceCount(0)
 	{
 		mName = "Direct3D9 Renderer";
@@ -48,6 +49,7 @@ namespace Titan
 
 	void D3D9Renderer::destroy()
 	{
+		SAFE_DELETE(mTextureMgr);
 		SAFE_DELETE(mHardwareBufferManager);
 		SAFE_RELEASE(mpD3dDevice);
 		SAFE_RELEASE(mpD3D9);
@@ -60,6 +62,8 @@ namespace Titan
 		mpD3D9->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &mD3dCaps);
 
 		mHardwareBufferManager = TITAN_NEW D3D9HardwareBufferManager();
+
+		mTextureMgr = TITAN_NEW D3D9TextureMgr();
 
 		ConfigOptionMap::iterator opt = mConfigOptions.find("Full Screen");
 		if(opt == mConfigOptions.end())

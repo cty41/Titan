@@ -42,9 +42,12 @@ namespace Titan
 			getline(fp, line);
 			if(line.length() > 0 && line.at(0) != '#')
 			{
-				if(line.at(0) == '[' && line.at(line.length() - 2) == ']')
+				if(line.length() > 1&&
+					(line.at(line.length() - 1) == '\n' || line.at(line.length() - 1) == '\r'))
+					line.erase(line.length() - 1);
+				if(line.at(0) == '[' && line.at(line.length() - 1) == ']')
 				{
-					String sectionName = line.substr(1, line.length() - 3);
+					String sectionName = line.substr(1, line.length() - 2);
 					SectionMap::iterator it = mSectionMap.find(sectionName);
 					if(it != mSectionMap.end())
 					{
@@ -62,7 +65,7 @@ namespace Titan
 				if(line.find('=') != String::npos)
 				{
 					first = line.substr(0,line.find('='));
-					second = line.substr(line.find('=') + 1, line.length() - line.find('=') - 2);
+					second = line.substr(line.find('=') + 1, line.length() - line.find('=') - 1);
 					if(currentMap != 0)
 					{
 						currentMap->insert(PropertyMap::value_type(first, second));
