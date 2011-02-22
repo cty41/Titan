@@ -54,7 +54,7 @@ void BaseHost::initResources()
 		while (pit.hasMoreElements())
 		{
 			String type = pit.peekNextKey(), name = pit.peekNextValue();
-			ResourceGroupManager::getSingltonPtr()->addResourceLocation(name, type, group);
+			ResourceGroupManager::getSingltonPtr()->addResourceLocation(name, type, group, true);
 			pit.next();
 		}
 		sit.next();
