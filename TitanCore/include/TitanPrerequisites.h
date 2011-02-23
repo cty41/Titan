@@ -217,6 +217,8 @@ namespace Titan
 	typedef _StringBase String;
 	typedef _StringStreamBase StringStream;
 	typedef StringStream stringstream;
+
+
 }
 
 #endif

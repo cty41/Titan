@@ -21,17 +21,40 @@ namespace Titan
 	//-------------------------------------------------------------//
 	StringVectorPtr CommonFileSystem::find(const String& wildcard, bool recursive)
 	{
-		StringVectorPtr stringPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+		StringVectorPtr namesPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+		StringVectorPtr pathsPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);	
 		
-		searchDir(mName + wildcard, stringPtr, recursive);
+		searchDir(mName + wildcard, recursive,namesPtr, pathsPtr);
 
-		return stringPtr;
+		return namesPtr;
 	}
 	//-------------------------------------------------------------//
-	void CommonFileSystem::searchDir(const String& subdir, StringVectorPtr stringVector, bool recursive)
+	void CommonFileSystem::find(const String& wildcard, bool recursive, StringVectorPtr *nameArray, StringVectorPtr* relPathArray)
+	{
+		StringVectorPtr namesPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+		StringVectorPtr pathsPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+		*nameArray = namesPtr, *relPathArray = pathsPtr;
+
+		searchDir(wildcard, recursive,namesPtr, pathsPtr);
+	}
+	//-------------------------------------------------------------//
+	void CommonFileSystem::searchDir(const String& pattern, bool recursive, StringVectorPtr stringVector, StringVectorPtr pathVector)
 	{
 		_finddata_t findData;
-		intptr_t handle = _findfirst(subdir.c_str(), &findData);
+		String fullpath = mName, fullpathName;
+		if(fullpath.at(fullpath.length() - 1) != '/' && fullpath.at(fullpath.length() - 1) != '\\' )
+			fullpath += '/';
+
+		size_t slashPos = pattern.find_last_of('/');
+		if(slashPos != String::npos)
+		{
+			fullpath += pattern.substr(0, slashPos + 1);
+			fullpathName = fullpath + pattern.substr(slashPos + 1, pattern.length() - 1);
+		}
+		else
+			fullpathName = fullpath + pattern;
+		
+		intptr_t handle = _findfirst(fullpathName.c_str(), &findData);
 		int ret = 0;
 		StringVector dirVector;
 		//woo,there has files!
@@ -41,6 +64,7 @@ namespace Titan
 			if((findData.attrib & _A_SUBDIR) == 0)
 			{
 				stringVector->push_back(findData.name);
+				pathVector->push_back(fullpath);
 			}
 			else
 			{
@@ -57,13 +81,16 @@ namespace Titan
 
 		if(recursive)
 		{
-			String baseDir = subdir;
-			if(baseDir.at(baseDir.length()-1) == '*')
-				baseDir.erase(baseDir.length()-1);
 			StringVector::iterator it = dirVector.begin(), itend = dirVector.end();
 			while(it != itend)
 			{
-				searchDir(baseDir + *it + "/*", stringVector, recursive);
+				size_t slashpos = pattern.find_last_of('/');
+				String subDir;
+				if(slashpos != String::npos)
+					subDir = pattern.substr(0, slashpos + 1) +  *it + pattern.substr(slashpos, pattern.length() -1);
+				else
+					subDir = *it + '/' + pattern;
+				searchDir(subDir, recursive, stringVector, pathVector);
 				++it;
 			}
 		}

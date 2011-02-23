@@ -12,6 +12,17 @@ namespace Titan
 	public:
 		struct ResourceGroup : public GeneralAlloc
 		{
+			struct LocationInfo : public GeneralAlloc
+			{
+				String			relativePath;
+				FileSystem*		pFileSystem;
+
+				LocationInfo(const String& relPath, FileSystem*	fileSystem)
+				{
+					relativePath = relPath;
+					pFileSystem = fileSystem;
+				}
+			};
 			enum Status
 			{
 				RGS_UNINITIALISED	= 0,
@@ -22,13 +33,13 @@ namespace Titan
 			};
 			String	groupName;
 			Status	state;
-			typedef map<String, FileSystem*>::type	FileLocationMap;
+			typedef map<String, LocationInfo>::type	FileLocationMap;
 			FileLocationMap fileLocationMap;
 			typedef list<ResourcePtr>::type ResourceList;
 			typedef map<int, ResourceList*>::type ResourceOrderListMap;
 			ResourceOrderListMap	resourceOrderListMap;
 
-			void insertFileLocation(const String& name, FileSystem* fileSystem);
+			void insertFileLocation(const String& name, const String& relativePath, FileSystem* fileSystem);
 		};
 
 		typedef map<String, ResourceGroup*>::type ResourceGroupMap;

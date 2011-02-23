@@ -24,6 +24,7 @@ namespace Titan
 
 		virtual StringVectorPtr		find(const String& wildcard, bool recursive) = 0;
 
+		virtual void	find(const String& wildcard, bool recursive, StringVectorPtr* nameArray, StringVectorPtr* relPathArray) = 0;
 
 	protected:
 		String	mType;
