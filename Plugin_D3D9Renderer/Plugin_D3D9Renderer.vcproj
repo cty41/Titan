@@ -210,7 +210,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\D3D9TextureManager.cpp"
+				RelativePath=".\src\D3D9TextureMgr.cpp"
 				>
 			</File>
 			<File
