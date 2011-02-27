@@ -35,6 +35,7 @@ namespace Titan
 	ResourceGroupManager::ResourceGroupManager()
 		:mCurrentGroup(0)
 	{
+		createResourceGroup(GENERAL_RESOURCE_GROUP);
 
 	}
 	//-------------------------------------------------------------//
@@ -109,6 +110,9 @@ namespace Titan
 				"There has a group with  name: " + group,
 				"ResourceGroupManager::createResourceGroup");
 		}
+		//cache the res group
+		if(mCurrentGroup != gp)
+			mCurrentGroup = gp;
 		return gp;
 	}
 	void ResourceGroupManager::initResourceGroup(const String& group)
