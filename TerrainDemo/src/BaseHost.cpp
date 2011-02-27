@@ -2,6 +2,7 @@
 #include "Timer.h"
 #include "Camera.h"
 #include "ConfigFile.h"
+#include "TitanTextureMgr.h"
 
 using namespace Titan;
 
@@ -54,7 +55,7 @@ void BaseHost::initResources()
 		while (pit.hasMoreElements())
 		{
 			String type = pit.peekNextKey(), name = pit.peekNextValue();
-			ResourceGroupManager::getSingltonPtr()->addResourceLocation(name, type, group);
+			ResourceGroupManager::getSingltonPtr()->addResourceLocation(name, type, group, true);
 			pit.next();
 		}
 		sit.next();
@@ -113,6 +114,8 @@ void BaseHost::setup()
 	renderer->_setFillMode(PM_WIREFRAME);
 	renderer->_setCullingMode(CULL_NONE);
 	renderer->_setLightEnable(false);
+
+	Titan::TextureMgr::getSingletonPtr()->create("test", "General");
 
 	mManualObject->begin();
 	mManualObject->position(-1.0f,-1.0f,-1.0f);			//0

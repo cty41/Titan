@@ -18,6 +18,7 @@
 #include <list>
 #include <deque>
 #include <queue>
+#include <utility>
 
 // STL algorithms & functions
 #include <algorithm>

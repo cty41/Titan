@@ -6,12 +6,12 @@
 namespace Titan
 {
 	String	ResourceGroupManager::GENERAL_RESOURCE_GROUP = "General";
-	void ResourceGroupManager::ResourceGroup::insertFileLocation(const String& name, FileSystem* fileSystem)
+	void ResourceGroupManager::ResourceGroup::insertFileLocation(const String& name, const String& relativePath, FileSystem* fileSystem)
 	{
 		FileLocationMap::iterator it = fileLocationMap.find(name);
 		if(it == fileLocationMap.end())
 		{
-			fileLocationMap.insert(FileLocationMap::value_type(name, fileSystem));
+			fileLocationMap.insert(FileLocationMap::value_type(name, LocationInfo(relativePath, fileSystem)));
 		}
 		else
 		{
@@ -60,12 +60,14 @@ namespace Titan
 		}
 
 		FileSystem* fileSystem = FileSystemManager::getSingletonPtr()->load(name, type);
-		StringVectorPtr pStringVector =  fileSystem->find("*", recursive);
-		StringVector::iterator sit = pStringVector->begin(), sitend = pStringVector->end();
-		while (sit != sitend)
+		StringVectorPtr pStringVector, pPathsVector;
+		fileSystem->find("*", recursive, &pStringVector, &pPathsVector);
+		StringVector::iterator sit = (pStringVector)->begin(), sitend = (pStringVector)->end();
+		StringVector::iterator sit2 = (pPathsVector)->begin(), sitend2 = (pPathsVector)->end();
+		while (sit != sitend && sit2 != sitend2)
 		{
-			gp->insertFileLocation(*sit, fileSystem);
-			++sit;
+			gp->insertFileLocation(*sit, *sit2, fileSystem);
+			++sit, ++sit2;
 		}
 
 		return fileSystem;

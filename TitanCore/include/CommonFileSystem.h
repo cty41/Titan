@@ -13,11 +13,15 @@ namespace Titan
 
 		~CommonFileSystem();
 
-		void load();
+		void	load();
 
-		void unload(){};
+		void	unload(){};
 
 		StringVectorPtr find(const String& wildcard, bool recursive);
+
+		void	find(const String& wildcard, bool recursive, StringVectorPtr* nameArray, StringVectorPtr* relPathArray);
+	protected:
+		void	searchDir(const String& pattern, bool recursive, StringVectorPtr stringVector, StringVectorPtr pathVector);
 	};
 
 

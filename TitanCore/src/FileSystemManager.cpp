@@ -35,7 +35,10 @@ namespace Titan
 			FileSystemMap::iterator fit = mFileSystemMap.find(name);
 			if(fit == mFileSystemMap.end())
 			{
-				pFile = it->second->createInstance(name, type);
+				if(name.at(name.length() - 1) != '/')
+					pFile = it->second->createInstance(name + '/', type);
+				else
+					pFile = it->second->createInstance(name, type);
 				pFile->load();
 				mFileSystemMap.insert(FileSystemMap::value_type(name, pFile));
 				
