@@ -4,6 +4,7 @@
 #include "D3D9Prerequisites.h"
 #include "TitanCommon.h"
 #include "HardwareBuffer.h"
+#include "TitanTexture.h"
 
 namespace Titan
 {
@@ -30,6 +31,10 @@ namespace Titan
 		static D3DXMATRIX makeD3DXMatrix( const Matrix4& mat );
 
 		static Matrix4 convertD3DXMatrix( const D3DXMATRIX& mat );
+
+		static D3DFORMAT convertD3D9Format(PixelFormat format);
+
+		static D3DPOOL	convertD3D9Pool(TexPool pool);
 	};
 }
 #endif

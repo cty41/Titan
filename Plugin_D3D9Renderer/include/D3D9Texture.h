@@ -14,17 +14,29 @@ namespace Titan
 		~D3D9Texture();
 
 	protected:
-		void loadImpl();
+		void	loadImpl();
 
-		void unloadImpl();
+		void	unloadImpl();
 
-		void loadNormalTex();
+		void	_loadNormalTex();
 
-		void loadCubeTex();
+		void	_loadCubeTex();
+
+		void	_perlinNoiseImpl(float scale, int octaves, float falloff);
+
+		void	_createCoreObject();
+
+		void	_create2DTex();
+
 
 	protected:
-		IDirect3DBaseTexture9*		mTexture;
-		
+		IDirect3DTexture9*		m2DTexture;
+
 	};
+
+	void _D3D9DllExport WINAPI perlinCallback(D3DXVECTOR4* pOut, 
+		const D3DXVECTOR2* pTexCoord, 
+		const D3DXVECTOR2* pTexelSize, void* pData);
+
 }
 #endif

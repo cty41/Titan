@@ -248,6 +248,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\PerlinNoise.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Renderer.cpp"
 				>
 			</File>
@@ -280,11 +284,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\ShaderEffectMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\StringConverter.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\TitanColor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanDataStream.cpp"
 				>
 			</File>
 			<File
@@ -324,6 +336,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TitanShaderEffect.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanStableHeader.cpp"
 				>
 				<FileConfiguration
@@ -334,6 +350,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\TitanStringFuncs.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\src\TitanTexture.cpp"
@@ -458,6 +478,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\PerlinNoise.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\Renderable.h"
 				>
 			</File>
@@ -495,6 +519,10 @@
 			</File>
 			<File
 				RelativePath=".\include\SceneObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\ShaderEffectMgr.h"
 				>
 			</File>
 			<File
@@ -539,6 +567,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanConfig.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanDataStream.h"
 				>
 			</File>
 			<File
@@ -606,6 +638,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TitanShaderEffect.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TitanSharedPtr.h"
 				>
 			</File>
@@ -615,6 +651,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanStableHeader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanStringFuncs.h"
 				>
 			</File>
 			<File

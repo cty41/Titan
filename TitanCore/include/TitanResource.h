@@ -3,6 +3,7 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanSharedPtr.h"
+#include "TitanDataStream.h"
 
 
 namespace Titan
@@ -12,9 +13,11 @@ namespace Titan
 
 	enum LoadState
 	{
-		LS_UNLOAD	= 0,
-		LS_LOADING	= 1,
-		LS_LOADED	= 2
+		LS_UNPREPARED	= 0,
+		LS_PREPARING	= 1,
+		LS_PREPARED		= 2,
+		LS_LOADING		= 3,
+		LS_LOADED		= 4
 	};
 
 	class _DllExport Resource: public GeneralAlloc
@@ -28,7 +31,13 @@ namespace Titan
 
 		virtual	void	unload();
 
-		bool	isLoaded(){ return (mLoadState == LS_LOADED); }
+		virtual void	prepare();
+
+		virtual void	unprapare();
+
+		bool	isPrepared() const { return (mLoadState >= LS_PREPARED);}
+
+		bool	isLoaded() const { return (mLoadState == LS_LOADED); }
 
 		void	changeGroup(const String& newGroup);
 
@@ -38,20 +47,26 @@ namespace Titan
 
 		ResourceHandle	getID() const { return mID; }
 
-		ResourceMgr*	getCreator() const { return mMgr; } 
-
-	protected:
-		virtual void loadImpl() = 0;
-
-		virtual	void unloadImpl() = 0;
+		ResourceMgr*	getCreator() const { return mMgr; }
 
 
 	protected:
-		ResourceMgr*		mMgr;
-		String				mName;
-		String				mGroup;
-		ResourceHandle		mID;
-		LoadState			mLoadState;
+		virtual void	prepareImpl();
+
+		virtual void	unprepareImpl();
+
+		virtual void	loadImpl() = 0;
+
+		virtual	void	unloadImpl() = 0;
+
+
+	protected:
+		ResourceMgr*			mMgr;
+		String					mName;
+		String					mGroup;
+		ResourceHandle			mID;
+		LoadState				mLoadState;
+		MemoryDataStreamPtr		mPreparedData;
 
 	};
 

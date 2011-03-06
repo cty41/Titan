@@ -31,8 +31,6 @@ namespace Titan
 
 		void outputMessage(const String& message, ConsoleMessageLevel cml = CML_NORMAL, bool outputTime = true);
 
-		void outputMessage(const String& message, bool outputTime = true);
-
 		ConsoleDebugger::Stream stream(ConsoleMessageLevel cml = CML_NORMAL);
 
 		static ConsoleDebugger* getSingletonPtr();

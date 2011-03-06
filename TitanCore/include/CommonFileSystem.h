@@ -17,6 +17,8 @@ namespace Titan
 
 		void	unload(){};
 
+		DataStreamPtr open(const String& filename);
+
 		StringVectorPtr find(const String& wildcard, bool recursive);
 
 		void	find(const String& wildcard, bool recursive, StringVectorPtr* nameArray, StringVectorPtr* relPathArray);

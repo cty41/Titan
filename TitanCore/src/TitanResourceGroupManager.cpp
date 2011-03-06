@@ -3,6 +3,7 @@
 #include "TitanResourceManager.h"
 #include "FileSystemManager.h"
 
+
 namespace Titan
 {
 	String	ResourceGroupManager::GENERAL_RESOURCE_GROUP = "General";
@@ -41,7 +42,7 @@ namespace Titan
 	//-------------------------------------------------------------//
 	ResourceGroupManager::~ResourceGroupManager()
 	{
-
+		destroyAllResourceGroup();
 	}
 	//-------------------------------------------------------------//
 	FileSystem* ResourceGroupManager::addResourceLocation(const String& name, const String& type, const String& group, bool recursive)
@@ -115,6 +116,22 @@ namespace Titan
 			mCurrentGroup = gp;
 		return gp;
 	}
+	//-------------------------------------------------------------//
+	void ResourceGroupManager::parseResourceGroup(ResourceGroup* rg)
+	{
+		//now here is useless, 'cause we do not have the script -cty
+#if 0
+		ResourceOrderListMap::iterator it = rg->resourceOrderListMap.begin(),
+			itend = rg->resourceOrderListMap.end();
+		while(it != itend)
+		{
+
+			while()
+			++it;
+		}
+#endif
+	}
+	//-------------------------------------------------------------//
 	void ResourceGroupManager::initResourceGroup(const String& group)
 	{
 		ResourceGroupMap::iterator it = mResourceGroupMap.find(group);
@@ -124,6 +141,7 @@ namespace Titan
 			it->second->state = ResourceGroup::RGS_INITIALISING;
 			//if we need to implement script
 			//add content here
+			parseResourceGroup(it->second);
 			it->second->state = ResourceGroup::RGS_INITIALISED;
 			mCurrentGroup = it->second;
 		}
@@ -151,25 +169,97 @@ namespace Titan
 	//-------------------------------------------------------------//
 	void ResourceGroupManager::destroyResourceGroup(const String& group)
 	{
+		ResourceGroupMap::iterator it = mResourceGroupMap.find(group);
+		if(it != mResourceGroupMap.end())
+		{
+			ResourceGroup *rg = it->second;
+			ResourceOrderListMap::iterator lit = rg->resourceOrderListMap.begin(), litend = rg->resourceOrderListMap.end();
+			while(lit != litend)
+			{
+				TITAN_DELETE_T(lit->second++, ResourceList, MEMCATEGORY_GENERAL);
+			}
+			
+			TITAN_DELETE it->second;
+			mResourceGroupMap.erase(it);
+		}
+		else
+		{
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				" the resource group called" + group + " does not exist!",
+				"ResourceGroupManager::destroyResourceGroup");
+		}
 
 	}
 	//-------------------------------------------------------------//
 	void ResourceGroupManager::destroyAllResourceGroup()
 	{
+		//maybe got memory leak here -cty
+		ResourceGroupMap::iterator it = mResourceGroupMap.begin(), itend = mResourceGroupMap.end();
+		while(it != itend)
+		{
+			ResourceGroup *rg = it->second;
+			ResourceOrderListMap::iterator lit = rg->resourceOrderListMap.begin(), litend = rg->resourceOrderListMap.end();
+			while(lit != litend)
+			{
+				TITAN_DELETE_T(lit->second, ResourceList, MEMCATEGORY_GENERAL);
+				++lit;
+			}
 
+			TITAN_DELETE it->second;
+			mResourceGroupMap.erase(it++);
+		}
 	}
 	//-------------------------------------------------------------//
 	void ResourceGroupManager::loadResourceGroup(const String& group)
 	{
-
+		//change later , we need to ad resource analyzer, maybe add in init
+		ResourceGroupMap::iterator it = mResourceGroupMap.find(group);
+		if(it != mResourceGroupMap.end())
+		{
+			ResourceGroup *rg = it->second;
+			ResourceOrderListMap::iterator lit = rg->resourceOrderListMap.begin(), litend = rg->resourceOrderListMap.end();
+			while(lit != litend)
+			{
+				ResourceList::iterator resit = lit->second->begin(), resitend = lit->second->end();
+				while(resit++ != resitend)
+				{
+					(*resit)->load();
+				}
+			}
+		}
+		else
+		{
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				" the resource group called" + group + " does not exist!",
+				"ResourceGroupManager::loadResourceGroup");
+		}
 	}
 	//-------------------------------------------------------------//
 	void ResourceGroupManager::unloadResourceGroup(const String& group)
 	{
-
+		ResourceGroupMap::iterator it = mResourceGroupMap.find(group);
+		if(it != mResourceGroupMap.end())
+		{
+			ResourceGroup *rg = it->second;
+			ResourceOrderListMap::iterator lit = rg->resourceOrderListMap.begin(), litend = rg->resourceOrderListMap.end();
+			while(lit != litend)
+			{
+				ResourceList::iterator resit = lit->second->begin(), resitend = lit->second->end();
+				while(resit++ != resitend)
+				{
+					(*resit)->unload();
+				}
+			}
+		}
+		else
+		{
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				" the resource group called" + group + " does not exist!",
+				"ResourceGroupManager::loadResourceGroup");
+		}
 	}
 	//-------------------------------------------------------------//
-	void ResourceGroupManager::addCreatedResource(const String& group, Resource& res)
+	void ResourceGroupManager::addCreatedResource(const String& group, ResourcePtr& res)
 	{
 		ResourceGroup* rg;
 		if(mCurrentGroup->groupName == group)
@@ -189,19 +279,37 @@ namespace Titan
 			}
 		}
 
-		int order = res.getCreator()->getLoadOrder();
-		ResourceGroup::ResourceOrderListMap::iterator it = rg->resourceOrderListMap.find(order);
+		int order = res->getCreator()->getLoadOrder();
+		ResourceOrderListMap::iterator it = rg->resourceOrderListMap.find(order);
 		if(it != rg->resourceOrderListMap.end())
 		{
-			ResourcePtr resPtr(&res);
-			it->second->push_back(resPtr);
+			it->second->push_back(res);
 		}
 		else
 		{
-			rg->resourceOrderListMap[order] = TITAN_NEW_T(ResourceGroup::ResourceList, MEMCATEGORY_GENERAL)();
-			ResourcePtr resPtr(&res);
-			rg->resourceOrderListMap[order]->push_back(resPtr);
+			rg->resourceOrderListMap[order] = TITAN_NEW_T(ResourceList, MEMCATEGORY_GENERAL)();
+			rg->resourceOrderListMap[order]->push_back(res);
 		}
+	}
+	//-------------------------------------------------------------//
+	DataStreamPtr ResourceGroupManager::openResource(const String& name, const String& group)
+	{
+		ResourceGroupMap::iterator it = mResourceGroupMap.find(group);
+		if(it != mResourceGroupMap.end())
+		{
+			FileLocationMap::iterator fit = it->second->fileLocationMap.find(name);
+			if(fit != it->second->fileLocationMap.end())
+			{
+				DataStreamPtr dataPtr = fit->second.pFileSystem->open(name);
+				return dataPtr;
+			}
+			
+		}
+
+		TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+			" the resource called" + name + "in group " + group + " does not exist!",
+			"ResourceGroupManager::openResource");
+	
 	}
 
 }

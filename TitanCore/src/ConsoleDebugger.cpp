@@ -93,11 +93,6 @@ namespace Titan
 		}
 	}
 	//-------------------------------------------------------------//
-	void ConsoleDebugger::outputMessage(const String& message, bool outputTime)
-	{
-		outputMessage(message, CML_NORMAL, outputTime);
-	}
-	//-------------------------------------------------------------//
 	ConsoleDebugger::Stream	ConsoleDebugger::stream(ConsoleMessageLevel cml)
 	{
 		return Stream(cml);

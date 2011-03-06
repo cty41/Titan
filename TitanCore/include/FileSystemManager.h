@@ -24,7 +24,13 @@ namespace Titan
 
 		void			unload(FileSystem* system);
 
-		void	addFileSystemFactory(FileSystemFactory* factory);
+		void			unloadAllInstances();
+
+		void			addFileSystemFactory(FileSystemFactory* factory);
+
+		void			removeFileSystemFactory(FileSystemFactory* factory);
+
+		void			removeAllFactory();
 
 		FileSystemMapIterator	getFileSystemMapIterator();
 

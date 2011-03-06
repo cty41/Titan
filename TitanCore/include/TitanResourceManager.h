@@ -15,41 +15,48 @@ namespace Titan
 		typedef map<ResourceHandle, ResourcePtr>::type ResourceHandleMap;
 		typedef hash_map<String, ResourceMap>::type ResourceGroupMap;
 
+		//true means it is a new resouce we just created
+		typedef std::pair<bool, ResourcePtr>	CreatedResource;
+
 	public:
 		ResourceMgr();
 
 		virtual ~ResourceMgr() = 0;
 
-		ResourcePtr create(const String& name, const String& group, AnyMap* extraParams = 0);
+		CreatedResource create(const String& name, const String& group, AnyMap* extraParams = 0);
 
-		void	remove(const String& name);
+		void			remove(const String& name);
 
-		void	remove(ResourceHandle ResourceID);
+		void			remove(ResourceHandle ResourceID);
 
-		void	removeAll();
+		void			removeAll();
 
-		void	removeUnreferencedResources();
+		void			removeUnreferencedResources();
 
-		void	load(const String& name);
+		ResourcePtr		load(const String& name, const String& group, AnyMap* extraParams = 0);
 
-		void	load(ResourceHandle ResourceID);
+		void			unload(const String& name);
 
-		void	unload(const String& name);
+		void			unload(ResourceHandle ResourceID);
 
-		void	unload(ResourceHandle ResourceID);
+		void			unloadAll();
 
-		void	unloadAll();
+		//no use now
+		void			unloadUnreferencedResources();
 
-		void	unloadUnreferencedResources();
-
-		int		getLoadOrder() const { return mLoadOrder; }
+		int				getLoadOrder() const { return mLoadOrder; }
 
 		ResourceHandle	getNextHandle(){ return ++mNextHandle; }
+
+		const String&	getType()const { return mType; }
 	protected:
 
-		virtual Resource* createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams) = 0;
+		virtual Resource*	createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams) = 0;
 
-		virtual	void		addImpl(ResourcePtr* res);
+		
+		virtual	void		addImpl(ResourcePtr& res);
+
+		
 
 	protected:
 		int						mLoadOrder;

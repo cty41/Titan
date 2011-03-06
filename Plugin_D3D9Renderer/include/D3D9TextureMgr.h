@@ -15,6 +15,8 @@ namespace Titan
 
 	protected:
 		Resource* createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams);
+
+
 	};
 }
 

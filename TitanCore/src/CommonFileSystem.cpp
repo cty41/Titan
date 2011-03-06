@@ -1,22 +1,90 @@
 #include "TitanStableHeader.h"
 #include "CommonFileSystem.h"
 #include <io.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 
 namespace Titan
 {
+	static bool is_absolute_path(const char* path)
+	{
+		if (isalpha(uchar(path[0])) && path[1] == ':')
+			return true;
+	}
+
+	static String concatenate_path(const String& base, const String& name)
+	{
+		if (base.empty() || is_absolute_path(name.c_str()))
+			return name;
+		else
+			return base + '/' + name;
+	}
+
 	CommonFileSystem::CommonFileSystem(const String& name, const String& type)
 		:FileSystem(name, type)
 	{
 	}
 	//-------------------------------------------------------------//
 	CommonFileSystem::~CommonFileSystem()
-	{}
+	{
+
+	}
 	//-------------------------------------------------------------//
 	void CommonFileSystem::load()
 	{
 		//for test
 		String testTmp(mName);
+	}
+	//-------------------------------------------------------------//
+	DataStreamPtr CommonFileSystem::open(const String& filename)
+	{
+		String full_path = concatenate_path(mName, filename);
+
+		// Use filesystem to determine size 
+		// (quicker than streaming to the end and back)
+		struct stat tagStat;
+		int ret = stat(full_path.c_str(), &tagStat);
+		assert(ret == 0 && "Problem getting file size" );
+		(void)ret;  // Silence warning
+
+		// Always open in binary mode
+		// Also, always include reading
+		std::ios::openmode mode = std::ios::in | std::ios::binary;
+		std::istream* baseStream = 0;
+		std::ifstream* roStream = 0;
+		std::fstream* rwStream = 0;
+
+
+		mode |= std::ios::out;
+		rwStream = TITAN_NEW_T(std::fstream, MEMCATEGORY_GENERAL)();
+		rwStream->open(full_path.c_str(), mode);
+
+		// Should check ensure open succeeded, in case fail for some reason.
+		if (baseStream->fail())
+		{
+			TITAN_DELETE_T(roStream, basic_ifstream, MEMCATEGORY_GENERAL);
+			TITAN_DELETE_T(rwStream, basic_fstream, MEMCATEGORY_GENERAL);
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				"Cannot open file: " + filename,
+				"CommonFileSystem::open");
+		}
+
+		/// Construct return stream, tell it to delete on destroy
+		FileStreamDataStream* stream = 0;
+		if (rwStream)
+		{
+			// use the writeable stream 
+			stream = TITAN_NEW FileStreamDataStream(filename,
+				rwStream, tagStat.st_size, true);
+		}
+		else
+		{
+			// read-only stream
+			stream = TITAN_NEW FileStreamDataStream(filename,
+				roStream, tagStat.st_size, true);
+		}
+		return DataStreamPtr(stream);
 	}
 	//-------------------------------------------------------------//
 	StringVectorPtr CommonFileSystem::find(const String& wildcard, bool recursive)

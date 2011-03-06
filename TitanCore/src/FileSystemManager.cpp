@@ -22,8 +22,9 @@ namespace Titan
 	//-------------------------------------------------------------//
 	FileSystemManager::~FileSystemManager()
 	{
-
-	}
+		unloadAllInstances();
+		removeAllFactory();
+	}	
 	//-------------------------------------------------------------//
 	FileSystem* FileSystemManager::load(const String& name, const String& type)
 	{
@@ -62,19 +63,14 @@ namespace Titan
 		FileSystemMap::iterator it = mFileSystemMap.find(name);
 		if(it != mFileSystemMap.end())
 		{
-			FileSystemFactoryMap::iterator fit = mFileSystemFactoryMap.find(it->second->getType());
-			if(fit != mFileSystemFactoryMap.end())
-			{
-				fit->second->destroyInstance(it->second);
-			}
-		}
+			TITAN_DELETE it->second;
+			mFileSystemMap.erase(it);
+		}	
 		else
 		{
-			{
-				TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-					"The FileSystem with this name " + name + " does exist!",
-					"FileSystemManager::load");
-			}
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"The FileSystem with this name " + name + " does exist!",
+				"FileSystemManager::load");
 		}
 	}
 	//-------------------------------------------------------------//
@@ -83,7 +79,8 @@ namespace Titan
 		FileSystemFactoryMap::iterator it = mFileSystemFactoryMap.find(system->getType());
 		if(it != mFileSystemFactoryMap.end())
 		{
-			it->second->destroyInstance(system);
+			TITAN_DELETE it->second;
+			mFileSystemFactoryMap.erase(it++);
 		}
 		else
 		{
@@ -92,6 +89,16 @@ namespace Titan
 				"FileSystemManager::load");
 		}
 	}
+	//-------------------------------------------------------------//
+	void FileSystemManager::unloadAllInstances()
+	{
+		FileSystemMap::iterator it = mFileSystemMap.begin(), itend = mFileSystemMap.end();
+		while(it != itend)
+		{
+			TITAN_DELETE it->second;
+			mFileSystemMap.erase(it++);
+		}
+	}		
 	//-------------------------------------------------------------//
 	void FileSystemManager::addFileSystemFactory(FileSystemFactory* factory)
 	{
@@ -105,6 +112,32 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
 				"The FileSystemFactory with this type " + factory->getType() + " does exist!",
 				"FileSystemManager::addFileSystemFactory");
+		}
+	}
+	//-------------------------------------------------------------//
+	void FileSystemManager::removeFileSystemFactory(FileSystemFactory* factory)
+	{
+		FileSystemFactoryMap::iterator it = mFileSystemFactoryMap.find(factory->getType());
+		if(it != mFileSystemFactoryMap.end())
+		{
+			mFileSystemFactoryMap.erase(it);
+			TITAN_DELETE factory;
+		}
+		else
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"The FileSystemFactory with this type " + factory->getType() + " does not exist!",
+				"FileSystemManager::removeFileSystemFactory");
+		}
+	}
+	//-------------------------------------------------------------//
+	void FileSystemManager::removeAllFactory()
+	{
+		FileSystemFactoryMap::iterator it = mFileSystemFactoryMap.begin(), itend = mFileSystemFactoryMap.end();
+		while(it != itend)
+		{
+			TITAN_DELETE it->second;
+			mFileSystemFactoryMap.erase(it++);
 		}
 	}
 	//-------------------------------------------------------------//

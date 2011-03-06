@@ -61,13 +61,12 @@ void BaseHost::initResources()
 		sit.next();
 	}
 
-	ResourceGroupManager::getSingltonPtr()->getResourceGroup("General");
+	ResourceGroupManager::getSingltonPtr()->initResourceGroup(ResourceGroupManager::GENERAL_RESOURCE_GROUP);
 
 }
 //-------------------------------------------------------------//
 void BaseHost::loadResources()
 {
-
 }
 //-------------------------------------------------------------//
 void BaseHost::initInputDevice()
@@ -114,8 +113,14 @@ void BaseHost::setup()
 	renderer->_setFillMode(PM_WIREFRAME);
 	renderer->_setCullingMode(CULL_NONE);
 	renderer->_setLightEnable(false);
+#if 1
+	TexturePtr pHeightmap = TextureMgr::getSingletonPtr()->createManually("heightMap1", ResourceGroupManager::GENERAL_RESOURCE_GROUP,
+										TT_2D, 128, 128, 0,TU_DEFAULT, PF_A8R8G8B8);
 
-	Titan::TextureMgr::getSingletonPtr()->create("test", "General");
+	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
+
+	
+#endif
 
 	mManualObject->begin();
 	mManualObject->position(-1.0f,-1.0f,-1.0f);			//0

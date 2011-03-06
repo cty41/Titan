@@ -3,6 +3,7 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanCommon.h"
+#include "TitanDataStream.h"
 
 namespace Titan
 {
@@ -21,6 +22,8 @@ namespace Titan
 		virtual void load() = 0;
 
 		virtual void unload() = 0;
+
+		virtual DataStreamPtr open(const String& filename) = 0;
 
 		virtual StringVectorPtr		find(const String& wildcard, bool recursive) = 0;
 

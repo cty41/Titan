@@ -4,25 +4,31 @@
 #include "TitanPrerequisites.h"
 #include "Singleton.h"
 #include "TitanResource.h"
+#include "TitanDataStream.h"
 
 namespace Titan
 {
 	class _DllExport ResourceGroupManager: public Singleton<ResourceGroupManager>, public GeneralAlloc
 	{
 	public:
+		typedef list<ResourcePtr>::type ResourceList;
+		typedef map<int, ResourceList*>::type ResourceOrderListMap;
+		struct LocationInfo : public GeneralAlloc
+		{
+			String			relativePath;
+			FileSystem*		pFileSystem;
+
+			LocationInfo(const String& relPath, FileSystem*	fileSystem)
+			{
+				relativePath = relPath;
+				pFileSystem = fileSystem;
+			}
+		};
+		typedef map<String, LocationInfo>::type	FileLocationMap;
+
 		struct ResourceGroup : public GeneralAlloc
 		{
-			struct LocationInfo : public GeneralAlloc
-			{
-				String			relativePath;
-				FileSystem*		pFileSystem;
 
-				LocationInfo(const String& relPath, FileSystem*	fileSystem)
-				{
-					relativePath = relPath;
-					pFileSystem = fileSystem;
-				}
-			};
 			enum Status
 			{
 				RGS_UNINITIALISED	= 0,
@@ -33,10 +39,9 @@ namespace Titan
 			};
 			String	groupName;
 			Status	state;
-			typedef map<String, LocationInfo>::type	FileLocationMap;
+
 			FileLocationMap fileLocationMap;
-			typedef list<ResourcePtr>::type ResourceList;
-			typedef map<int, ResourceList*>::type ResourceOrderListMap;
+
 			ResourceOrderListMap	resourceOrderListMap;
 
 			void insertFileLocation(const String& name, const String& relativePath, FileSystem* fileSystem);
@@ -58,19 +63,23 @@ namespace Titan
 		ResourceGroup*	createResourceGroup(const String& group);
 
 		//no use now
-		void initResourceGroup(const String& group);
+		void		initResourceGroup(const String& group);
 		//no use now
-		void initAllResourceGroup();
+		void		initAllResourceGroup();
 
-		void destroyResourceGroup(const String& group);
+		void		destroyResourceGroup(const String& group);
 
-		void destroyAllResourceGroup();
+		void		destroyAllResourceGroup();
 
-		void loadResourceGroup(const String& group);
+		void		loadResourceGroup(const String& group);
 
-		void unloadResourceGroup(const String& group);
+		void		unloadResourceGroup(const String& group);
 
-		void addCreatedResource(const String& group, Resource& res);
+		void		addCreatedResource(const String& group, ResourcePtr& res);
+	
+		void		parseResourceGroup(ResourceGroup* rg);
+
+		DataStreamPtr	openResource(const String& name, const String& group = GENERAL_RESOURCE_GROUP);
 
 
 		static ResourceGroupManager*	getSingltonPtr();

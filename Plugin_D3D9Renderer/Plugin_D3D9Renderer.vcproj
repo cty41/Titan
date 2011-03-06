@@ -206,6 +206,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\D3D9ShaderEffect.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\D3D9ShaderEffectMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\D3D9Texture.cpp"
 				>
 			</File>
@@ -253,6 +261,14 @@
 			</File>
 			<File
 				RelativePath=".\include\D3D9RenderWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\D3D9ShaderEffect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\D3D9ShaderEffectMgr.h"
 				>
 			</File>
 			<File

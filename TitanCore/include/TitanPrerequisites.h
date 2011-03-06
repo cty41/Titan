@@ -80,6 +80,8 @@ namespace Titan
 	class SceneObject;
 	class SceneObjectFactory;
 	class SceneNode;
+	class ShaderEffect;
+	class ShaderEffectMgr;
 	class ManualObject;
 	class ManualObjectFactory;
 	class Frustum;

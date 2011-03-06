@@ -20,11 +20,14 @@ namespace Titan
 	class D3D9RenderWindow;
 	class D3D9Renderer;
 	class D3D9Plugin;
+	class D3D9IndexBuffer;
 	class D3D9VertexBuffer;
 	class D3D9VertexDeclaration;
 	class D3D9HardwareBufferManager;
 	class D3D9Texture;
 	class D3D9TextureMgr;
+	class D3D9ShaderEffect;
+	class D3D9ShaderEffectMgr;
 }
 
 #ifdef PLUGIN_D3D9RENDERER_EXPORTS

@@ -12,20 +12,29 @@ namespace Titan
 	//-------------------------------------------------------------//
 	ResourceMgr::~ResourceMgr()
 	{
-
+		removeAll();
 	}
 	//-------------------------------------------------------------//
-	ResourcePtr ResourceMgr::create(const String& name, const String& group, AnyMap* extraParams /* = 0 */)
+	ResourceMgr::CreatedResource ResourceMgr::create(const String& name, const String& group, AnyMap* extraParams /* = 0 */)
 	{
-		ResourceHandle id = getNextHandle();
-		Resource* res= createImpl(name, id, group, extraParams);
-		ResourcePtr pRes(res);
-		//add to 
-		addImpl(&pRes);
+		//if this resource has been created
+		ResourceMap::iterator it = mResourceMap.find(name);
+		if(it != mResourceMap.end())
+		{
+			return CreatedResource(false, it->second);
+		}
+		else
+		{
+			ResourceHandle id = getNextHandle();
+			Resource* res= createImpl(name, id, group, extraParams);
+			ResourcePtr pRes(res);
+			//add to 
+			addImpl(pRes);
 
-		ResourceGroupManager::getSingltonPtr()->addCreatedResource(group, *res);
+			ResourceGroupManager::getSingltonPtr()->addCreatedResource(group, pRes);
+			return CreatedResource(true, pRes);
+		}
 
-		return pRes;
 	}
 	//-------------------------------------------------------------//
 	void ResourceMgr::remove(const String& name)
@@ -93,29 +102,55 @@ namespace Titan
 		}
 	}
 	//-------------------------------------------------------------//
-	void ResourceMgr::load(const String& name)
+	ResourcePtr ResourceMgr::load(const String& name, const String& group, AnyMap* extraParams)
 	{
-		
-	}
-	//-------------------------------------------------------------//
-	void ResourceMgr::load(ResourceHandle ResourceID)
-	{
+		CreatedResource created = create(name, group, extraParams);
 
+		created.second->load();
+
+		return created.second;
 	}
 	//-------------------------------------------------------------//
 	void ResourceMgr::unload(const String& name)
 	{
-
+		ResourceMap::iterator it = mResourceMap.find(name);
+		if(it != mResourceMap.end())
+		{
+			it->second->unload();
+		}
+		else
+		{
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				"The resource called" + name + " does not found in" + mType,
+				"ResourceMgr::unload");
+		}
 	}
 	//-------------------------------------------------------------//
 	void ResourceMgr::unload(ResourceHandle ResourceID)
 	{
-
+		ResourceHandleMap::iterator it = mResourceHandleMap.find(ResourceID);
+		if(it != mResourceHandleMap.end())
+		{
+			it->second->unload();
+		}
+		else
+		{
+			StringStream errMsg;
+			errMsg<<ResourceID;
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				"The resource with ID " + errMsg.str() + " does not found in" + mType,
+				"ResourceMgr::unload");
+		}
 	}
 	//-------------------------------------------------------------//
 	void ResourceMgr::unloadAll()
 	{
-
+		ResourceMap::iterator it = mResourceMap.begin(), itend = mResourceMap.end();
+		while(it != itend)
+		{
+			it->second->unload();
+			++it;
+		}
 	}
 	//-------------------------------------------------------------//
 	void ResourceMgr::unloadUnreferencedResources()
@@ -123,10 +158,10 @@ namespace Titan
 
 	}
 	//-------------------------------------------------------------//
-	void ResourceMgr::addImpl(ResourcePtr* res)
+	void ResourceMgr::addImpl(ResourcePtr& res)
 	{
-		
+		//to add into map
+		mResourceMap.insert(ResourceMap::value_type(res->getName(), res));
+		mResourceHandleMap.insert(ResourceHandleMap::value_type(res->getID(), res));
 	}
-
-
 }

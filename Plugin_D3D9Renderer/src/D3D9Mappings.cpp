@@ -213,4 +213,34 @@ namespace Titan
 			mat.m[0][2], mat.m[1][2], mat.m[2][2], mat.m[3][2],
 			mat.m[0][3], mat.m[1][3], mat.m[2][3], mat.m[3][3]);
 	}
+	//-------------------------------------------------------------//
+	D3DFORMAT D3D9Mappings::convertD3D9Format(PixelFormat format)
+	{
+		switch (format)
+		{
+		case PF_A8:
+			return D3DFMT_A8;
+
+		case PF_A8R8G8B8:
+			return D3DFMT_A8B8G8R8;
+
+		case PF_UNKNOWN:
+		default:
+			return D3DFMT_UNKNOWN;
+		}
+	}
+	//-------------------------------------------------------------//
+	D3DPOOL D3D9Mappings::convertD3D9Pool(TexPool pool)
+	{
+		switch (pool)
+		{
+		case TP_MANAGED:
+			return D3DPOOL_MANAGED;
+		case TP_SYSMEM:
+			return D3DPOOL_SYSTEMMEM;
+		case TP_DEFAULT:
+		default:
+			return D3DPOOL_DEFAULT;
+		}
+	}
 }

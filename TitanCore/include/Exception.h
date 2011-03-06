@@ -18,7 +18,8 @@ namespace Titan
 			EXCEP_ITEM_NOT_FOUND,
 			EXCEP_CANNOT_WRITE_TO_FILE,
 			EXCEP_INTERNAL_ERROR,
-			EXCEP_INVALID_PARAMS
+			EXCEP_INVALID_PARAMS, 
+			EXCEP_INTERNAL_WARNNING,
 		};
 
 		Exception(int number, const String& desc, const String& src);
@@ -113,6 +114,13 @@ namespace Titan
 		InvalidParamsException(int number, const String& description, const String& source, const char* file, long line)
 			: Exception(number, description,source, "InvalidParamsException", file, line){}
 	};
+	//-------------------------------------------------------------//
+	class _DllExport InternalWarnningsException: public Exception
+	{
+	public:
+		InternalWarnningsException(int number, const String& description, const String& source, const char* file, long line)
+			: Exception(number, description,source, "InternalWarnningsException", file, line){}
+	};
 
 	
 	class ExceptionFactory
@@ -166,6 +174,14 @@ namespace Titan
 			const String& src, const char* file, long line)
 		{
 			return InvalidParamsException(code.number, desc, src, file, line);
+		}
+
+		static InternalWarnningsException create(
+			ExceptionCodeType<Exception::EXCEP_INTERNAL_WARNNING> code,
+			const String& desc,
+			const String& src, const char* file, long line)
+		{
+			return InternalWarnningsException(code.number, desc, src, file, line);
 		}
 	};
 
