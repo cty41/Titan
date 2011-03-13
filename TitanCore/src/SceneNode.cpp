@@ -7,7 +7,7 @@ namespace Titan
 	AutoNamer SceneNode::msAutoNamer("scenenode_");
 
 	SceneNode::SceneNode(const String& name)
-		:mName(name),mNeedUpdate(true),
+		:mParent(NULL), mName(name),mNeedUpdate(true),
 		mScale(Vector3::UNIT_SCALE), mNeedUpdateMat(true),
 		mPosition(Vector3::ZERO), mQuaternion(Quaternion::IDENTITY)
 	{

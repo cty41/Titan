@@ -6,13 +6,14 @@
 
 namespace Titan
 {
-	typedef multimap<String, String>::type PropertyMap;
-	typedef MapIterator<PropertyMap>	PropertyMapIterator;
-	typedef	map<String, PropertyMap*>::type SectionMap;
-	typedef MapIterator<SectionMap>		SectionMapIterator;
 
 	class _DllExport ConfigFile : public GeneralAllocatedObject
 	{
+	public:
+		typedef multimap<String, String>::type PropertyMap;
+		typedef MapIterator<PropertyMap>	PropertyMapIterator;
+		typedef	map<String, PropertyMap*>::type SectionMap;
+		typedef MapIterator<SectionMap>		SectionMapIterator;
 	public:
 		ConfigFile();
 

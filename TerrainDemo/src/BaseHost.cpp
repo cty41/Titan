@@ -3,14 +3,15 @@
 #include "Camera.h"
 #include "ConfigFile.h"
 #include "TitanTextureMgr.h"
+#include "TitanIteratorWrapper.h"
 
-using namespace Titan;
+
 
 BaseHost::BaseHost()
 :mRoot(0), mSceneMgr(0), mInputMgr(0),
 mKeyboard(0), mMouse(0), mCamController(0)
 {
-	mTimer = TITAN_NEW Timer;
+	mTimer = TITAN_NEW Titan::Timer;
 	mTimer->reset();
 }
 //-------------------------------------------------------------//
@@ -44,24 +45,24 @@ void BaseHost::destroy()
 //-------------------------------------------------------------//
 void BaseHost::initResources()
 {
-	ConfigFile resConfig;
+	Titan::ConfigFile resConfig;
 	resConfig.load("resources.cfg");
 
-	SectionMapIterator sit = resConfig.getSectionMapIterator();
+	Titan::ConfigFile::SectionMapIterator sit = resConfig.getSectionMapIterator();
 	while (sit.hasMoreElements())
 	{
-		String group = sit.peekNextKey();
-		PropertyMapIterator pit = resConfig.getPropertyMapIterator(group);
+		Titan::String group = sit.peekNextKey();
+		Titan::ConfigFile::PropertyMapIterator pit = resConfig.getPropertyMapIterator(group);
 		while (pit.hasMoreElements())
 		{
-			String type = pit.peekNextKey(), name = pit.peekNextValue();
-			ResourceGroupManager::getSingltonPtr()->addResourceLocation(name, type, group, true);
+			Titan::String type = pit.peekNextKey(), name = pit.peekNextValue();
+			Titan::ResourceGroupManager::getSingltonPtr()->addResourceLocation(name, type, group, true);
 			pit.next();
 		}
 		sit.next();
 	}
 
-	ResourceGroupManager::getSingltonPtr()->initResourceGroup(ResourceGroupManager::GENERAL_RESOURCE_GROUP);
+	Titan::ResourceGroupManager::getSingltonPtr()->initResourceGroup(Titan::ResourceGroupManager::GENERAL_RESOURCE_GROUP);
 
 }
 //-------------------------------------------------------------//
@@ -91,7 +92,7 @@ void BaseHost::initInputDevice()
 //-------------------------------------------------------------//
 void BaseHost::setup()
 {
-	mRoot = TITAN_NEW Root();
+	mRoot = TITAN_NEW Titan::Root();
 	mRoot->loadConfig();
 	mWindow = mRoot->initialise();
 	assert(mWindow);
@@ -108,14 +109,14 @@ void BaseHost::setup()
 
 	mManualObject = mSceneMgr->createManualObject("test");
 
-	Renderer* renderer = mRoot->getActiveRenderer();
+	Titan::Renderer* renderer = mRoot->getActiveRenderer();
 
-	renderer->_setFillMode(PM_WIREFRAME);
-	renderer->_setCullingMode(CULL_NONE);
+	renderer->_setFillMode(Titan::PM_WIREFRAME);
+	renderer->_setCullingMode(Titan::CULL_NONE);
 	renderer->_setLightEnable(false);
 #if 1
-	TexturePtr pHeightmap = TextureMgr::getSingletonPtr()->createManually("heightMap1", ResourceGroupManager::GENERAL_RESOURCE_GROUP,
-										TT_2D, 128, 128, 0,TU_DEFAULT, PF_A8R8G8B8);
+	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupManager::GENERAL_RESOURCE_GROUP,
+										Titan::TT_2D, 128, 128, 0,Titan::TU_DEFAULT, Titan::PF_A8R8G8B8);
 
 	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
 
@@ -139,8 +140,8 @@ void BaseHost::setup()
 	mManualObject->quad(4, 0, 3, 7);
 	mManualObject->end();
 
-	SceneNode* node = mSceneMgr->getRootSceneNode()->createChild();
-	node->rotate(Vector3::UNIT_X, Radian(3.14f * 0.25f));
+	Titan::SceneNode* node = mSceneMgr->getRootSceneNode()->createChild();
+	node->rotate(Titan::Vector3::UNIT_X, Titan::Radian(3.14f * 0.25f));
 	node->attachObject(mManualObject);
 
 	mCamera->setPosition(0.0f, 0.0f, 10.0f);
@@ -198,11 +199,11 @@ void BaseHost::render(float frameTime)
 {
 
 
-	SceneNode* node = mManualObject->getAttachedNode();
+	Titan::SceneNode* node = mManualObject->getAttachedNode();
 	if(node)
 	{
 		// incremement y-rotation angle each frame
-		node->rotate(Vector3::UNIT_Y, Radian(frameTime * 0.001f));
+		node->rotate(Titan::Vector3::UNIT_Y, Titan::Radian(frameTime * 0.001f));
 	}
 
 	mRoot->renderOneFrame();

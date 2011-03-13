@@ -180,13 +180,13 @@ namespace Titan
 
 	//hash_map
 #if _MSC_VER >1300 && !defined(_STLP_MSVC)
-	template <typename K, typename V, typename P = stdext::hash_compare<K, std::less<K> >, typename A = STLAllocator<std::pair<const K, V>, GeneralAllocPolicy> > 
+	template <typename K, typename P = stdext::hash_compare<K, std::less<K> >, typename A = STLAllocator<K, GeneralAllocPolicy> > 
 	struct hash_set 
 	{ 
 #if TITAN_CONTAINERS_USE_CUSTOM_MEMORY_ALLOCATOR
-		typedef typename stdext::hash_set<K, V, P, A> type; 
+		typedef typename stdext::hash_set<K, P, A> type; 
 #else
-		typedef typename stdext::hash_set<K, V, P> type; 
+		typedef typename stdext::hash_set<K, P> type; 
 #endif
 	};
 #else

@@ -82,12 +82,12 @@ namespace Titan
 		fp.close();
 	}
 	//-------------------------------------------------------------//
-	SectionMapIterator	ConfigFile::getSectionMapIterator()
+	ConfigFile::SectionMapIterator	ConfigFile::getSectionMapIterator()
 	{
 		return SectionMapIterator(mSectionMap.begin(), mSectionMap.end());
 	}
 	//-------------------------------------------------------------//
-	PropertyMapIterator ConfigFile::getPropertyMapIterator(const String& sectionName)
+	ConfigFile::PropertyMapIterator ConfigFile::getPropertyMapIterator(const String& sectionName)
 	{
 		SectionMap::iterator it = mSectionMap.find(sectionName);
 		return PropertyMapIterator(it->second->begin(), it->second->end());
