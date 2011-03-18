@@ -340,6 +340,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TitanShaderParams.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanShaderParamsUpdater.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanStableHeader.cpp"
 				>
 				<FileConfiguration
@@ -554,6 +562,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TitanBaseTerrain.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TitanBitOperation.h"
 				>
 			</File>
@@ -639,6 +651,14 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanShaderEffect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanShaderParams.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanShaderParamsUpdater.h"
 				>
 			</File>
 			<File

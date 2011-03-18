@@ -3,6 +3,7 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanResource.h"
+#include "TitanShaderParams.h"
 
 namespace Titan
 {
@@ -13,8 +14,15 @@ namespace Titan
 		ShaderEffect(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
 
 		virtual ~ShaderEffect();
-	
+
+		virtual void begin() = 0;
+
+		virtual void updateParams(ShaderParamsUpdater* updater) = 0;
+
+		virtual void end() = 0;
+
 	protected:
+		ShaderParams	mParams;
 	};
 
 	class ShaderEffectPtr : public SharedPtr<ShaderEffect>

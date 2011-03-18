@@ -79,6 +79,7 @@ namespace Titan
 	template<typename T>
 	class VectorIterator: public VectorIteratorWrapper<T, typename T::iterator>
 	{
+	public:
 		VectorIterator( typename T::iterator begin, typename T::iterator end )
 		: VectorIteratorWrapper<T,  typename T::iterator>(begin , end )
 		{

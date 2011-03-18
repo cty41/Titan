@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "ManualObject.h"
 #include "HardwareBufferManager.h"
-
+#include "TitanShaderEffect.h"
 
 namespace Titan
 {
@@ -56,7 +56,7 @@ namespace Titan
 	ManualObject::ManualObjectSection* ManualObject::end()
 	{
 		if(!mCurrentSection)
-		{
+		{ 
 			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
 				"You must call begin() before end()",
 				"ManualObject::end()");
@@ -200,6 +200,17 @@ namespace Titan
 		triangle(i1, i2, i3);
 		// second tri
 		triangle(i3, i4, i1);
+	}
+	//-------------------------------------------------------------//
+	void ManualObject::setShaderEffect(ShaderEffectPtr effect)
+	{
+		ManualObjectSectionVector::iterator it = mSectionVector.begin(), itend = mSectionVector.end();
+		while (it != itend)
+		{
+			//to do
+			(*it)->setShaderEffect(effect);
+			++it;
+		}
 	}
 	//-------------------------------------------------------------//
 	void ManualObject::copyTempVertexToBuffer()

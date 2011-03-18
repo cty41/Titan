@@ -1,9 +1,9 @@
 #include "TitanStableHeader.h"
 #include "SceneMgr.h"
-
 #include "Root.h"
 #include "ManualObject.h"
 #include "Viewport.h"
+#include "TitanShaderParamsUpdater.h"
 
 namespace Titan
 {
@@ -12,6 +12,8 @@ namespace Titan
 		mRootSceneNode(0)
 	{
 		mRelatedRenderer = Root::getSingletonPtr()->getActiveRenderer();
+
+		mShaderParamsUpdater = TITAN_NEW ShaderParamsUpdater();
 	}
 	//-------------------------------------------------------------//
 	SceneMgr::~SceneMgr()
@@ -19,6 +21,8 @@ namespace Titan
 		if(mRootSceneNode)
 			TITAN_DELETE mRootSceneNode;
 		removeAllSceneObjects();
+
+		TITAN_DELETE(mShaderParamsUpdater);
 	}	
 	//-------------------------------------------------------------//
 	SceneNode*	SceneMgr::getRootSceneNode()
@@ -111,6 +115,8 @@ namespace Titan
 
 		mRelatedRenderer->_setProjMatrix(cam->getProjMatrixRS());
 
+		mShaderParamsUpdater->setCurrentCamera(cam);
+
 		_renderOpaqueObjects();
 
 		mRelatedRenderer->_endFrame();
@@ -122,11 +128,36 @@ namespace Titan
 	{
 		Matrix4 transformMat;
 		rend->getTransformMat(&transformMat);
-		mRelatedRenderer->_setWorldMatrix(transformMat);
 
-		RenderData rd;
-		rend->getRenderData(rd);
-		mRelatedRenderer->_render(rd);
+		//programmable shader
+		if(rend->hasShader())
+		{
+			ShaderEffectPtr effectPtr = rend->getShaderEffect();
+			effectPtr->begin();
+			mShaderParamsUpdater->setCurrentRenderable(rend);
+			mShaderParamsUpdater->setWorldMatrix(transformMat);
+			_updateShaderParams(effectPtr);
+
+			RenderData rd;
+			rend->getRenderData(rd);
+			mRelatedRenderer->_render(rd);
+
+			effectPtr->end();
+		}
+		else
+		{
+			//fixed pipeline
+			mRelatedRenderer->_setWorldMatrix(transformMat);
+
+			RenderData rd;
+			rend->getRenderData(rd);
+			mRelatedRenderer->_render(rd);
+		}
+	}
+	//-------------------------------------------------------------//
+	void SceneMgr::_updateShaderParams(ShaderEffectPtr effect)
+	{
+		effect->updateParams(mShaderParamsUpdater);
 	}
 	//-------------------------------------------------------------//
 	SceneObject* SceneMgr::createSceneObject(const String& name, const String& typeName)

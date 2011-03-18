@@ -26,4 +26,10 @@ namespace Titan
 	{
 
 	}
+	//-------------------------------------------------------------//
+	ShaderEffectPtr ShaderEffectMgr::loadManually(const String& name, const String& group)
+	{
+		ShaderEffectPtr shaderPtr = load(name, group);
+		return shaderPtr;
+	}
 }

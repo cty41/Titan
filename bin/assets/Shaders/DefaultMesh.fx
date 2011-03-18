@@ -1,50 +1,43 @@
-// material reflectivity
-float4 k_d : MATERIALDIFFUSE = { 1.0f, 1.0f, 1.0f, 1.0f };    // diffuse
-
-texture tex0 : TEXTURE;
+//texture tex0 : Texture;
 
 // transformations
-float4x4 mWorldViewProj: WORLDVIEWPROJECTION;
+float4x4 mWorldViewProj: WorldViewProj;
 
 struct VS_OUTPUT
 {
     float4 Pos  : POSITION;
-    float2 Tex  : TEXCOORD0;
 };
 
-VS_OUTPUT VS(
-    float3 Pos  : POSITION,
-		float2 Tex  : TEXCOORD0)
+VS_OUTPUT VS(float3 Pos  : POSITION)
 {
     VS_OUTPUT Out = (VS_OUTPUT)0;
 
-    Out.Pos = mul(float4(Pos, 1), mWorldViewProj);  // position (view space)
-		Out.Tex = Tex;
+    Out.Pos = mul(mWorldViewProj, float4(Pos, 1));  // position (view space)
 
     return Out;
 }
 
-sampler LinearSamp0 = sampler_state 
-{
-    texture = <tex0>;
-    AddressU  = clamp;        
-    AddressV  = clamp;
-    AddressW  = clamp;
-    MIPFILTER = LINEAR;
-    MINFILTER = LINEAR;
-    MAGFILTER = LINEAR;
-};
+//sampler LinearSamp0 = sampler_state 
+//{
+//   texture = <tex0>;
+//   AddressU  = clamp;        
+//    AddressV  = clamp;
+//    AddressW  = clamp;
+//    MIPFILTER = LINEAR;
+//    MINFILTER = LINEAR;
+//    MAGFILTER = LINEAR;
+//};
 
 float4 PS(VS_OUTPUT In) : COLOR
 {
-    return tex2D(LinearSamp0, In.Tex );
+    return float4(1.0, 1.0, 1.0, 1.0);
 }
 
 technique TVertexAndPixelShader
 {
 	pass P0
 	{
-		CULLMODE = CCW;
+		CULLMODE = CW;
 		ZENABLE = TRUE;
 		ZWRITEENABLE = TRUE;
 		ZFUNC = LESSEQUAL;

@@ -193,16 +193,23 @@ namespace Titan
 		return ret;
 	}
 	//-------------------------------------------------------------//
-	D3DXMATRIX D3D9Mappings::makeD3DXMatrix( const Matrix4& mat )
+	D3DXMATRIX D3D9Mappings::makeD3DXMatrix(const Matrix4& mat, bool isColumn)
 	{
 		// Transpose matrix
 		// D3D9 uses row vectors i.e. V*M
 		// Ogre, OpenGL and everything else uses column vectors i.e. M*V
-		return D3DXMATRIX(
-			mat[0][0], mat[1][0], mat[2][0], mat[3][0],
-			mat[0][1], mat[1][1], mat[2][1], mat[3][1],
-			mat[0][2], mat[1][2], mat[2][2], mat[3][2],
-			mat[0][3], mat[1][3], mat[2][3], mat[3][3]);
+		if(!isColumn)
+			return D3DXMATRIX(
+				mat[0][0], mat[1][0], mat[2][0], mat[3][0],
+				mat[0][1], mat[1][1], mat[2][1], mat[3][1],
+				mat[0][2], mat[1][2], mat[2][2], mat[3][2],
+				mat[0][3], mat[1][3], mat[2][3], mat[3][3]);
+		else
+			return D3DXMATRIX(
+			mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+			mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+			mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+			mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
 	}
 	//---------------------------------------------------------------------
 	Matrix4 D3D9Mappings::convertD3DXMatrix( const D3DXMATRIX& mat )
@@ -241,6 +248,46 @@ namespace Titan
 		case TP_DEFAULT:
 		default:
 			return D3DPOOL_DEFAULT;
+		}
+	}
+	//-------------------------------------------------------------//
+	ShaderConstantType D3D9Mappings::convertConstantType(D3DXPARAMETER_TYPE type)
+	{
+		switch(type)
+		{
+		case D3DXPT_INT: 
+			return SCT_INT;
+
+		case D3DXPT_FLOAT:
+			return SCT_FLOAT;
+
+		case D3DXPT_TEXTURE1D:
+			return SCT_TEXTURE1D;
+
+		case D3DXPT_TEXTURE2D:
+			return SCT_TEXTURE2D;
+
+		case D3DXPT_TEXTURE3D:
+			return SCT_TEXTURE3D;
+
+		case D3DXPT_TEXTURECUBE:
+			return SCT_TEXTURECUBE;
+
+		case D3DXPT_SAMPLER1D:
+			return SCT_SAMPLER1D;
+
+		case D3DXPT_SAMPLER2D:
+			return SCT_SAMPLER2D;
+
+		case D3DXPT_SAMPLER3D:
+			return SCT_SAMPLER3D;
+
+		case D3DXPT_SAMPLERCUBE:
+			return SCT_SAMPLERCUBE;
+
+			//add other in the future
+		default:
+			return SCT_UNUSED;
 		}
 	}
 }

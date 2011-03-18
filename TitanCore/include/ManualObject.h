@@ -8,6 +8,7 @@
 #include "VertexIndexBufferData.h"
 #include "TitanCommon.h"
 #include "SceneObject.h"
+#include "TitanShaderEffect.h"
 
 namespace Titan
 {
@@ -22,7 +23,7 @@ namespace Titan
 
 		const String&	getType() const { return mType; }
 
-		void _updateRenderableList(SceneMgr::RenderableList& renderableList);
+		void	_updateRenderableList(SceneMgr::RenderableList& renderableList);
 
 		void	begin(RenderData::OperationType ot = RenderData::OT_TRIANGLE_LIST);
 
@@ -40,6 +41,8 @@ namespace Titan
 
 		void	quad(uint32 i1, uint32 i2, uint32 i3, uint32 i4);
 
+		void	setShaderEffect(ShaderEffectPtr effect);
+
 	
 		struct ManualVertex
 		{
@@ -51,17 +54,25 @@ namespace Titan
 		protected:		
 			ManualObject*	mParent;
 			RenderData		mRenderData;
+			ShaderEffectPtr	mShaderEffect;
 
 		public:
 			ManualObjectSection(ManualObject* parent, RenderData::OperationType ot);
 
 			~ManualObjectSection();
 
-			void	getRenderData(RenderData& rd);
+			void			getRenderData(RenderData& rd);
 
-			RenderData*	getRenderData() { return &mRenderData; }
+			RenderData*		getRenderData() { return &mRenderData; }
 
-			void	getTransformMat(Matrix4* transMat);
+			void			getTransformMat(Matrix4* transMat);
+
+			bool			hasShader(){ return !mShaderEffect.isNull(); }
+
+			ShaderEffectPtr getShaderEffect() { return mShaderEffect; }
+
+			void			setShaderEffect(ShaderEffectPtr effect){ mShaderEffect = effect; }
+
 		};
 
 	protected:

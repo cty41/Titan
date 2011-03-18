@@ -120,6 +120,11 @@ namespace Titan
 		}
 	}
 	//-------------------------------------------------------------//
+	void Frustum::updateFrustumPlanes()
+	{
+
+	}
+	//-------------------------------------------------------------//
 	const Matrix4&	Frustum::getProjMatrix()
 	{
 		updateProjection();

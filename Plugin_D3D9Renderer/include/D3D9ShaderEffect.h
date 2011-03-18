@@ -13,13 +13,24 @@ namespace Titan
 
 		~D3D9ShaderEffect();
 
+		void			begin();
+
+		void			updateParams(ShaderParamsUpdater* updater);
+
+		void			end();
+
 
 	protected:
 		void			loadImpl();
 
 		void			unloadImpl();
+
+		void			_parseEffectContent();
 	protected:
 		ID3DXEffect*		mEffect;
+		D3DXEFFECT_DESC		mEffectDesc;
+		D3DXHANDLE			mTechnique;
+		D3DXTECHNIQUE_DESC	mTechniqueDesc;
 	};
 }
 

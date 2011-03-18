@@ -4,6 +4,7 @@
 #include "TitanPrerequisites.h"
 #include "TitanResourceManager.h"
 #include "Singleton.h"
+#include "TitanShaderEffect.h"
 
 namespace Titan
 {
@@ -13,6 +14,8 @@ namespace Titan
 		ShaderEffectMgr();
 
 		~ShaderEffectMgr();
+
+		ShaderEffectPtr loadManually(const String& name, const String& group);
 
 		
 

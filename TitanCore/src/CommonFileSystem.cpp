@@ -39,12 +39,13 @@ namespace Titan
 	//-------------------------------------------------------------//
 	DataStreamPtr CommonFileSystem::open(const String& filename)
 	{
-		String full_path = concatenate_path(mName, filename);
+		//comment first, I did not come up any good design to deal with path problem
+		//String full_path = concatenate_path(mName, filename);
 
 		// Use filesystem to determine size 
 		// (quicker than streaming to the end and back)
 		struct stat tagStat;
-		int ret = stat(full_path.c_str(), &tagStat);
+		int ret = stat(filename.c_str(), &tagStat);
 		assert(ret == 0 && "Problem getting file size" );
 		(void)ret;  // Silence warning
 
@@ -58,10 +59,10 @@ namespace Titan
 
 		mode |= std::ios::out;
 		rwStream = TITAN_NEW_T(std::fstream, MEMCATEGORY_GENERAL)();
-		rwStream->open(full_path.c_str(), mode);
+		rwStream->open(filename.c_str(), mode);
 
 		// Should check ensure open succeeded, in case fail for some reason.
-		if (baseStream->fail())
+		if (rwStream->fail())
 		{
 			TITAN_DELETE_T(roStream, basic_ifstream, MEMCATEGORY_GENERAL);
 			TITAN_DELETE_T(rwStream, basic_fstream, MEMCATEGORY_GENERAL);

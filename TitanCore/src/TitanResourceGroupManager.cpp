@@ -300,7 +300,7 @@ namespace Titan
 			FileLocationMap::iterator fit = it->second->fileLocationMap.find(name);
 			if(fit != it->second->fileLocationMap.end())
 			{
-				DataStreamPtr dataPtr = fit->second.pFileSystem->open(name);
+				DataStreamPtr dataPtr = fit->second.pFileSystem->open(fit->second.relativePath + name);
 				return dataPtr;
 			}
 			

@@ -50,6 +50,8 @@ namespace Titan
 
 		void	updateFrustumImpl();
 
+		void	updateFrustumPlanes();
+
 		void	calcProjectionParams();
 
 
@@ -64,6 +66,7 @@ namespace Titan
 		Matrix4			mProjMatrixRS;
 		bool			mUpdateProj;
 		float			mLeft, mRight, mTop, mBottom;
+		Plane			mFrustumPlanes[6];
 
 		static const float INFINITE_FAR_PLANE_ADJUST;
 

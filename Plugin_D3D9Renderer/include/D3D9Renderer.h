@@ -82,7 +82,9 @@ namespace Titan
 	protected:
 		D3D9HardwareBufferManager*		mHardwareBufferManager;
 		D3D9TextureMgr*					mTextureMgr;			
-	
+		D3D9ShaderEffectMgr*			mShaderEffectMgr;
+
+
 		D3DPRESENT_PARAMETERS	mD3dpp;
 		HINSTANCE				mhInstance;
 		HWND					mhWnd;

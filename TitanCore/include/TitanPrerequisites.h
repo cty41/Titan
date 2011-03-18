@@ -82,6 +82,8 @@ namespace Titan
 	class SceneNode;
 	class ShaderEffect;
 	class ShaderEffectMgr;
+	class ShaderParams;
+	class ShaderParamsUpdater;
 	class ManualObject;
 	class ManualObjectFactory;
 	class Frustum;

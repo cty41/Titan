@@ -4,7 +4,7 @@
 #include "ConfigFile.h"
 #include "TitanTextureMgr.h"
 #include "TitanIteratorWrapper.h"
-
+#include "ShaderEffectMgr.h"
 
 
 BaseHost::BaseHost()
@@ -107,7 +107,7 @@ void BaseHost::setup()
 
 	mCamController = TITAN_NEW CameraController(mCamera);
 
-	mManualObject = mSceneMgr->createManualObject("test");
+
 
 	Titan::Renderer* renderer = mRoot->getActiveRenderer();
 
@@ -120,9 +120,16 @@ void BaseHost::setup()
 
 	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
 
+
+
 	
 #endif
 
+#if 1
+	Titan::ShaderEffectPtr pEffect = Titan::ShaderEffectMgr::getSingletonPtr()->loadManually("DefaultMesh.fx", Titan::ResourceGroupManager::GENERAL_RESOURCE_GROUP);
+#endif
+
+	mManualObject = mSceneMgr->createManualObject("test");
 	mManualObject->begin();
 	mManualObject->position(-1.0f,-1.0f,-1.0f);			//0
 	mManualObject->position(-1.0f, 1.0f,-1.0f);			//1
@@ -139,6 +146,8 @@ void BaseHost::setup()
 	mManualObject->quad(1, 5, 6, 2);
 	mManualObject->quad(4, 0, 3, 7);
 	mManualObject->end();
+
+	mManualObject->setShaderEffect(pEffect);
 
 	Titan::SceneNode* node = mSceneMgr->getRootSceneNode()->createChild();
 	node->rotate(Titan::Vector3::UNIT_X, Titan::Radian(3.14f * 0.25f));

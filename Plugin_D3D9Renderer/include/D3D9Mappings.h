@@ -5,6 +5,7 @@
 #include "TitanCommon.h"
 #include "HardwareBuffer.h"
 #include "TitanTexture.h"
+#include "TitanShaderParams.h"
 
 namespace Titan
 {
@@ -28,13 +29,15 @@ namespace Titan
 
 		static DWORD convertToD3D9(HardwareBuffer::LockOptions options, HardwareBuffer::Usage usage);
 
-		static D3DXMATRIX makeD3DXMatrix( const Matrix4& mat );
+		static D3DXMATRIX makeD3DXMatrix( const Matrix4& mat, bool isColumn = false);
 
 		static Matrix4 convertD3DXMatrix( const D3DXMATRIX& mat );
 
 		static D3DFORMAT convertD3D9Format(PixelFormat format);
 
 		static D3DPOOL	convertD3D9Pool(TexPool pool);
+
+		static ShaderConstantType convertConstantType(D3DXPARAMETER_TYPE type);
 	};
 }
 #endif

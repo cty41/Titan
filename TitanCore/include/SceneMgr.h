@@ -2,6 +2,7 @@
 #define _TITAN_SCENEMANAGER_HH
 
 #include "TitanPrerequisites.h"
+#include "TitanShaderEffect.h"
 
 namespace Titan
 {
@@ -34,11 +35,14 @@ namespace Titan
 		void			removeAllSceneObjects();
 
 		SceneMgrType	getType() const { return mType; }
+
+
 	protected:
-		SceneMgrType	mType;
-		String			mName;
-		Renderer*		mRelatedRenderer;
-		SceneNode*		mRootSceneNode;
+		SceneMgrType			mType;
+		String					mName;
+		Renderer*				mRelatedRenderer;
+		SceneNode*				mRootSceneNode;
+		ShaderParamsUpdater*	mShaderParamsUpdater;	
 
 		typedef map<String, SceneObject*>::type SceneObjectMap;
 		typedef map<String, SceneObjectMap*>::type SceneObjectCollection;
@@ -59,6 +63,8 @@ namespace Titan
 		virtual void	_buildRenderUnitQueue(SceneNode* node);
 
 		virtual void	_renderSingleObject(Renderable* rend);
+
+		virtual void	_updateShaderParams(ShaderEffectPtr effect);
 	};
 
 	class _DllExport SceneMgrFactory : public GeneralAlloc

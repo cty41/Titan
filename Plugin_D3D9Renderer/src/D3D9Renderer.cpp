@@ -9,6 +9,7 @@
 #include "D3D9VertexBuffer.h"
 #include "D3D9VertexDeclaration.h"
 #include "D3D9TextureMgr.h"
+#include "D3D9ShaderEffectMgr.h"
 
 namespace Titan
 {
@@ -49,6 +50,7 @@ namespace Titan
 
 	void D3D9Renderer::destroy()
 	{
+		SAFE_DELETE(mShaderEffectMgr);
 		SAFE_DELETE(mTextureMgr);
 		SAFE_DELETE(mHardwareBufferManager);
 		SAFE_RELEASE(mpD3dDevice);
@@ -64,6 +66,8 @@ namespace Titan
 		mHardwareBufferManager = TITAN_NEW D3D9HardwareBufferManager();
 
 		mTextureMgr = TITAN_NEW D3D9TextureMgr();
+
+		mShaderEffectMgr = TITAN_NEW D3D9ShaderEffectMgr();
 
 		ConfigOptionMap::iterator opt = mConfigOptions.find("Full Screen");
 		if(opt == mConfigOptions.end())
@@ -446,7 +450,7 @@ namespace Titan
 		projDst[2][2] = (projDst[2][2] + projDst[3][2]) / 2;
 		projDst[2][3] = (projDst[2][3] + projDst[3][3]) / 2;
 
-		//if (!forGpuProgram)
+		if (false)//!forGpuProgram)
 		{
 			// Convert right-handed to left-handed
 			projDst[0][2] = -projDst[0][2];
