@@ -485,6 +485,8 @@ namespace Titan
         /** Plane / box intersection test. */
         static bool intersects(const Plane& plane, const AABB& box);
 
+		static bool intersects(const AABB& a, const AABB& b, AABB& result);
+
         /** Ray / convex plane list intersection test. 
         @param ray The ray to test with
         @param plaeList List of planes which form a convex volume

@@ -76,6 +76,8 @@ namespace Titan
 		
 
 	};
+
+#define DEBUG_OUTPUT Titan::ConsoleDebugger::getSingletonPtr()->stream()
 }
 
 #endif

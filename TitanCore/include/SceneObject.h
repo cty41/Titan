@@ -20,6 +20,11 @@ namespace Titan
 
 		virtual const String& getType() const = 0;
 
+		//temp method, which will be removed when we add render queue
+		virtual void _updateRenderableList(SceneMgr::RenderableList& renderableList) = 0;
+
+		virtual const AABB& getAABB() const = 0;
+
 		const String& getName() const { return mName; }
 
 		bool isAttached() const;
@@ -28,12 +33,9 @@ namespace Titan
 
 		void _setAttachedNode(SceneNode* node);
 
-		virtual void _updateRenderableList(SceneMgr::RenderableList& renderableList) = 0;
-
 		virtual const Matrix4& _getAttachedNodeFullTransform(void) const;
 
 		SceneNode* getAttachedNode() const { return mAttachedNode; }
-
 
 	protected:
 		SceneNode*			mAttachedNode;
@@ -42,7 +44,6 @@ namespace Titan
 
 		static AutoNamer	mAutoNamer;
 
-		AABB				mAABB;
 	};
 
 	class _DllExport SceneObjectFactory : public GeneralAlloc

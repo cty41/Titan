@@ -5,6 +5,8 @@
 #include "TitanCommon.h"
 #include "TitanMatrix4.h"
 #include "TitanIteratorWrapper.h"
+#include "TitanAABB.h"
+#include "SceneMgr.h"
 
 namespace Titan
 {
@@ -20,25 +22,26 @@ namespace Titan
 	public:
 		SceneNode(const String& name);
 		
-		~SceneNode();
+		virtual ~SceneNode();
 
-		void	attachObject(SceneObject* object);
-
-		void	detachObject(const String& objectName);
-
-		void    detachObject(SceneObject* object);
-
-		SceneNode*	createChild(const String& name, const Vector3& v = Vector3::ZERO,
+		virtual SceneNode*	createChild(const String& name, const Vector3& v = Vector3::ZERO,
 			const Quaternion& q = Quaternion::IDENTITY);
 
-		SceneNode*	createChild(const Vector3& v = Vector3::ZERO,
+		virtual SceneNode*	createChild(const Vector3& v = Vector3::ZERO,
 			const Quaternion& q = Quaternion::IDENTITY);
 
-		void		addChild(SceneNode* child);
+		virtual void		removeChild(const String& name);
 
-		void		removeChild(const String& name);
+		virtual void		removeChild(SceneNode* child);
 
-		void		removeChild(SceneNode* child);
+		void				attachObject(SceneObject* object);
+
+		void				detachObject(const String& objectName);
+
+		void				detachObject(SceneObject* object);
+
+		void				addChild(SceneNode* child);
+
 
 		void		scale(float x, float y, float z);
 
@@ -74,9 +77,15 @@ namespace Titan
 
 		void		_setParent(SceneNode* parent);
 
+		virtual	void _updateAABB();
+
+		virtual void _findVisibleObjects(Camera* cam, SceneMgr::RenderableList& renderableList);
+
 		SceneNode*	getParent() const { return mParent; }
 
 		const String& getName() const { return mName; }
+
+		const AABB& getAABB() const { return mAABB; }
 
 		virtual ObjectIterator 	getAttachedObjectIterator();
 
@@ -92,6 +101,7 @@ namespace Titan
 
 		SceneNodeMap	mChildrenMap;
 		SceneObjectMap	mSceneObjects;
+		AABB			mAABB;
 		
 
 		static	AutoNamer	msAutoNamer;

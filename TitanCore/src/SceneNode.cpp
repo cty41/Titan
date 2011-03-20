@@ -120,13 +120,12 @@ namespace Titan
 	{
 		if(child)
 		{
-			SceneNodeMap::iterator it = mChildrenMap.find(child->getName()), 
-				itend = mChildrenMap.end();
+			SceneNodeMap::iterator it = mChildrenMap.find(child->getName());
 
-			if(it != itend)
+			if(it != mChildrenMap.end())
 			{
-				mChildrenMap.erase(it);
 				child->_setParent(0);
+				mChildrenMap.erase(it);
 			}
 
 		}
@@ -134,10 +133,9 @@ namespace Titan
 	//-------------------------------------------------------------//
 	void SceneNode::removeChild(const String& name)
 	{
-		SceneNodeMap::iterator it = mChildrenMap.find(name), 
-			itend = mChildrenMap.end();
+		SceneNodeMap::iterator it = mChildrenMap.find(name);
 
-		if(it != itend)
+		if(it != mChildrenMap.end())
 		{
 			it->second->_setParent(0);
 			mChildrenMap.erase(it);
@@ -162,6 +160,8 @@ namespace Titan
 		}
 
 		mNeedUpdate = false;
+
+		_updateAABB();
 	}
 	//-------------------------------------------------------------//
 	void SceneNode::_updateFromParent()
@@ -181,6 +181,45 @@ namespace Titan
 			mDerivedQuaternion = mQuaternion;
 			mDerivedScale = mScale;
 		}
+	}
+	//-------------------------------------------------------------//
+	void SceneNode::_updateAABB()
+	{
+		mAABB.setNull();
+		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
+		while(it != itend)
+		{
+			mAABB.merge(it->second->getAABB());
+			++it;
+		}
+
+		SceneNodeMap::iterator it2 = mChildrenMap.begin(), itend2 = mChildrenMap.end();
+		while(it2 != itend2)
+		{
+			mAABB.merge(it2->second->getAABB());
+			++it2;
+		}
+	}
+	//-------------------------------------------------------------//
+	void SceneNode::_findVisibleObjects(Camera* cam, SceneMgr::RenderableList& renderableList)
+	{
+		if(!cam->isVisible(mAABB))
+			return;
+
+		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
+		while(it != itend)
+		{
+			it->second->_updateRenderableList(renderableList);
+			++it;
+		}
+
+		SceneNodeMap::iterator it2 = mChildrenMap.begin(), itend2 = mChildrenMap.end();
+		while(it2 != itend2)
+		{
+			it2->second->_findVisibleObjects(cam, renderableList);
+			++it2;
+		}
+
 	}
 	//-------------------------------------------------------------//
 	const Matrix4& SceneNode::_getTransformMatrix()

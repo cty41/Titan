@@ -5,6 +5,7 @@
 #include "TitanTextureMgr.h"
 #include "TitanIteratorWrapper.h"
 #include "ShaderEffectMgr.h"
+#include "TitanQuadtreeSceneMgr.h"
 
 
 BaseHost::BaseHost()
@@ -101,7 +102,10 @@ void BaseHost::setup()
 
 	initInputDevice();
 
-	mSceneMgr = mRoot->createSceneMgr("SceneMgr");
+	mSceneMgr = mRoot->createSceneMgr("SceneMgr", Titan::SNT_QUADTREE);
+	Titan::QuadtreeSceneMgr* quadMgr = static_cast<Titan::QuadtreeSceneMgr*>(mSceneMgr);
+	quadMgr->setOctreeConfigs(Titan::AABB(-500.0f, 0, -500.0f,
+										   500.0f, 500.0f, 500.0f));
 	mCamera = mSceneMgr->createCamera("testCamera");
 	mWindow->addViewport(mCamera);
 

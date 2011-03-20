@@ -53,28 +53,14 @@ namespace Titan
 
         void setOrientation(const Quaternion& q);
 
-		const Matrix4&	getViewMatrix();
-
 		void _renderScene(Viewport* vp);
 
 
 	protected:
 
-		void	notifyViewUpdate();
-
-		bool	needUpdateView() const ;
-
-		void	updateView();
-
-		void	updateViewImpl();
-
 
 	protected:
 		String			mName;
-		Quaternion		mOrientation;
-		Vector3			mPosition;
-		bool			mUpdateView;
-		Matrix4			mViewMatrix;
 		SceneMgr*		mSceneMgr;
 
 	};

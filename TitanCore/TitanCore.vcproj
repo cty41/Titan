@@ -180,6 +180,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\BaseTerrain.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Camera.cpp"
 				>
 				<FileConfiguration
@@ -317,6 +321,18 @@
 			</File>
 			<File
 				RelativePath=".\src\TitanPlane.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanQuadtree.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanQuadtreeNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanQuadtreeSceneMgr.cpp"
 				>
 			</File>
 			<File
@@ -566,6 +582,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TitanBitFlags.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TitanBitOperation.h"
 				>
 			</File>
@@ -614,6 +634,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TitanNumericTools.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TitanPlane.h"
 				>
 			</File>
@@ -627,6 +651,18 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanPrerequisites.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanQuadtree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanQuadtreeNode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanQuadtreeSceneMgr.h"
 				>
 			</File>
 			<File

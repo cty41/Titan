@@ -767,6 +767,66 @@ namespace Titan
             return !(*this == rhs);
         }
 
+		const AABB& operator +=(const Vector3& vec)
+		{
+			mMinimum += vec;
+			mMaximum += vec;
+
+			return (*this);
+		}
+		const AABB& operator +=(float s)
+		{
+			mMinimum += s;
+			mMaximum += s;
+
+			return (*this);
+		}
+
+		const AABB& operator -=(const Vector3& vec)
+		{
+			mMinimum -= vec;
+			mMaximum -= vec;
+
+			return (*this);
+		}
+		const AABB& operator -=(float s)
+		{
+			mMinimum -= s;
+			mMaximum -= s;
+
+			return (*this);
+		}
+
+		const AABB& operator *=(const Vector3& vec)
+		{
+			mMinimum *= vec;
+			mMaximum *= vec;
+
+			return (*this);
+		}
+		const AABB& operator *=(float s)
+		{
+			mMinimum *= s;
+			mMaximum *= s;
+
+			return (*this);
+		}
+
+		const AABB& operator /=(const Vector3& vec)
+		{
+			mMinimum /= vec;
+			mMaximum /= vec;
+
+			return (*this);
+		}
+		const AABB& operator /=(float s)
+		{
+			mMinimum /= s;
+			mMaximum /= s;
+
+			return (*this);
+		}
+
 		// special values
 		static const AABB BOX_NULL;
 		static const AABB BOX_INFINITE;

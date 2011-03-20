@@ -7,6 +7,7 @@
 #include "ManualObject.h"
 #include "CommonFileSystem.h"
 #include "TitanResourceGroupManager.h"
+#include "TitanQuadtreeSceneMgr.h"
 
 namespace Titan
 {
@@ -33,6 +34,7 @@ namespace Titan
 		mConsoleDebugger = TITAN_NEW ConsoleDebugger();
 
 		mSceneMgrSelector = TITAN_NEW SceneMgrSelector();
+		mSceneMgrSelector->addFactory(TITAN_NEW QuadtreeSceneMgrFactory());
 
 		addSceneObjectFactory(TITAN_NEW ManualObjectFactory());
 

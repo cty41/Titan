@@ -9,6 +9,7 @@
 #include "TitanSphere.h"
 #include "TitanAABB.h"
 #include "TitanPlane.h"
+#include "TitanNumericTools.h"
 
 
 namespace Titan
@@ -810,6 +811,21 @@ namespace Titan
 		return d <= radius * radius;
 
     }
+	//-------------------------------------------------------------//
+	bool Math::intersects(const AABB& a, const AABB& b, AABB& result)
+	{
+		result.getMinimum().x = maximum(a.getMinimum().x, b.getMinimum().x);
+		result.getMinimum().y = maximum(a.getMinimum().y, b.getMinimum().y);
+		result.getMinimum().z = maximum(a.getMinimum().z, b.getMinimum().z);
+
+		result.getMaximum().x = minimum(a.getMaximum().x, b.getMaximum().x);
+		result.getMaximum().y = minimum(a.getMaximum().y, b.getMaximum().y);
+		result.getMaximum().z = minimum(a.getMaximum().z, b.getMaximum().z);
+
+		return(   (result.getMinimum().x <= result.getMaximum().x)
+			&&(result.getMinimum().y <= result.getMaximum().y)
+			&&(result.getMinimum().z <= result.getMaximum().z));
+	}
     //-----------------------------------------------------------------------
     bool Math::intersects(const Plane& plane, const AABB& box)
     {

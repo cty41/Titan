@@ -9,6 +9,7 @@
 #include "TitanCommon.h"
 #include "SceneObject.h"
 #include "TitanShaderEffect.h"
+#include "TitanAABB.h"
 
 namespace Titan
 {
@@ -42,6 +43,8 @@ namespace Titan
 		void	quad(uint32 i1, uint32 i2, uint32 i3, uint32 i4);
 
 		void	setShaderEffect(ShaderEffectPtr effect);
+
+		const AABB& getAABB() const { return mAABB;}
 
 	
 		struct ManualVertex
@@ -77,6 +80,7 @@ namespace Titan
 
 	protected:
 		String			mName;
+		AABB			mAABB;
 
 		typedef vector<ManualObjectSection*>::type	ManualObjectSectionVector;
 		ManualObjectSectionVector mSectionVector;

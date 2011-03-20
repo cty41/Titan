@@ -9,7 +9,7 @@ namespace Titan
 	enum SceneMgrType
 	{
 		SMT_GENERAL	= 0,
-		SNT_CHUNK_TERRAIN = 1
+		SNT_QUADTREE = 1
 	};
 	class _DllExport SceneMgr : public GeneralAlloc
 	{
@@ -20,7 +20,7 @@ namespace Titan
 
 		virtual ~SceneMgr();
 
-		SceneNode*	getRootSceneNode();
+		virtual SceneNode*	getRootSceneNode();
 
 		Camera* createCamera(const String& name);
 
@@ -60,8 +60,6 @@ namespace Titan
 
 		virtual void	_renderOpaqueObjects();
 
-		virtual void	_buildRenderUnitQueue(SceneNode* node);
-
 		virtual void	_renderSingleObject(Renderable* rend);
 
 		virtual void	_updateShaderParams(ShaderEffectPtr effect);
@@ -74,7 +72,7 @@ namespace Titan
 
 		virtual ~SceneMgrFactory();
 
-		SceneMgr*	createSceneMgr(const String& name);
+		virtual SceneMgr*	createSceneMgr(const String& name);
 
 		void		destroySceneMgr(SceneMgr* mgr);
 

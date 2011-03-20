@@ -113,6 +113,7 @@ namespace Titan
 	//-------------------------------------------------------------//
 	void ManualObject::clear()
 	{
+		mAABB.setNull();
 		resetTempAreas();
 		ManualObjectSectionVector::iterator it = mSectionVector.begin(), itend = mSectionVector.end();
 
@@ -155,6 +156,8 @@ namespace Titan
 		mTempVertex.position.x = x;
 		mTempVertex.position.y = y;
 		mTempVertex.position.z = z;
+
+		mAABB.merge(mTempVertex.position);
 
 		mTempVertexPending = true;
 	}

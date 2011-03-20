@@ -5,9 +5,7 @@
 namespace Titan
 {
 	Camera::Camera(const String& name, SceneMgr* mgr)
-		: Frustum(),mSceneMgr(mgr),
-		mName(name), mOrientation(Quaternion::IDENTITY),
-		mPosition(Vector3::ZERO), mUpdateView(true)
+		: Frustum(),mSceneMgr(mgr), mName(name)
 	{
 		notifyViewUpdate();
 		notifyProjUpdate();
@@ -15,7 +13,6 @@ namespace Titan
 	//-------------------------------------------------------------//
 	Camera::~Camera()
 	{
-
 	}
 	//-------------------------------------------------------------//
 	void Camera::setPosition(const Vector3& pos)
@@ -165,40 +162,6 @@ namespace Titan
 	void Camera::setOrientation(const Quaternion& q)
 	{
 		mOrientation = q;
-	}
-	//-------------------------------------------------------------//
-	void Camera::notifyViewUpdate()
-	{
-		mUpdateView = true;
-	}
-	//-------------------------------------------------------------//
-	bool Camera::needUpdateView() const
-	{
-		return mUpdateView;
-	}
-	//-------------------------------------------------------------//
-	void Camera::updateView()
-	{
-		if(needUpdateView())
-			updateViewImpl();
-
-	}
-	//-------------------------------------------------------------//
-	void Camera::updateViewImpl()
-	{
-		Matrix3 rot;
-		const Quaternion& orientation = mOrientation;
-		const Vector3& position = mPosition;
-
-		mViewMatrix = Math::makeViewMatrix(position, orientation, 0);
-		mUpdateView = false;
-	}
-	//-------------------------------------------------------------//
-	const Matrix4& Camera::getViewMatrix()
-	{
-		updateView();
-
-		return mViewMatrix;
 	}
 	//-------------------------------------------------------------//
 	void Camera::_renderScene(Viewport* vp)

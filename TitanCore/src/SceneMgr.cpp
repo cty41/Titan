@@ -4,6 +4,7 @@
 #include "ManualObject.h"
 #include "Viewport.h"
 #include "TitanShaderParamsUpdater.h"
+#include "ConsoleDebugger.h"
 
 namespace Titan
 {
@@ -74,22 +75,7 @@ namespace Titan
 	//-------------------------------------------------------------//
 	void SceneMgr::_processVisibleObjects(Camera* cam)
 	{
-		_buildRenderUnitQueue(mRootSceneNode);
-	}
-	//-------------------------------------------------------------//
-	void SceneMgr::_buildRenderUnitQueue(SceneNode* node)
-	{
-		SceneNode::ConstChildIterator it = node->getConstChildIterator();
-		while (it.hasMoreElements())
-		{
-			_buildRenderUnitQueue(it.getNext());
-		}
-		SceneNode::ConstObjectIterator objIt = node->getAttachedConstObjectIterator();
-		while (objIt.hasMoreElements())
-		{
-			objIt.getNext()->_updateRenderableList(mRenderableList);
-		}
-
+		mRootSceneNode->_findVisibleObjects(cam, mRenderableList);
 	}
 	//-------------------------------------------------------------//
 	void SceneMgr::_renderOpaqueObjects()
@@ -141,6 +127,7 @@ namespace Titan
 			RenderData rd;
 			rend->getRenderData(rd);
 			mRelatedRenderer->_render(rd);
+			DEBUG_OUTPUT<<"hell";
 
 			effectPtr->end();
 		}

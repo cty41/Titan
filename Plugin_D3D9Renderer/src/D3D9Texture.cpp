@@ -2,6 +2,7 @@
 #include "PerlinNoise.h"
 #include "D3D9Mappings.h"
 #include "D3D9Renderer.h"
+#include "TitanNumericTools.h"
 
 namespace Titan
 {
@@ -141,7 +142,7 @@ namespace Titan
 			frequency *= 2.0f;
 		}
 
-		accum = Math::Clamp(accum, -1.0f, 1.0f);
+		accum = clamp(accum, -1.0f, 1.0f);
 		accum *= 0.5f;
 		accum += 0.5f;
 
