@@ -1,3 +1,4 @@
+///Fuck the D3D9
 #ifndef _D3D9PREQUISITES_HH
 #define _D3D9PREQUISITES_HH
 

@@ -10,6 +10,12 @@ namespace Titan
 	//-------------------------------------------------------------//
 	ShaderEffect::~ShaderEffect()
 	{
-
 	}
+	//-------------------------------------------------------------//
+	void ShaderEffect::updateParams(ShaderParamsUpdater* updater)
+	{
+		updateAutoParams(updater);
+	}
+	//-------------------------------------------------------------//
+
 }

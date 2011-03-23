@@ -11,7 +11,6 @@ namespace Titan
 #define TEMP_INITIAL_VERTEX_SIZE TEMP_VERTEXSIZE_GUESS * TEMP_INITIAL_SIZE
 #define TEMP_INITIAL_INDEX_SIZE sizeof(uint32) * TEMP_INITIAL_SIZE
 
-	String ManualObject::mType = "ManualObject";
 	//-------------------------------------------------------------//
 	ManualObject::ManualObject(const String& name)
 		: mName(name), mFirstVertex(true),
@@ -20,6 +19,8 @@ namespace Titan
 		mTempIndexBuffer(0), mTempIndexSize(TEMP_INITIAL_INDEX_SIZE),
 		mDeclSize(0)
 	{
+		mType = "ManualObject";
+		//If you got an error here, recompiled it..
 	}
 	//-------------------------------------------------------------//
 	ManualObject::~ManualObject()
@@ -27,7 +28,7 @@ namespace Titan
 		clear();
 	}
 	//-------------------------------------------------------------//
-	void ManualObject::_updateRenderableList(SceneMgr::RenderableList& renderableList)
+	void ManualObject::_updateRenderableList(SceneMgr::RenderableList& renderableList, Camera* cam)
 	{
 		ManualObjectSectionVector::iterator it = mSectionVector.begin(),
 			itend = mSectionVector.end();
@@ -84,26 +85,18 @@ namespace Titan
 
 			rd->vertexData->vertexBufferBinding->setBinding(0, vbuf);
 
-			if(rd->useIndex)
+			vbuf->writeData(
+				0, rd->vertexData->vertexCount * mDeclSize,
+				mTempVertexBuffer, true);
+	
+			if(rd->useIndex)		//16bit index, expand later
 			{
 				rd->indexData->indexBuffer = HardwareBufferManager::getSingleton().createIndexBuffer(
 					rd->indexData->indexCount,
 					HardwareBuffer::HBU_STATIC_WRITE_ONLY, true);
-			}
 
-			vbuf->writeData(
-				0, rd->vertexData->vertexCount * mDeclSize,
-				mTempVertexBuffer, true);
+				rd->indexData->indexBuffer->writeData(0, rd->indexData->indexCount * rd->indexData->indexBuffer->getIndexSize(), (void*)mTempIndexBuffer);
 
-			if(rd->useIndex)
-			{
-				uint16* pIdx = static_cast<uint16*>(rd->indexData->indexBuffer->lock(HardwareBuffer::HBL_DISCARD));
-				uint32* pSrc = mTempIndexBuffer;
-				for (size_t i = 0; i < rd->indexData->indexCount; i++)
-				{
-					*pIdx++ = static_cast<uint16>(*pSrc++);
-				}
-				rd->indexData->indexBuffer->unlock();
 			}
 		}
 
@@ -337,7 +330,7 @@ namespace Titan
 	//-------------------------------------------------------------//
 	void ManualObject::resizeTempIndexBufferIfNeeded(size_t numInds)
 	{
-		size_t newSize = numInds * sizeof(uint32);
+		size_t newSize = numInds * sizeof(uint16);
 		if (newSize > mTempIndexSize || !mTempIndexBuffer)
 		{
 			if (!mTempIndexBuffer)
@@ -350,9 +343,9 @@ namespace Titan
 				// increase to at least double current
 				newSize = std::max(newSize, mTempIndexSize*2);
 			}
-			numInds = newSize / sizeof(uint32);
-			uint32* tmp = mTempIndexBuffer;
-			mTempIndexBuffer = TITAN_ALLOC_T(uint32, numInds, MEMCATEGORY_GENERAL);
+			numInds = newSize / sizeof(uint16);
+			uint16* tmp = mTempIndexBuffer;
+			mTempIndexBuffer = TITAN_ALLOC_T(uint16, numInds, MEMCATEGORY_GENERAL);
 			if (tmp)
 			{
 				memcpy(mTempIndexBuffer, tmp, mTempIndexSize);

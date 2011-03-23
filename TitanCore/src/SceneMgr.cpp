@@ -120,6 +120,8 @@ namespace Titan
 		{
 			ShaderEffectPtr effectPtr = rend->getShaderEffect();
 			effectPtr->begin();
+			rend->customUpdate();
+
 			mShaderParamsUpdater->setCurrentRenderable(rend);
 			mShaderParamsUpdater->setWorldMatrix(transformMat);
 			_updateShaderParams(effectPtr);
@@ -127,7 +129,6 @@ namespace Titan
 			RenderData rd;
 			rend->getRenderData(rd);
 			mRelatedRenderer->_render(rd);
-			DEBUG_OUTPUT<<"hell";
 
 			effectPtr->end();
 		}

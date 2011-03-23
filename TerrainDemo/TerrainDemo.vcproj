@@ -212,6 +212,18 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<Filter
+			Name="Shaders"
+			>
+			<File
+				RelativePath="..\bin\assets\Shaders\DefaultMesh.fx"
+				>
+			</File>
+			<File
+				RelativePath="..\bin\assets\Shaders\single_texture_terrain.fx"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

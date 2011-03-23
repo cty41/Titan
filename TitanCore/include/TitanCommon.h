@@ -14,6 +14,74 @@ namespace Titan
 		String		value;		
 	}ConfigOption;
 
+	/** Structure used to define a box in a 3-D integer space.
+	Note that the left, top, and front edges are included but the right, 
+	bottom and back ones are not.
+	*/
+	struct Box : public GeneralAlloc
+	{
+		size_t left, top, right, bottom, front, back;
+		/// Parameterless constructor for setting the members manually
+		Box()
+			: left(0), top(0), right(1), bottom(1), front(0), back(1)
+		{
+		}
+		/** Define a box from left, top, right and bottom coordinates
+		This box will have depth one (front=0 and back=1).
+		@param	l	x value of left edge
+		@param	t	y value of top edge
+		@param	r	x value of right edge
+		@param	b	y value of bottom edge
+		@note Note that the left, top, and front edges are included 
+		but the right, bottom and back ones are not.
+		*/
+		Box( size_t l, size_t t, size_t r, size_t b ):
+		left(l),
+			top(t),   
+			right(r),
+			bottom(b),
+			front(0),
+			back(1)
+		{
+			assert(right >= left && bottom >= top && back >= front);
+		}
+		/** Define a box from left, top, front, right, bottom and back
+		coordinates.
+		@param	l	x value of left edge
+		@param	t	y value of top edge
+		@param  ff  z value of front edge
+		@param	r	x value of right edge
+		@param	b	y value of bottom edge
+		@param  bb  z value of back edge
+		@note Note that the left, top, and front edges are included 
+		but the right, bottom and back ones are not.
+		*/
+		Box( size_t l, size_t t, size_t ff, size_t r, size_t b, size_t bb ):
+		left(l),
+			top(t),   
+			right(r),
+			bottom(b),
+			front(ff),
+			back(bb)
+		{
+			assert(right >= left && bottom >= top && back >= front);
+		}
+
+		/// Return true if the other box is a part of this one
+		bool contains(const Box &def) const
+		{
+			return (def.left >= left && def.top >= top && def.front >= front &&
+				def.right <= right && def.bottom <= bottom && def.back <= back);
+		}
+
+		/// Get the width of this box
+		size_t getWidth() const { return right-left; }
+		/// Get the height of this box
+		size_t getHeight() const { return bottom-top; }
+		/// Get the depth of this box
+		size_t getDepth() const { return back-front; }
+	};
+
 	class _DllExport AutoNamer: public GeneralAlloc
 	{
 	public:
@@ -46,53 +114,53 @@ namespace Titan
 		uint	mCount;
 	};
 
-   /** Light shading modes. */
-    enum ShadeOptions
-    {
-        SO_FLAT,
-        SO_GOURAUD,
-        SO_PHONG
-    };
+	/** Light shading modes. */
+	enum ShadeOptions
+	{
+		SO_FLAT,
+		SO_GOURAUD,
+		SO_PHONG
+	};
 
-    /** Fog modes. */
-    enum FogMode
-    {
-        /// No fog. Duh.
-        FOG_NONE,
-        /// Fog density increases  exponentially from the camera (fog = 1/e^(distance * density))
-        FOG_EXP,
-        /// Fog density increases at the square of FOG_EXP, i.e. even quicker (fog = 1/e^(distance * density)^2)
-        FOG_EXP2,
-        /// Fog density increases linearly between the start and end distances
-        FOG_LINEAR
-    };
+	/** Fog modes. */
+	enum FogMode
+	{
+		/// No fog. Duh.
+		FOG_NONE,
+		/// Fog density increases  exponentially from the camera (fog = 1/e^(distance * density))
+		FOG_EXP,
+		/// Fog density increases at the square of FOG_EXP, i.e. even quicker (fog = 1/e^(distance * density)^2)
+		FOG_EXP2,
+		/// Fog density increases linearly between the start and end distances
+		FOG_LINEAR
+	};
 
-    /** Hardware culling modes based on vertex winding.
-        This setting applies to how the hardware API culls triangles it is sent. */
-    enum CullingMode
-    {
-        /// Hardware never culls triangles and renders everything it receives.
-        CULL_NONE = 1,
-        /// Hardware culls triangles whose vertices are listed clockwise in the view (default).
-        CULL_CLOCKWISE = 2,
-        /// Hardware culls triangles whose vertices are listed anticlockwise in the view.
-        CULL_ANTICLOCKWISE = 3
-    };
+	/** Hardware culling modes based on vertex winding.
+	This setting applies to how the hardware API culls triangles it is sent. */
+	enum CullingMode
+	{
+		/// Hardware never culls triangles and renders everything it receives.
+		CULL_NONE = 1,
+		/// Hardware culls triangles whose vertices are listed clockwise in the view (default).
+		CULL_CLOCKWISE = 2,
+		/// Hardware culls triangles whose vertices are listed anticlockwise in the view.
+		CULL_ANTICLOCKWISE = 3
+	};
 
-    /** Manual culling modes based on vertex normals.
-        This setting applies to how the software culls triangles before sending them to the 
-		hardware API. This culling mode is used by scene managers which choose to implement it -
-		normally those which deal with large amounts of fixed world geometry which is often 
-		planar (software culling movable variable geometry is expensive). */
-    enum ManualCullingMode
-    {
-        /// No culling so everything is sent to the hardware.
-        MANUAL_CULL_NONE = 1,
-        /// Cull triangles whose normal is pointing away from the camera (default).
-        MANUAL_CULL_BACK = 2,
-        /// Cull triangles whose normal is pointing towards the camera.
-        MANUAL_CULL_FRONT = 3
-    };
+	/** Manual culling modes based on vertex normals.
+	This setting applies to how the software culls triangles before sending them to the 
+	hardware API. This culling mode is used by scene managers which choose to implement it -
+	normally those which deal with large amounts of fixed world geometry which is often 
+	planar (software culling movable variable geometry is expensive). */
+	enum ManualCullingMode
+	{
+		/// No culling so everything is sent to the hardware.
+		MANUAL_CULL_NONE = 1,
+		/// Cull triangles whose normal is pointing away from the camera (default).
+		MANUAL_CULL_BACK = 2,
+		/// Cull triangles whose normal is pointing towards the camera.
+		MANUAL_CULL_FRONT = 3
+	};
 
 	/** The polygon mode to use when rasterising. */
 	enum PolygonMode
@@ -154,13 +222,6 @@ namespace Titan
 		VET_COLOR_ABGR = 11
 	};
 
-	enum PixelFormat
-	{
-		PF_UNKNOWN	= 0,
-		PF_A8		= 1,
-		PF_A8R8G8B8	= 2,
-			
-	};
 
 	typedef map<String, ConfigOption>::type ConfigOptionMap;
 

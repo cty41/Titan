@@ -63,12 +63,12 @@ namespace Titan
 		}
 	}
 	//-------------------------------------------------------------//
-	void QuadtreeNode::_findVisibleObjects(SceneMgr::RenderableList& renderableList)
+	void QuadtreeNode::_findVisibleObjects(SceneMgr::RenderableList& renderableList, Camera* cam)
 	{
 		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
 		while(it != itend)
 		{
-			it->second->_updateRenderableList(renderableList);
+			it->second->_updateRenderableList(renderableList, cam);
 			++it;
 		}
 		//do not find in child nodes, because we also add child node in quadtree
@@ -95,4 +95,5 @@ namespace Titan
 			mAttachQuadNode = NULL;
 		}
 	}
+	//to do: change node update
 }

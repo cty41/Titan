@@ -34,10 +34,31 @@ namespace Titan
 			}
 		}
 		//to add custom params here
+		mNamedConstantParams.push_back(NamedConstantParam(name,handle,type, sizeInByte));
+
 	}
 	//-------------------------------------------------------------//
 	ShaderParams::AutoConstantParamVecIterator ShaderParams::getAutoConstantParamVecIterator()
 	{
 		return AutoConstantParamVecIterator(mAutoConstantParams.begin(), mAutoConstantParams.end());
+	}
+	//-------------------------------------------------------------//
+	ShaderParams::NamedConstantParamVecIterator	 ShaderParams::getNamedConstantParamVecIterator()
+	{
+		return NamedConstantParamVecIterator(mNamedConstantParams.begin(), mNamedConstantParams.end());
+	}
+	//-------------------------------------------------------------//
+	uint	ShaderParams::getNameParamIndex(const String& name)
+	{
+		ShaderParams::NamedConstantParamVec::iterator it = mNamedConstantParams.begin(), itend = mNamedConstantParams.end();
+		uint idx = 0;
+		while(it != itend)
+		{
+			if((*it).name == name)
+				return idx;
+			++idx;
+			++it;
+		}
+		return -1;
 	}
 }

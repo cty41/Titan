@@ -5,6 +5,7 @@
 namespace Titan
 {
 	VertexData::VertexData(HardwareBufferManager* mgr )
+		: vertexStart(0), vertexCount(0)
 	{
 		mMgr = mgr ? mgr : HardwareBufferManager::getSingletonPtr();
 		vertexDecl = mMgr->createVertexDeclaration();
@@ -12,6 +13,7 @@ namespace Titan
 	}
 	//-------------------------------------------------------------//
 	VertexData::VertexData(VertexDeclaration* decl, VertexBufferBinding* binding)
+		: vertexStart(0), vertexCount(0)
 	{
 		mMgr = HardwareBufferManager::getSingletonPtr();
 		vertexDecl = decl;
@@ -28,6 +30,7 @@ namespace Titan
 
 	//-------------------------------------------------------------//
 	IndexData::IndexData()
+		: indexStart(0), indexCount(0)
 	{
 	}
 	//-------------------------------------------------------------//

@@ -22,27 +22,12 @@ namespace Titan
 	//-------------------------------------------------------------//
 	HardwareBufferManager::~HardwareBufferManager()
 	{
+		//why we do not delete , because we buffers are wrapped into the sharedPtr which means they will be deleted automatically
 		mVertexBuffers.clear();
-		for(IndexBufferList::iterator i = mIndexBuffers.begin(); i != mIndexBuffers.end();)
-		{
-
-
-			IndexBuffer* buffer = (*i);
-			TITAN_DELETE buffer;
-						mIndexBuffers.erase(i++);
-		}
-
 		mIndexBuffers.clear();
 
 		destroyAllVertexBufferBindings();
 		destroyAllVertexDeclarations();
-	}
-	//-------------------------------------------------------------//
-	VertexDeclaration*	HardwareBufferManager::createVertexDeclaration()
-	{
-		VertexDeclaration* decl = TITAN_NEW VertexDeclaration();
-		mVertexDeclarations.insert(decl);
-		return decl;
 	}
 	//-------------------------------------------------------------//
 	VertexBufferBinding* HardwareBufferManager::createVertexBufferBinding()

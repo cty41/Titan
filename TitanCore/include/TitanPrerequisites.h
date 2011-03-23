@@ -12,24 +12,16 @@
 #	endif
 #endif
 
+#include "TitanDataType.h"
+
 namespace Titan
 {
-	typedef unsigned int uint32;
-	typedef unsigned short uint16;
-	typedef unsigned char uint8;
-	typedef int int32;
-	typedef short int16;
-	typedef char int8;
-
-	typedef unsigned char uchar;
-	typedef unsigned short ushort;
-	typedef unsigned int uint;
-	typedef unsigned long ulong;
-
+	//Forward declaration
 	class Angle;
 	class AABB;
 	class AutoNamer;
 	class BaseTerrain;
+	class BaseTerrainSection;
 	class Camera;
 	class Color;
 	class ConsoleDebugger;
@@ -60,6 +52,7 @@ namespace Titan
 	class Root;
 	class Radian;
 	class Ray;
+	class Rect2D;
 	class RenderQueue;
 	class RenderQueueGroup;
 	class Renderer;

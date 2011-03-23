@@ -27,7 +27,7 @@ namespace Titan
 
 		void		removeChild(SceneNode* child);
 
-		void		_findVisibleObjects(SceneMgr::RenderableList& renderableList);
+		void		_findVisibleObjects(SceneMgr::RenderableList& renderableList, Camera* cam);
 
 		Quadtree*	getAttachedQuadTree() const { return mAttachQuadNode; }
 

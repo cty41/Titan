@@ -108,7 +108,7 @@ namespace Titan
 		mEffect->BeginPass(0);
 	}
 	//-------------------------------------------------------------//
-	void D3D9ShaderEffect::updateParams(ShaderParamsUpdater* updater)
+	void D3D9ShaderEffect::updateAutoParams(ShaderParamsUpdater* updater)
 	{
 		HRESULT hr;
 		//to do: optimize later
@@ -178,6 +178,19 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
 				"ID3DXEffect failed: " + errMsg,
 				"D3D9ShaderEffect::end");
+		}
+	}
+	//-------------------------------------------------------------//
+	void D3D9ShaderEffect::setNamedParamByIndex(uint index, const float* pValue)
+	{
+		HRESULT hr;
+		ShaderParams::NamedConstantParam namedParam = mParams.getNameParamByIndex(index);
+		if(FAILED(hr = mEffect->SetValue(D3DXHANDLE(namedParam.handle), pValue, namedParam.count)))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"Set Named Parameter failed because of: " + errMsg,
+				"D3D9ShaderEffect::setNamedParamByIndex");
 		}
 	}
 }

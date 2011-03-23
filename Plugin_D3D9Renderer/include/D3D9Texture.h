@@ -13,6 +13,10 @@ namespace Titan
 
 		~D3D9Texture();
 
+		void lockRect(uint level, PixelBox* lockRect, const Box* rect, LockOptions options);
+
+		void unlockRect(uint level);
+
 	protected:
 		void	loadImpl();
 

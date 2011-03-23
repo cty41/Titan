@@ -296,11 +296,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TitanBaseTerrain.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanBaseTerrainSection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanColor.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\TitanDataStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanDataType.cpp"
 				>
 			</File>
 			<File
@@ -317,6 +329,10 @@
 			</File>
 			<File
 				RelativePath=".\src\TitanMatrix4.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanPixelFormat.cpp"
 				>
 			</File>
 			<File
@@ -582,6 +598,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TitanBaseTerrainSection.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TitanBitFlags.h"
 				>
 			</File>
@@ -603,6 +623,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanDataStream.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanDataType.h"
 				>
 			</File>
 			<File
@@ -635,6 +659,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanNumericTools.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanPixelFormat.h"
 				>
 			</File>
 			<File
@@ -671,6 +699,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanRay.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanRect2D.h"
 				>
 			</File>
 			<File

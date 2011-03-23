@@ -35,7 +35,7 @@ namespace Titan
 			 hr = pD3D9Device->CreateIndexBuffer(
 				static_cast<UINT>(mSizeInBytes),
 				D3D9Mappings::convertToD3D9(mUsage),
-				(mIndexSize == 16)? D3DFMT_INDEX16 : D3DFMT_INDEX32,
+				(mIndexSize == 2)? D3DFMT_INDEX16 : D3DFMT_INDEX32,		//2 * 8bits == 16
 				mBufferDesc.Pool,
 				&mBuffer,
 				0);
@@ -68,7 +68,7 @@ namespace Titan
 		HRESULT hr;
 
 		void* pDst;
-		hr = mBuffer->Lock(offset, length, (void**)&pDst, D3D9Mappings::convertToD3D9(mLockOption, mUsage));
+		hr = mBuffer->Lock(offset, length , (void**)&pDst, D3D9Mappings::convertToD3D9(mLockOption, mUsage));
 		if(FAILED(hr))
 		{
 			String msg = DXGetErrorDescription(hr);

@@ -4,7 +4,9 @@
 #include "TitanPrerequisites.h"
 #include "TitanResource.h"
 #include "TitanCommon.h"
+#include "TitanPixelFormat.h"
 #include "TitanSharedPtr.h"
+#include "HardwareBuffer.h"
 
 namespace Titan
 {
@@ -65,6 +67,11 @@ namespace Titan
 
 		TexPool		getTexPool() const { return mPool; }
 
+		typedef HardwareBuffer::LockOptions LockOptions;
+
+		virtual void		lockRect(uint level, PixelBox* lockRect, const Box* rect,  LockOptions options)  = 0;
+
+		virtual void		unlockRect(uint level) = 0;
 
 
 		void		generatePerlinNoise(float scale, int octaves, float falloff);

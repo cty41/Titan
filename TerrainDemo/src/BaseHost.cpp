@@ -6,11 +6,12 @@
 #include "TitanIteratorWrapper.h"
 #include "ShaderEffectMgr.h"
 #include "TitanQuadtreeSceneMgr.h"
+#include "TitanBaseTerrain.h"
 
 
 BaseHost::BaseHost()
 :mRoot(0), mSceneMgr(0), mInputMgr(0),
-mKeyboard(0), mMouse(0), mCamController(0)
+mKeyboard(0), mMouse(0), mCamController(0), mTerrain(NULL)
 {
 	mTimer = TITAN_NEW Titan::Timer;
 	mTimer->reset();
@@ -34,6 +35,8 @@ void BaseHost::destroy()
 		OIS::InputManager::destroyInputSystem(mInputMgr);
 	}
 
+	if(mTerrain)
+		TITAN_DELETE mTerrain;
 	if(mCamController)
 		TITAN_DELETE mCamController;
 
@@ -106,6 +109,8 @@ void BaseHost::setup()
 	Titan::QuadtreeSceneMgr* quadMgr = static_cast<Titan::QuadtreeSceneMgr*>(mSceneMgr);
 	quadMgr->setOctreeConfigs(Titan::AABB(-500.0f, 0, -500.0f,
 										   500.0f, 500.0f, 500.0f));
+
+
 	mCamera = mSceneMgr->createCamera("testCamera");
 	mWindow->addViewport(mCamera);
 
@@ -120,10 +125,12 @@ void BaseHost::setup()
 	renderer->_setLightEnable(false);
 #if 1
 	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupManager::GENERAL_RESOURCE_GROUP,
-										Titan::TT_2D, 128, 128, 0,Titan::TU_DEFAULT, Titan::PF_A8R8G8B8);
+										Titan::TT_2D, 128, 128, 0,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
 
 	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
 
+	mTerrain = TITAN_NEW Titan::BaseTerrain();
+	mTerrain->create(mSceneMgr->getRootSceneNode(), pHeightmap, Titan::AABB(-500.0f, 0, -500.0f, 500.0f, 500.0f, 500.0f));
 
 
 	

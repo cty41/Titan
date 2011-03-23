@@ -9,9 +9,21 @@ namespace Titan
 	class _DllExport Renderable : public GeneralAlloc
 	{
 	public:
+		class _DllExport RenderableListener
+		{
+		public:
+			RenderableListener(){};
+
+			~RenderableListener(){};
+
+			virtual void customUpdate() = 0;
+		};
+
+		typedef list<RenderableListener*>::type RenderableListenerList;
+	public:
 		Renderable(){};
 
-		virtual ~Renderable(){};
+		virtual ~Renderable(){ mRenderableListenerList.clear(); };
 
 		virtual void			getRenderData(RenderData& rd) = 0;
 
@@ -23,7 +35,21 @@ namespace Titan
 
 		virtual bool			hasShader() = 0;
 
+		void	addListener(RenderableListener* listener){ mRenderableListenerList.push_back(listener); }
+		
+		virtual void customUpdate(){};
+		void	updateListeners()
+		{
+			RenderableListenerList::iterator it = mRenderableListenerList.begin(), itend = mRenderableListenerList.end();
+			while (it != itend)
+			{			
+				(*it)->customUpdate();
+				++it;
+			}
+		}
 	protected:
+
+		RenderableListenerList	mRenderableListenerList;
 	};
 }
 #endif

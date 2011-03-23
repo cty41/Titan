@@ -18,6 +18,14 @@ namespace Titan
 		/// Get the size in bytes of each index
 		size_t getIndexSize(void) const { return mIndexSize; }
 
+		void createSingleStripGrid(
+			uint16 xVerts,	// width of grid
+			uint16 yVerts,	// height of grid
+			uint16 xStep,	// horz vertex count per cell
+			uint16 yStep,	// vert vertex count per cell
+			uint16 stride,	// horz vertex count in vbuffer
+			uint16 flags);
+
 	protected:
 		HardwareBufferManager*	mMgr;
 		size_t mNumIndexes;

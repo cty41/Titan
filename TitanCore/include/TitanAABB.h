@@ -7,6 +7,7 @@
 
 #include "TitanVector3.h"
 #include "TitanMatrix4.h"
+#include "TitanRect2D.h"
 
 namespace Titan 
 {
@@ -102,6 +103,16 @@ namespace Titan
 				setInfinite();
 			else
 				setExtents(rhs.mMinimum, rhs.mMaximum);
+
+			return *this;
+		}
+
+		AABB& operator=(const Rect2D& rhs)
+		{
+			mMinimum.x = rhs.x0;
+			mMinimum.z = rhs.y0;
+			mMaximum.x = rhs.x1;
+			mMaximum.z = rhs.y1;
 
 			return *this;
 		}

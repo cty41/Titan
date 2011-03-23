@@ -15,9 +15,11 @@ namespace Titan
 
 		void			begin();
 
-		void			updateParams(ShaderParamsUpdater* updater);
+		void			updateAutoParams(ShaderParamsUpdater* updater);
 
 		void			end();
+
+		void			setNamedParamByIndex(uint index, const float* pValue);
 
 
 	protected:

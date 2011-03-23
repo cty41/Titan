@@ -75,6 +75,21 @@ namespace Titan
 	typedef vector<AutoConstantParam>::type		AutoConstantParamVec;
 	typedef VectorIterator<AutoConstantParamVec>	AutoConstantParamVecIterator;
 
+	struct NamedConstantParam
+	{
+		uint				handle;
+		String				name;
+		ShaderConstantType	constantType;
+		ElementType			elementType;
+		uint				count;
+		NamedConstantParam(const String& name, uint handle, ShaderConstantType ct, uint count)
+			: name(name), handle(handle), constantType(ct), count(count)
+		{
+		};
+	};
+	
+	typedef vector<NamedConstantParam>::type  NamedConstantParamVec;
+	typedef VectorIterator<NamedConstantParamVec>	NamedConstantParamVecIterator;
 	public:
 		ShaderParams();
 
@@ -82,13 +97,22 @@ namespace Titan
 
 		void	addParam(const String& name, const String& semantic, uint handle, ShaderConstantType type, uint sizeInByte);
 
+		uint	getNameParamIndex(const String& paramSemantic);
+
+		const NamedConstantParam&	getNameParamByIndex(uint index){ return mNamedConstantParams.at(index); }
 
 		AutoConstantParamVecIterator	getAutoConstantParamVecIterator();
 
+		NamedConstantParamVecIterator	getNamedConstantParamVecIterator();
+
 	protected:
+
+	protected:
+
 		static AutoConstantParamDef	gAutoConstantParamDefs[];
 
 		AutoConstantParamVec		mAutoConstantParams;
+		NamedConstantParamVec		mNamedConstantParams;
 
 
 

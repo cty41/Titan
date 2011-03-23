@@ -144,13 +144,13 @@ namespace Titan
 						if(Math::intersects(cam->getWorldAABB(), node->getAABB(), result))
 						{
 							if(cam->isVisible(node->getAABB()))
-								node->_findVisibleObjects(renderableList);
+								node->_findVisibleObjects(renderableList, cam);
 						}
 					}
 					else
 					{
 						if(cam->isVisible(node->getAABB()))
-							node->_findVisibleObjects(renderableList);
+							node->_findVisibleObjects(renderableList, cam);
 					}
 
 				}

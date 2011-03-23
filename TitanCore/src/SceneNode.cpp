@@ -16,13 +16,7 @@ namespace Titan
 	//-------------------------------------------------------------//
 	SceneNode::~SceneNode()
 	{
-		SceneObjectMap::iterator it = mSceneObjects.begin(),
-			iend = mSceneObjects.end();
-		while(it != iend)
-		{
-			TITAN_DELETE it->second;
-			++it;
-		}
+		mSceneObjects.clear();
 	}
 	//-------------------------------------------------------------//
 	void SceneNode::attachObject(SceneObject* object)
@@ -209,7 +203,7 @@ namespace Titan
 		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
 		while(it != itend)
 		{
-			it->second->_updateRenderableList(renderableList);
+			it->second->_updateRenderableList(renderableList, cam);
 			++it;
 		}
 

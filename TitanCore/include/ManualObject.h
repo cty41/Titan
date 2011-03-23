@@ -24,7 +24,7 @@ namespace Titan
 
 		const String&	getType() const { return mType; }
 
-		void	_updateRenderableList(SceneMgr::RenderableList& renderableList);
+		void	_updateRenderableList(SceneMgr::RenderableList& renderableList, Camera* cam);
 
 		void	begin(RenderData::OperationType ot = RenderData::OT_TRIANGLE_LIST);
 
@@ -96,7 +96,7 @@ namespace Titan
 		/// System memory allocation size, in bytes
 		size_t mTempVertexSize;
 		/// System-memory buffer whilst we establish the size required
-		uint32* mTempIndexBuffer;
+		uint16* mTempIndexBuffer;
 		/// System memory allocation size, in bytes
 		size_t mTempIndexSize;
 		/// Current declaration vertex size

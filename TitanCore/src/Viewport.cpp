@@ -11,7 +11,7 @@ namespace Titan
 		mRelLeft(left), mRelTop(top), mRelWidth(width), 
 		mRelHeight(height), mZOrder(ZOrder),
 		mIsAutoUpdate(true),mClearBuffers(FBT_COLOR | FBT_DEPTH),
-		mBackColor(Color::Blue)
+		mBackColor(Color::Grey)
 	{
 
 	}

@@ -51,6 +51,7 @@ protected:
 	Titan::Root*					mRoot;
 	Titan::SceneMgr*				mSceneMgr;
 	Titan::RenderWindow*			mWindow;
+	Titan::BaseTerrain*				mTerrain;
 
 	Titan::Timer*					mTimer;
 	Titan::ManualObject*			mManualObject;

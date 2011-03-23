@@ -35,7 +35,7 @@ namespace Titan
 			size_t numIndexes, HardwareBuffer::Usage usage,
 			bool useSystemMemory) = 0;
 
-		virtual VertexDeclaration*		createVertexDeclaration();
+		virtual VertexDeclaration*		createVertexDeclaration() = 0;
 
 		VertexBufferBinding*			createVertexBufferBinding();
 

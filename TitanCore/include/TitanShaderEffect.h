@@ -17,13 +17,22 @@ namespace Titan
 
 		virtual void begin() = 0;
 
-		virtual void updateParams(ShaderParamsUpdater* updater) = 0;
+		virtual void updateParams(ShaderParamsUpdater* updater);
+
+		virtual void updateAutoParams(ShaderParamsUpdater* updater) = 0;
 
 		virtual void end() = 0;
 
+		virtual void setNamedParamByIndex(uint index, const float* pValue) = 0;
+
+		ShaderParams	getShaderParams()  { return mParams; }
+
 	protected:
 		ShaderParams	mParams;
+
 	};
+
+
 
 	class ShaderEffectPtr : public SharedPtr<ShaderEffect>
 	{

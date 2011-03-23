@@ -1,5 +1,5 @@
 // transformations
-float4x4 mViewProj: VIEWPROJECTION;
+float4x4 mViewProj: ViewProj;
 
 float4 posOffset : posScaleOffset = {1.0, 1.0, 0.0f, 0.0f};
 float4 texOffset : uvScaleOffset = {1.0, 1.0, 0.0f, 0.0f};
@@ -10,17 +10,15 @@ texture tex0 : TEXTURE; // blend
 
 struct VS_INPUT
 {
-  float2	Pos		: POSITION0;
-  float2	UV		: TEXCOORD0;
-	float	  ZPos	: POSITION1;
-	float3	Norm	: NORMAL;
+	float2	Pos		: POSITION0;
+	float2	UV		: TEXCOORD0;
+	float	Height	: POSITION1;
 };
 
 struct VS_OUTPUT
 {
-    float4 Pos  : POSITION;
-    float4 vDiffuse  : COLOR0;
-    float2 vTex0  : TEXCOORD0;
+    float4 Pos		: POSITION;
+    float2 vTex0	: TEXCOORD0;
 };
 
 VS_OUTPUT VS(const VS_INPUT v)
@@ -29,16 +27,14 @@ VS_OUTPUT VS(const VS_INPUT v)
 
 	float4 combinedPos = float4(
 		v.Pos.x,
+		v.Height,
 		v.Pos.y,
-		v.ZPos,
 		1);
 
 	combinedPos.x += posOffset.z;	
-	combinedPos.y += posOffset.w;
+	combinedPos.z += posOffset.w;
 
-	Out.Pos = mul(combinedPos, mViewProj);  // position (view space)
-
-	Out.vDiffuse = dot(v.Norm, sun_vec.rgb)+ambient_light;
+	Out.Pos = mul(mViewProj, combinedPos);  // position (view space)
 
 	Out.vTex0 = (v.UV+texOffset.zw)*texOffset.xy;
 
@@ -60,11 +56,12 @@ sampler LinearSamp0 = sampler_state
 float4 PS(VS_OUTPUT In) : COLOR
 {   
 	// sample the texture
-	float4 Color = tex2D(LinearSamp0, In.vTex0 );
+	//float4 Color = tex2D(LinearSamp0, In.vTex0 );
 
 	// multiply by the diffuse 
 	// vertex color 
-	return Color*In.vDiffuse;
+	//return Color;
+	return float4(1.0, 1.0, 1.0, 1.0);
 }  
 
 

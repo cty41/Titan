@@ -3,6 +3,7 @@
 #include "D3D9Mappings.h"
 #include "D3D9Renderer.h"
 #include "TitanNumericTools.h"
+#include "Exception.h"
 
 namespace Titan
 {
@@ -17,6 +18,145 @@ namespace Titan
 		if(mType == TT_2D)
 		{
 			SAFE_RELEASE(m2DTexture);
+		}
+	}
+	void fromD3DLock(PixelBox &rval, const D3DLOCKED_RECT &lrect)
+	{
+		size_t bpp = PixelFuncs::getNumElemBytes(rval.format);
+		if (bpp != 0)
+		{
+			rval.rowPitch = lrect.Pitch / bpp;
+			rval.slicePitch = rval.rowPitch * rval.getHeight();
+			assert((lrect.Pitch % bpp)==0);
+		}
+		//add compressed later
+		else
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
+				"Invalid pixel format", "fromD3DLock");
+		}
+
+		rval.data = lrect.pBits;
+	}
+	void fromD3DLock(PixelBox &rval, const D3DLOCKED_BOX &lbox)
+	{
+		size_t bpp = PixelFuncs::getNumElemBytes(rval.format);
+		if (bpp != 0)
+		{
+			rval.rowPitch = lbox.RowPitch / bpp;
+			rval.slicePitch = lbox.SlicePitch / bpp;
+			assert((lbox.RowPitch % bpp)==0);
+			assert((lbox.SlicePitch % bpp)==0);
+		}
+		//add compressed later
+		else
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
+				"Invalid pixel format", "fromD3DLock");
+		}
+		rval.data = lbox.pBits;
+	}
+	// Convert Ogre integer Box to D3D rectangle
+	RECT toD3DRECT(const Box &lockBox)
+	{
+		RECT prect;
+		assert(lockBox.getDepth() == 1);
+		prect.left = static_cast<LONG>(lockBox.left);
+		prect.right = static_cast<LONG>(lockBox.right);
+		prect.top = static_cast<LONG>(lockBox.top);
+		prect.bottom = static_cast<LONG>(lockBox.bottom);
+		return prect;
+	}
+	// Convert Ogre integer Box to D3D box
+	D3DBOX toD3DBOX(const Box &lockBox)
+	{
+		D3DBOX pbox;
+
+		pbox.Left = static_cast<UINT>(lockBox.left);
+		pbox.Right = static_cast<UINT>(lockBox.right);
+		pbox.Top = static_cast<UINT>(lockBox.top);
+		pbox.Bottom = static_cast<UINT>(lockBox.bottom);
+		pbox.Front = static_cast<UINT>(lockBox.front);
+		pbox.Back = static_cast<UINT>(lockBox.back);
+		return pbox;
+	}
+	// Convert Ogre pixelbox extent to D3D rectangle
+	RECT toD3DRECTExtent(const PixelBox &lockBox)
+	{
+		RECT prect;
+		assert(lockBox.getDepth() == 1);
+		prect.left = 0;
+		prect.right = static_cast<LONG>(lockBox.getWidth());
+		prect.top = 0;
+		prect.bottom = static_cast<LONG>(lockBox.getHeight());
+		return prect;
+	}
+	// Convert Ogre pixelbox extent to D3D box
+	D3DBOX toD3DBOXExtent(const PixelBox &lockBox)
+	{
+		D3DBOX pbox;
+		pbox.Left = 0;
+		pbox.Right = static_cast<UINT>(lockBox.getWidth());
+		pbox.Top = 0;
+		pbox.Bottom = static_cast<UINT>(lockBox.getHeight());
+		pbox.Front = 0;
+		pbox.Back = static_cast<UINT>(lockBox.getDepth());
+		return pbox;
+	}
+	//-------------------------------------------------------------//
+	void D3D9Texture::lockRect(uint level, PixelBox* lockRect, const Box* rect, LockOptions options)
+	{
+		assert(lockRect != NULL&& "lockRect should not be zero pointer");
+
+		HRESULT hr;
+		DWORD flags = 0;
+		switch(options)
+		{
+		case HardwareBuffer::HBL_DISCARD:
+			// D3D only likes D3DLOCK_DISCARD if you created the texture with D3DUSAGE_DYNAMIC
+			// debug runtime flags this up, could cause problems on some drivers
+			if (mUsage & TU_DYNAMIC)
+				flags |= D3DLOCK_DISCARD;
+			break;
+		case HardwareBuffer::HBL_READ_ONLY:
+			flags |= D3DLOCK_READONLY;
+			break;
+		default: 
+			break;
+		};
+		if(mType == TT_2D)
+		{
+			D3DLOCKED_RECT lockedRect;
+			
+			if(rect != NULL)
+			{
+				RECT _rect = toD3DRECT(*rect);
+				hr = m2DTexture->LockRect(level, &lockedRect, &_rect, flags);
+			}
+			else
+				hr = m2DTexture->LockRect(level, &lockedRect, NULL, flags);
+			if(FAILED(hr))
+			{
+				String errMsg = DXGetErrorDescription(hr);
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Texture lock rect failed because of: " + errMsg,
+					"D3D9Texture::lockRect");
+			}
+			lockRect->format = mPixelFormat;
+			fromD3DLock(*lockRect, lockedRect);
+		}
+
+	}
+	//-------------------------------------------------------------//
+	void D3D9Texture::unlockRect(uint level)
+	{
+		HRESULT hr;
+		if(mType == TT_2D)
+		{
+			if(FAILED(hr = m2DTexture->UnlockRect(level)))
+			{
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Texture unlock rect failed",
+					"D3D9Texture::unlockRect");
+			}
 		}
 	}
 	//-------------------------------------------------------------//

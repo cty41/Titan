@@ -21,7 +21,7 @@ namespace Titan
 		virtual const String& getType() const = 0;
 
 		//temp method, which will be removed when we add render queue
-		virtual void _updateRenderableList(SceneMgr::RenderableList& renderableList) = 0;
+		virtual void _updateRenderableList(SceneMgr::RenderableList& renderableList, Camera* cam) = 0;
 
 		virtual const AABB& getAABB() const = 0;
 
@@ -40,7 +40,7 @@ namespace Titan
 	protected:
 		SceneNode*			mAttachedNode;
 		String				mName;
-		static String		mType;
+		String				mType;
 
 		static AutoNamer	mAutoNamer;
 
