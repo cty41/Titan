@@ -34,7 +34,7 @@ namespace Titan
 
 
 
-	class ShaderEffectPtr : public SharedPtr<ShaderEffect>
+	class _DllExport ShaderEffectPtr : public SharedPtr<ShaderEffect>
 	{
 	public:
 		ShaderEffectPtr()

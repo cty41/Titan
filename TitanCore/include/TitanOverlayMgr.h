@@ -31,6 +31,10 @@ namespace Titan
 
 		void			removeAllElements();
 
+		OverlayElement*	findElement(const String& name);
+
+		void			renameElement(const String& old, const String& newName);
+
 		void			addFactory(OverlayElementFactory* factory);
 
 		void			removeFactory(const String& type);
@@ -38,7 +42,15 @@ namespace Titan
 		void			removeAllFactories();
 
 
-		void			updateRenderQueue(RenderQueue* queue);
+		void			updateRenderQueue(RenderQueue* queue, Viewport* vp);
+
+		bool			hasViewportChanged(void) const { return mViewportChanged;}
+
+		int				getViewportHeight(void) const { return mViewportHeight;}
+
+		int				getViewportWidth(void) const{ return mViewportWidth; }
+
+		float			getViewportAspectRatio(void) const { return (float)mViewportWidth/(float)mViewportHeight;}
 
 	public:
 		typedef map<String, OverlayElement*>::type	OverlayElementMap;
@@ -47,10 +59,13 @@ namespace Titan
 	protected:
 		OverlayElementMap		mOverlayElementMap;
 		OverlayElementFactoryMap	mOverlayElementFactoryMap;
-	public:
-		OverlayMgr*			getSingletonPtr();
 
-		OverlayMgr&			getSingleton();
+		int		mViewportWidth, mViewportHeight;
+		bool	mViewportChanged;
+	public:
+		static OverlayMgr*			getSingletonPtr();
+
+		static OverlayMgr&			getSingleton();
 	};
 }
 #endif

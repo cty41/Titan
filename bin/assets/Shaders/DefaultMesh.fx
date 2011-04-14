@@ -37,6 +37,7 @@ technique TVertexAndPixelShader
 {
 	pass P0
 	{
+		FILLMODE = WIREFRAME;
 		CULLMODE = CW;
 		ZENABLE = TRUE;
 		ZWRITEENABLE = TRUE;

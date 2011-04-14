@@ -59,6 +59,7 @@ namespace Titan
 	typedef BitFlags<uint8> u8Flags;	// 8 bits of flags
 	typedef BitFlags<uint16> u16Flags; // 16 bits of flags
 	typedef BitFlags<uint32> u32Flags; // 32 bits of flags
+	typedef BitFlags<uint64> u64Flags; // 32 bits of flags
 
 	//- Inline Functions --------------------------------------------
 

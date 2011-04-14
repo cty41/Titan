@@ -13,19 +13,19 @@ namespace Titan
 	{
 		assert( ms_Singleton );  return ( *ms_Singleton );
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 
 	FileSystemManager::FileSystemManager()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	FileSystemManager::~FileSystemManager()
 	{
 		unloadAllInstances();
 		removeAllFactory();
 	}	
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	FileSystem* FileSystemManager::load(const String& name, const String& type)
 	{
 		FileSystem* pFile = 0;
@@ -57,7 +57,7 @@ namespace Titan
 		}
 		return pFile;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void FileSystemManager::unload(const String& name)
 	{
 		FileSystemMap::iterator it = mFileSystemMap.find(name);
@@ -73,7 +73,7 @@ namespace Titan
 				"FileSystemManager::load");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void FileSystemManager::unload(FileSystem* system)
 	{
 		FileSystemFactoryMap::iterator it = mFileSystemFactoryMap.find(system->getType());
@@ -89,7 +89,7 @@ namespace Titan
 				"FileSystemManager::load");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void FileSystemManager::unloadAllInstances()
 	{
 		FileSystemMap::iterator it = mFileSystemMap.begin(), itend = mFileSystemMap.end();
@@ -99,7 +99,7 @@ namespace Titan
 			mFileSystemMap.erase(it++);
 		}
 	}		
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void FileSystemManager::addFileSystemFactory(FileSystemFactory* factory)
 	{
 		FileSystemFactoryMap::iterator it = mFileSystemFactoryMap.find(factory->getType());
@@ -114,7 +114,7 @@ namespace Titan
 				"FileSystemManager::addFileSystemFactory");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void FileSystemManager::removeFileSystemFactory(FileSystemFactory* factory)
 	{
 		FileSystemFactoryMap::iterator it = mFileSystemFactoryMap.find(factory->getType());
@@ -130,7 +130,7 @@ namespace Titan
 				"FileSystemManager::removeFileSystemFactory");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void FileSystemManager::removeAllFactory()
 	{
 		FileSystemFactoryMap::iterator it = mFileSystemFactoryMap.begin(), itend = mFileSystemFactoryMap.end();
@@ -140,7 +140,7 @@ namespace Titan
 			mFileSystemFactoryMap.erase(it++);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	FileSystemMapIterator FileSystemManager::getFileSystemMapIterator()
 	{
 		return FileSystemMapIterator(mFileSystemMap.begin(), mFileSystemMap.end());

@@ -18,18 +18,18 @@ namespace Titan
 	{
 		assert( ms_Singleton );  return ( *ms_Singleton );
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ConsoleDebugger::ConsoleDebugger()
 		:mConsoleEnable(true)
 	{
 		enableConsole();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ConsoleDebugger::~ConsoleDebugger()
 	{
 		disableConsole();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ConsoleDebugger::enableConsole()
 	{
 #if WIN32
@@ -68,12 +68,12 @@ namespace Titan
 		std::ios::sync_with_stdio();
 #endif
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ConsoleDebugger::disableConsole()
 	{
 		FreeConsole();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ConsoleDebugger::outputMessage(const String& message, ConsoleMessageLevel cml, bool outputTime)
 	{
 		if(mConsoleEnable)
@@ -92,7 +92,7 @@ namespace Titan
 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ConsoleDebugger::Stream	ConsoleDebugger::stream(ConsoleMessageLevel cml)
 	{
 		return Stream(cml);

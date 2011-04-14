@@ -70,7 +70,7 @@ technique SinglePassTerrain
     pass P0
     {
 			FILLMODE = WIREFRAME;
-			CULLMODE = CW;
+			CULLMODE = NONE;
 			ZENABLE = TRUE;
 			ZWRITEENABLE = TRUE;
 			ZFUNC = LESSEQUAL;

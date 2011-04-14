@@ -11,18 +11,18 @@ namespace Titan
 	{
 		memset(mChildren, 0, sizeof(mChildren));
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Quadtree::~Quadtree()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::setParent(Quadtree* parent)
 	{
 		assert(mParent == NULL);
 		mParent = parent;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::setChildren(Quadtree* child1, Quadtree* child2, Quadtree* child3, Quadtree* child4)
 	{
 		mChildren[0] = child1;
@@ -30,7 +30,7 @@ namespace Titan
 		mChildren[2] = child3;
 		mChildren[3] = child4;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::addOrUpdateNode(QuadtreeNode* member, const QuadTreeAABB& aabb)
 	{
 		u32Flags heightMask = calcHeightMask(aabb.y0, aabb.y1);
@@ -63,7 +63,7 @@ namespace Titan
 
 		member->_setQuadTreeData(this, heightMask);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::removeMember(QuadtreeNode* member)
 	{
 		if(member->getAttachedQuadTree() != this)
@@ -86,7 +86,7 @@ namespace Titan
 				mParent->descendantMemberRemoved();
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::rebuildLocalHeightMask()
 	{
 		mHeightLocalMask.clear();
@@ -100,7 +100,7 @@ namespace Titan
 	
 		rebuildHeightMask();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::rebuildHeightMask()
 	{
 		mHeightMask = mHeightLocalMask;
@@ -111,7 +111,7 @@ namespace Titan
 				mHeightMask.setFlags(mChildren[i]->getHeightMask());
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::descendantMemberAdded(u32Flags heightMask)
 	{
 		mHeightMask.setFlags(heightMask);
@@ -119,7 +119,7 @@ namespace Titan
 		if(mParent)
 			mParent->descendantMemberAdded(heightMask);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Quadtree::descendantMemberRemoved()
 	{
 		rebuildHeightMask();
@@ -127,8 +127,8 @@ namespace Titan
 		if(mParent)
 			mParent->descendantMemberRemoved();
 	}
-	//-------------------------------------------------------------//
-	void Quadtree::_findVisibleObjects(SceneMgr::RenderableList& renderableList, u32Flags heightMask, Camera* cam, bool state)
+	//-------------------------------------------------------------------------------//
+	void Quadtree::_findVisibleObjects(RenderQueue* queue, u32Flags heightMask, Camera* cam, bool state)
 	{
 		AABB result;
 		if(mHeightLocalMask.testAny(heightMask))
@@ -144,13 +144,13 @@ namespace Titan
 						if(Math::intersects(cam->getWorldAABB(), node->getAABB(), result))
 						{
 							if(cam->isVisible(node->getAABB()))
-								node->_findVisibleObjects(renderableList, cam);
+								node->_findVisibleObjects(queue, cam);
 						}
 					}
 					else
 					{
 						if(cam->isVisible(node->getAABB()))
-							node->_findVisibleObjects(renderableList, cam);
+							node->_findVisibleObjects(queue, cam);
 					}
 
 				}
@@ -158,7 +158,7 @@ namespace Titan
 			}
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 
 
 

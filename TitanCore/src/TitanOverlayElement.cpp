@@ -1,6 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TitanOverlayElement.h"
 #include "TitanOverlayMgr.h"
+#include "TiMaterialMgr.h"
 
 namespace Titan
 {
@@ -9,9 +10,9 @@ namespace Titan
 		mIsInitialised(false),mAbsLeft(0.0f), mAbsTop(0.0f), mAbsWidth(1.0f), mAbsHeight(1.0f),
 		mPixelScaleX(1.0f), mPixelScaleY(1.0f), mZOrder(0), mIsVisible(false)
 	{
-
+		mMaterial = MaterialMgr::getSingleton().getDefaultMaterial();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setName(const String& name)
 	{
 		if(mName != name)
@@ -21,7 +22,7 @@ namespace Titan
 		}
 		
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setWidth(float width)
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -34,7 +35,7 @@ namespace Titan
 		}
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setHeight(float height)
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -47,7 +48,7 @@ namespace Titan
 		}
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setLeft(float left)
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -60,7 +61,7 @@ namespace Titan
 		}
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setTop(float top)
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -73,7 +74,7 @@ namespace Titan
 		}
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setSize(float width, float height)
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -88,7 +89,7 @@ namespace Titan
 		}
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setPosition(float left, float top)
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -103,7 +104,7 @@ namespace Titan
 		}
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::update()
 	{
 
@@ -142,17 +143,17 @@ namespace Titan
 			mNeedUpdateTexData = false;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::getTransformMat(Matrix4* transMat)
 	{
 		*transMat = Matrix4::IDENTITY;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	float OverlayElement::getSquaredDistance(Camera* cam)
 	{
 		return 10000.0f;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayElement::setMetricsMode(OverlayMetricsMode mode)
 	{
 		if(mode == OMM_ABSOLUTE)

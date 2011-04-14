@@ -525,6 +525,13 @@ namespace Titan
 			return (mExtent == EXTENT_FINITE);
 		}
 
+		/** Sets the box to 'finite'
+		*/
+		inline void setFinite()
+		{
+			mExtent = EXTENT_FINITE;
+		}
+
 		/** Sets the box to 'infinite'
 		*/
 		inline void setInfinite()

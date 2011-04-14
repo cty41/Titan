@@ -2,7 +2,7 @@
 #define _TITAN_MANUALOBJECT_HH
 
 #include "TitanPrerequisites.h"
-#include "Renderable.h"
+#include "TiRenderable.h"
 #include "RenderData.h"
 #include "TitanVector3.h"
 #include "VertexIndexBufferData.h"
@@ -10,6 +10,7 @@
 #include "SceneObject.h"
 #include "TitanShaderEffect.h"
 #include "TitanAABB.h"
+#include "TiMaterial.h"
 
 namespace Titan
 {
@@ -24,7 +25,7 @@ namespace Titan
 
 		const String&	getType() const { return mType; }
 
-		void	_updateRenderableList(SceneMgr::RenderableList& renderableList, Camera* cam);
+		void	_updateRenderQueue(RenderQueue* queue, Camera* cam);
 
 		void	begin(RenderData::OperationType ot = RenderData::OT_TRIANGLE_LIST);
 
@@ -56,6 +57,7 @@ namespace Titan
 		{
 		protected:		
 			ManualObject*	mParent;
+			MaterialPtr		mMaterial;
 			RenderData		mRenderData;
 			ShaderEffectPtr	mShaderEffect;
 
@@ -70,11 +72,23 @@ namespace Titan
 
 			void			getTransformMat(Matrix4* transMat);
 
+			const MaterialPtr&	getMaterial() const;
+
+			bool			hasTexture() const { return false; }
+
+			const TexturePtr&	getTexture() const;
+
 			bool			hasShader(){ return !mShaderEffect.isNull(); }
 
 			ShaderEffectPtr getShaderEffect() { return mShaderEffect; }
 
 			void			setShaderEffect(ShaderEffectPtr effect){ mShaderEffect = effect; }
+			
+			float			getSquaredDistance(Camera* cam);
+
+			virtual bool			IsUseIdentityView() const {return false;}
+
+			virtual bool			IsUseIdentityProj() const { return false;}
 
 		};
 

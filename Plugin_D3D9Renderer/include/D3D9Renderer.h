@@ -2,7 +2,7 @@
 #define __D3D9RENDERER__HH
 
 #include "D3D9Prerequisites.h"
-#include "Renderer.h"
+#include "TiRenderer.h"
 #include "TitanCommon.h"
 #include "TitanColor.h"
 #include "Singleton.h"
@@ -49,6 +49,8 @@ namespace Titan
 
 		HRESULT					__SetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value);
 
+		HRESULT					__SetTexStageState(DWORD stage, D3DTEXTURESTAGESTATETYPE stageType, DWORD value);
+
 		void					_beginFrame();
 
 		void					_endFrame();
@@ -62,16 +64,45 @@ namespace Titan
 		void					setVertexBufferBinding(VertexBufferBinding* binding);
 
 		void					_render(const RenderData& rd);
-		
-		VertexElementType		getColorVertexElementType() const;
 
-		void					_convertProjMatrix(Matrix4& projSrc, Matrix4& projDst);
+		void					_convertProjMatrix(const Matrix4& projSrc, Matrix4& projDst, bool forGpuProgram);
 
 		void					_setViewMatrix(const Matrix4& view);
 
 		void					_setProjMatrix(const Matrix4& proj);
 
 		void					_setWorldMatrix(const Matrix4& world);
+
+		void					_setDepthCheck(bool state);
+
+		void					_setDepthWrite(bool state);
+
+		void					_setDepthFuntion(CompareFunction cf);
+
+		void					_setSamplerFilter(uint sampler, FilterType type, FilterOptions fo);
+
+		void					_setTexCoordSet(uint stage, size_t texcoordSet);
+
+		void					_setTexAddressMode(uint stage, const TexAddressModeSets& tam);
+
+		void					_setTexture(size_t stage, const TexturePtr& pTex);
+
+		void					_setSceneBlending( SceneBlendFactor sourceFactor, SceneBlendFactor destFactor, SceneBlendOperation op);
+
+		float					getMinDepthValue() { return 0.0f;}
+
+		// Range [0.0f, 1.0f]
+		// D3D inverts even identity view matrices, so maximum INPUT is -1.0
+		float					getMaxDepthValue(){ return -1.0f;}
+
+		// D3D considers the origin to be in the center of a pixel, so we need to offset -0.5f
+		float					getHorizontalTexelOffset() { return -0.5f;}
+
+		float					getVerticalTexelOffset() { return -0.5f; }
+
+		VertexElementType		getColorVertexElementType(void) const{ return VET_COLOR_ARGB; }
+
+		void					resumeFixFunction();
 
 		LPDIRECT3DDEVICE9		__getD3D9Device() const { return mpD3dDevice; }
 

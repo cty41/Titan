@@ -36,4 +36,9 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		AMDCaPersistentConfig = Debug|Win32
+		AMDCaPersistentStartup = TerrainDemo
+		AMDCaProjectFile = D:\Programmer\Work\Terrain\CodeAnalyst\Titan.caw
+	EndGlobalSection
 EndGlobal

@@ -3,7 +3,7 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanFont.h"
-#include "TitanResourceManager.h"
+#include "TiResourceMgr.h"
 #include "Singleton.h"
 
 namespace Titan
@@ -15,6 +15,8 @@ namespace Titan
 
 		~FontMgr();
 
+	protected:
+		Resource*	createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams);
 
 
 	public:

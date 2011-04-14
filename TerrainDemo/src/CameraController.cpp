@@ -7,11 +7,11 @@ mBoost(false),mLeftButtonPressed(false), mRightButtonPressed(false)
 ,mVelocity(Titan::Vector3::ZERO)
 {
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 CameraController::~CameraController()
 {
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void CameraController::update(float frameTime)
 {
 	if(mStyle == CS_FREE)
@@ -46,7 +46,7 @@ void CameraController::update(float frameTime)
 		if (mVelocity != Titan::Vector3::ZERO) mCamera->move(mVelocity * frameTime);
 	}
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void CameraController::injectKeyPressd(const OIS::KeyEvent &arg)
 {
 	switch (arg.key)
@@ -68,7 +68,7 @@ void CameraController::injectKeyPressd(const OIS::KeyEvent &arg)
 		break;
 	}
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void CameraController::injectKeyReleased(const OIS::KeyEvent &arg)
 {
 	switch (arg.key)
@@ -86,7 +86,7 @@ void CameraController::injectKeyReleased(const OIS::KeyEvent &arg)
 		mBoost = false;
 	}
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void CameraController::mouseMoved( const OIS::MouseEvent &arg )
 {
 	if(mRightButtonPressed&& mStyle == CS_FREE)
@@ -95,7 +95,7 @@ void CameraController::mouseMoved( const OIS::MouseEvent &arg )
 		mCamera->pitch(Titan::Degree(-arg.state.Y.rel * 0.15f));
 	}
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void CameraController::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
 	if(mStyle == CS_FREE)
@@ -106,7 +106,7 @@ void CameraController::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButton
 			mRightButtonPressed = true;
 	}
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void CameraController::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
 	if(mStyle == CS_FREE)

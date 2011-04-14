@@ -7,20 +7,20 @@
 
 namespace Titan
 {
-    const float Matrix3::EPSILON = 1e-06;
+    const float Matrix3::EPSILON = 1e-06f;
     const Matrix3 Matrix3::ZERO(0,0,0,0,0,0,0,0,0);
     const Matrix3 Matrix3::IDENTITY(1,0,0,0,1,0,0,0,1);
-    const float Matrix3::ms_fSvdEpsilon = 1e-04;
+    const float Matrix3::ms_fSvdEpsilon = 1e-04f;
     const unsigned int Matrix3::ms_iSvdMaxIterations = 32;
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Matrix3::GetColumn (size_t iCol) const
     {
         assert( 0 <= iCol && iCol < 3 );
         return Vector3(m[0][iCol],m[1][iCol],
             m[2][iCol]);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::SetColumn(size_t iCol, const Vector3& vec)
     {
         assert( 0 <= iCol && iCol < 3 );
@@ -29,7 +29,7 @@ namespace Titan
         m[2][iCol] = vec.z;
 
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis)
     {
         SetColumn(0,xAxis);
@@ -38,7 +38,7 @@ namespace Titan
 
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::operator== (const Matrix3& rkMatrix) const
     {
         for (size_t iRow = 0; iRow < 3; iRow++)
@@ -52,7 +52,7 @@ namespace Titan
 
         return true;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 Matrix3::operator+ (const Matrix3& rkMatrix) const
     {
         Matrix3 kSum;
@@ -66,7 +66,7 @@ namespace Titan
         }
         return kSum;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 Matrix3::operator- (const Matrix3& rkMatrix) const
     {
         Matrix3 kDiff;
@@ -80,7 +80,7 @@ namespace Titan
         }
         return kDiff;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 Matrix3::operator* (const Matrix3& rkMatrix) const
     {
         Matrix3 kProd;
@@ -96,7 +96,7 @@ namespace Titan
         }
         return kProd;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Matrix3::operator* (const Vector3& rkPoint) const
     {
         Vector3 kProd;
@@ -109,7 +109,7 @@ namespace Titan
         }
         return kProd;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 operator* (const Vector3& rkPoint, const Matrix3& rkMatrix)
     {
         Vector3 kProd;
@@ -122,7 +122,7 @@ namespace Titan
         }
         return kProd;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 Matrix3::operator- () const
     {
         Matrix3 kNeg;
@@ -133,7 +133,7 @@ namespace Titan
         }
         return kNeg;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 Matrix3::operator* (float fScalar) const
     {
         Matrix3 kProd;
@@ -144,7 +144,7 @@ namespace Titan
         }
         return kProd;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 operator* (float fScalar, const Matrix3& rkMatrix)
     {
         Matrix3 kProd;
@@ -155,7 +155,7 @@ namespace Titan
         }
         return kProd;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 Matrix3::Transpose () const
     {
         Matrix3 kTranspose;
@@ -166,7 +166,7 @@ namespace Titan
         }
         return kTranspose;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::Inverse (Matrix3& rkInverse, float fTolerance) const
     {
         // Invert a 3x3 using cofactors.  This is about 8 times faster than
@@ -208,14 +208,14 @@ namespace Titan
 
         return true;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix3 Matrix3::Inverse (float fTolerance) const
     {
         Matrix3 kInverse = Matrix3::ZERO;
         Inverse(kInverse,fTolerance);
         return kInverse;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Matrix3::Determinant () const
     {
         float fCofactor00 = m[1][1]*m[2][2] -
@@ -232,7 +232,7 @@ namespace Titan
 
         return fDet;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::Bidiagonalize (Matrix3& kA, Matrix3& kL,
         Matrix3& kR)
     {
@@ -347,7 +347,7 @@ namespace Titan
             }
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::GolubKahanStep (Matrix3& kA, Matrix3& kL,
         Matrix3& kR)
     {
@@ -452,7 +452,7 @@ namespace Titan
             kL[iCol][2] = fSin*fTmp0+fCos*fTmp1;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::SingularValueDecomposition (Matrix3& kL, Vector3& kS,
         Matrix3& kR) const
     {
@@ -575,7 +575,7 @@ namespace Titan
             }
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::SingularValueComposition (const Matrix3& kL,
         const Vector3& kS, const Matrix3& kR)
     {
@@ -600,7 +600,7 @@ namespace Titan
             }
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::Orthonormalize ()
     {
         // Algorithm uses Gram-Schmidt orthogonalization.  If 'this' matrix is
@@ -663,7 +663,7 @@ namespace Titan
         m[1][2] *= fInvLength;
         m[2][2] *= fInvLength;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::QDUDecomposition (Matrix3& kQ,
         Vector3& kD, Vector3& kU) const
     {
@@ -767,7 +767,7 @@ namespace Titan
         kU[1] = kR[0][2]*fInvD0;
         kU[2] = kR[1][2]/kD[1];
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Matrix3::MaxCubicRoot (float afCoeff[3])
     {
         // Spectral norm is for A^T*A, so characteristic polynomial
@@ -775,8 +775,8 @@ namespace Titan
         // This yields the assertions c[0] < 0 and c[2]*c[2] >= 3*c[1].
 
         // quick out for uniform scale (triple root)
-        const float fOneThird = 1.0/3.0;
-        const float fEpsilon = 1e-06;
+        const float fOneThird = 1.0f / 3.0f;
+        const float fEpsilon = 1e-06f;
         float fDiscr = afCoeff[2]*afCoeff[2] - 3.0f*afCoeff[1];
         if ( fDiscr <= fEpsilon )
             return -fOneThird*afCoeff[2];
@@ -811,7 +811,7 @@ namespace Titan
 
         return fX;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Matrix3::SpectralNorm () const
     {
         Matrix3 kP;
@@ -852,7 +852,7 @@ namespace Titan
         float fNorm = Math::Sqrt(fPmax*fRoot);
         return fNorm;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::ToAxisAngle (Vector3& rkAxis, Radian& rfRadians) const
     {
         // Let (x,y,z) be the unit-length axis and let A be an angle of rotation.
@@ -949,7 +949,7 @@ namespace Titan
             rkAxis.z = 0.0;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromAxisAngle (const Vector3& rkAxis, const Radian& fRadians)
     {
         float fCos = Math::Cos(fRadians);
@@ -975,7 +975,7 @@ namespace Titan
         m[2][1] = fYZM+fXSin;
         m[2][2] = fZ2*fOneMinusCos+fCos;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::ToEulerAnglesXYZ (Radian& rfYAngle, Radian& rfPAngle,
         Radian& rfRAngle) const
     {
@@ -1010,7 +1010,7 @@ namespace Titan
             return false;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::ToEulerAnglesXZY (Radian& rfYAngle, Radian& rfPAngle,
         Radian& rfRAngle) const
     {
@@ -1045,7 +1045,7 @@ namespace Titan
             return false;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::ToEulerAnglesYXZ (Radian& rfYAngle, Radian& rfPAngle,
         Radian& rfRAngle) const
     {
@@ -1080,7 +1080,7 @@ namespace Titan
             return false;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::ToEulerAnglesYZX (Radian& rfYAngle, Radian& rfPAngle,
         Radian& rfRAngle) const
     {
@@ -1115,7 +1115,7 @@ namespace Titan
             return false;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::ToEulerAnglesZXY (Radian& rfYAngle, Radian& rfPAngle,
         Radian& rfRAngle) const
     {
@@ -1150,7 +1150,7 @@ namespace Titan
             return false;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::ToEulerAnglesZYX (Radian& rfYAngle, Radian& rfPAngle,
         Radian& rfRAngle) const
     {
@@ -1185,7 +1185,7 @@ namespace Titan
             return false;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromEulerAnglesXYZ (const Radian& fYAngle, const Radian& fPAngle,
         const Radian& fRAngle)
     {
@@ -1205,7 +1205,7 @@ namespace Titan
 
         *this = kXMat*(kYMat*kZMat);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromEulerAnglesXZY (const Radian& fYAngle, const Radian& fPAngle,
         const Radian& fRAngle)
     {
@@ -1225,7 +1225,7 @@ namespace Titan
 
         *this = kXMat*(kZMat*kYMat);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromEulerAnglesYXZ (const Radian& fYAngle, const Radian& fPAngle,
         const Radian& fRAngle)
     {
@@ -1245,7 +1245,7 @@ namespace Titan
 
         *this = kYMat*(kXMat*kZMat);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromEulerAnglesYZX (const Radian& fYAngle, const Radian& fPAngle,
         const Radian& fRAngle)
     {
@@ -1265,7 +1265,7 @@ namespace Titan
 
         *this = kYMat*(kZMat*kXMat);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromEulerAnglesZXY (const Radian& fYAngle, const Radian& fPAngle,
         const Radian& fRAngle)
     {
@@ -1285,7 +1285,7 @@ namespace Titan
 
         *this = kZMat*(kXMat*kYMat);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::FromEulerAnglesZYX (const Radian& fYAngle, const Radian& fPAngle,
         const Radian& fRAngle)
     {
@@ -1305,7 +1305,7 @@ namespace Titan
 
         *this = kZMat*(kYMat*kXMat);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::Tridiagonal (float afDiag[3], float afSubDiag[3])
     {
         // Householder reduction T = Q^t M Q
@@ -1363,7 +1363,7 @@ namespace Titan
             m[2][2] = 1.0;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Matrix3::QLAlgorithm (float afDiag[3], float afSubDiag[3])
     {
         // QL iteration with implicit shifting to reduce matrix from tridiagonal
@@ -1444,7 +1444,7 @@ namespace Titan
 
         return true;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::EigenSolveSymmetric (float afEigenvalue[3],
         Vector3 akEigenvector[3]) const
     {
@@ -1470,7 +1470,7 @@ namespace Titan
             akEigenvector[2][2] = - akEigenvector[2][2];
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Matrix3::TensorProduct (const Vector3& rkU, const Vector3& rkV,
         Matrix3& rkProduct)
     {
@@ -1480,5 +1480,5 @@ namespace Titan
                 rkProduct[iRow][iCol] = rkU[iRow]*rkV[iCol];
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
 }

@@ -188,11 +188,16 @@ namespace Titan
 			usage |= D3DUSAGE_RENDERTARGET;
 
 		LPDIRECT3DDEVICE9 pD3D9Device = D3D9Renderer::getSingleton().__getD3D9Device();
-		if(FAILED(hr = D3DXCreateTextureFromFileInMemoryEx(pD3D9Device, mPreparedData->getPtr(), mPreparedData->size(),
+
+		D3DFORMAT d3dPF = D3D9Mappings::convertD3D9Format(mPixelFormat);
+		D3DPOOL d3dPool = D3D9Mappings::convertD3D9Pool(mPool);
+		if(FAILED(hr = D3DXCreateTextureFromFileInMemoryEx(pD3D9Device, (void*)mPreparedData->getPtr(), mPreparedData->size(),
 			mWidth, mHeight, mMipmapsLevel,
-			usage, D3D9Mappings::convertD3D9Format(mPixelFormat),
-			D3D9Mappings::convertD3D9Pool(mPool),
-			0, 0, 0, 0, 0, 
+			usage, 
+			d3dPF,
+			d3dPool,
+			D3DX_DEFAULT, D3DX_DEFAULT, 
+			0, NULL, NULL, 
 			&m2DTexture)))
 		{
 			String errMsg = DXGetErrorDescription(hr);
@@ -201,7 +206,12 @@ namespace Titan
 				"D3D9Texture::_loadNormalTex()");
 		}
 
-	}
+		D3DSURFACE_DESC texDesc;
+		m2DTexture->GetLevelDesc(0, & texDesc);
+		mWidth = texDesc.Width;
+		mHeight = texDesc.Height;
+		mPixelFormat = D3D9Mappings::convertToTitan(texDesc.Format);
+ 	}
 	//-------------------------------------------------------------//
 	void D3D9Texture::_loadCubeTex()
 	{

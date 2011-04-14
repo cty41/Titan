@@ -13,12 +13,12 @@ namespace Titan
 	{  
 		assert( ms_Singleton );  return ( *ms_Singleton );  
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgrSelector::SceneMgrSelector()
 	{
 		addFactory(TITAN_NEW SceneMgrFactory());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgrSelector::~SceneMgrSelector()
 	{
 		SceneMgrMap::iterator i = mSceneMgrMap.begin(), iend = mSceneMgrMap.end();
@@ -37,7 +37,7 @@ namespace Titan
 		}
 		mFactoryMap.clear();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgrSelector::addFactory(SceneMgrFactory* factory)
 	{
 		FactoryMap::iterator it = mFactoryMap.find(factory->getType());
@@ -53,7 +53,7 @@ namespace Titan
 			mFactoryMap.insert(FactoryMap::value_type(factory->getType(), factory));
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgrSelector::removeFactory(SceneMgrFactory* factory)
 	{
 		FactoryMap::iterator it = mFactoryMap.find(factory->getType());
@@ -70,7 +70,7 @@ namespace Titan
 				"SceneMgrSelector::removeFactory");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgr*	SceneMgrSelector::createSceneMgr(const String& name, SceneMgrType smt)
 	{
 		SceneMgrMap::iterator i = mSceneMgrMap.find(smt);
@@ -99,12 +99,12 @@ namespace Titan
 			return mgr;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgrSelector::destroySceneMgr(SceneMgr* mgr)
 	{
 		mSceneMgrMap.erase(mgr->getType());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgr* SceneMgrSelector::getSceneMgr(SceneMgrType smt)
 	{
 		SceneMgrMap::iterator i = mSceneMgrMap.find(smt);
@@ -120,5 +120,5 @@ namespace Titan
 			return 0;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 }

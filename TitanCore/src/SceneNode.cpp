@@ -1,6 +1,7 @@
 #include "TitanStableHeader.h"
 #include "SceneNode.h"
 #include "SceneObject.h"
+#include "Camera.h"
 
 namespace Titan
 {
@@ -13,12 +14,12 @@ namespace Titan
 	{
 
 	}	
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode::~SceneNode()
 	{
 		mSceneObjects.clear();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::attachObject(SceneObject* object)
 	{
 		SceneObjectMap::iterator it = mSceneObjects.find(object->getName());
@@ -34,7 +35,7 @@ namespace Titan
 			object->_setAttachedNode(this);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::detachObject(SceneObject* object)
 	{
 		SceneObjectMap::iterator it = mSceneObjects.find(object->getName());
@@ -50,7 +51,7 @@ namespace Titan
 			mSceneObjects.erase(it);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::detachObject(const String& objectName)
 	{
 		SceneObjectMap::iterator it = mSceneObjects.find(objectName);
@@ -66,7 +67,7 @@ namespace Titan
 			mSceneObjects.erase(it);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::_setParent(SceneNode* parent)
 	{
 		if(mParent)
@@ -77,7 +78,7 @@ namespace Titan
 		
 		mParent = parent;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode*	SceneNode::createChild(const String& name, const Vector3& v,
 		const Quaternion& q)
 	{
@@ -88,7 +89,7 @@ namespace Titan
 
 		return node;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode* SceneNode::createChild(const Vector3& v,
 		const Quaternion& q)
 	{
@@ -99,7 +100,7 @@ namespace Titan
 
 		return node;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::addChild(SceneNode* child)
 	{
 		if(child->getParent() == this)
@@ -109,7 +110,7 @@ namespace Titan
 		child->_setParent(this);
 		
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::removeChild(SceneNode* child)
 	{
 		if(child)
@@ -124,7 +125,7 @@ namespace Titan
 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::removeChild(const String& name)
 	{
 		SceneNodeMap::iterator it = mChildrenMap.find(name);
@@ -135,13 +136,13 @@ namespace Titan
 			mChildrenMap.erase(it);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::notifyUpdate()
 	{
 		mNeedUpdate = true;
 		mNeedUpdateMat = true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::_update()
 	{
 		if(mNeedUpdate)
@@ -157,7 +158,7 @@ namespace Titan
 
 		_updateAABB();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::_updateFromParent()
 	{
 		if(mParent)
@@ -176,7 +177,7 @@ namespace Titan
 			mDerivedScale = mScale;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::_updateAABB()
 	{
 		mAABB.setNull();
@@ -194,8 +195,8 @@ namespace Titan
 			++it2;
 		}
 	}
-	//-------------------------------------------------------------//
-	void SceneNode::_findVisibleObjects(Camera* cam, SceneMgr::RenderableList& renderableList)
+	//-------------------------------------------------------------------------------//
+	void SceneNode::_findVisibleObjects(Camera* cam, RenderQueue* queue)
 	{
 		if(!cam->isVisible(mAABB))
 			return;
@@ -203,19 +204,19 @@ namespace Titan
 		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
 		while(it != itend)
 		{
-			it->second->_updateRenderableList(renderableList, cam);
+			it->second->_updateRenderQueue(queue, cam);
 			++it;
 		}
 
 		SceneNodeMap::iterator it2 = mChildrenMap.begin(), itend2 = mChildrenMap.end();
 		while(it2 != itend2)
 		{
-			it2->second->_findVisibleObjects(cam, renderableList);
+			it2->second->_findVisibleObjects(cam, queue);
 			++it2;
 		}
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const Matrix4& SceneNode::_getTransformMatrix()
 	{
 		if(mNeedUpdateMat)
@@ -227,19 +228,19 @@ namespace Titan
 
 		return mTransformMat;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::scale(float x, float y, float z)
 	{
 		scale(Vector3(x, y, z));
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::scale(const Vector3& vec)
 	{
 		mScale *= vec;
 
 		notifyUpdate();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::rotate(const Quaternion& q)
 	{
 		Quaternion qu = q;
@@ -247,40 +248,46 @@ namespace Titan
 		mQuaternion = mQuaternion * qu;
 		notifyUpdate();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::rotate(const Vector3& axis, const Radian& angle)
 	{
 		Quaternion q;
 		q.FromAngleAxis(angle,axis);
 		rotate(q);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::translate(float x, float y, float z)
 	{
 		translate(Vector3(x, y, z));
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneNode::translate(const Vector3& pos)
 	{
 		mPosition += pos;
 		notifyUpdate();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
+	float SceneNode::getSquaredDistance(Camera* cam)
+	{
+		Vector3 diff = _getDerivedPosition() - cam->getPosition();
+		return diff.squaredLength();
+	}
+	//-------------------------------------------------------------------------------//
 	SceneNode::ObjectIterator SceneNode::getAttachedObjectIterator()
 	{
 		return ObjectIterator(mSceneObjects.begin(), mSceneObjects.end());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode::ConstObjectIterator SceneNode::getAttachedConstObjectIterator()
 	{
 		return ConstObjectIterator(mSceneObjects.begin(), mSceneObjects.end());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode::ChildIterator SceneNode::getChildIterator()
 	{
 		return ChildIterator(mChildrenMap.begin(), mChildrenMap.end());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode::ConstChildIterator SceneNode::getConstChildIterator()
 	{
 		return ConstChildIterator(mChildrenMap.begin(), mChildrenMap.end());

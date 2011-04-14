@@ -3,7 +3,7 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanTexture.h"
-#include "TitanResourceManager.h"
+#include "TiResourceMgr.h"
 #include "Singleton.h"
 
 namespace Titan

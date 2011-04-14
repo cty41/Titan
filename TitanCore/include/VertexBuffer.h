@@ -68,6 +68,10 @@ namespace Titan
 
 		static size_t getTypeSize(VertexElementType etype);
 
+		static uint32 convertColor(const Color& src,
+			VertexElementType dst);
+
+
 		static VertexElementType getColorVertexElementType();
 
 		inline bool operator== (const VertexElement& rhs) const

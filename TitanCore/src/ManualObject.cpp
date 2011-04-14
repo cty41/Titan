@@ -2,16 +2,20 @@
 #include "ManualObject.h"
 #include "HardwareBufferManager.h"
 #include "TitanShaderEffect.h"
+#include "TitanRenderQueue.h"
+#include "TiMaterialMgr.h"
 
 namespace Titan
 {
+
+	static const TexturePtr sNullTexPtr;
 
 #define TEMP_INITIAL_SIZE 50
 #define TEMP_VERTEXSIZE_GUESS sizeof(float) * 12
 #define TEMP_INITIAL_VERTEX_SIZE TEMP_VERTEXSIZE_GUESS * TEMP_INITIAL_SIZE
 #define TEMP_INITIAL_INDEX_SIZE sizeof(uint32) * TEMP_INITIAL_SIZE
 
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ManualObject::ManualObject(const String& name)
 		: mName(name), mFirstVertex(true),
 		mTempVertexPending(false), mCurrentSection(0),
@@ -22,23 +26,23 @@ namespace Titan
 		mType = "ManualObject";
 		//If you got an error here, recompiled it..
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ManualObject::~ManualObject()
 	{
 		clear();
 	}
-	//-------------------------------------------------------------//
-	void ManualObject::_updateRenderableList(SceneMgr::RenderableList& renderableList, Camera* cam)
+	//-------------------------------------------------------------------------------//
+	void ManualObject::_updateRenderQueue(RenderQueue* queue, Camera* cam)
 	{
 		ManualObjectSectionVector::iterator it = mSectionVector.begin(),
 			itend = mSectionVector.end();
 		while(it != itend)
 		{
-			renderableList.push_back(*it);
+			queue->addRenderable(*it);
 			++it;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::begin(RenderData::OperationType ot)
 	{
 		if(mCurrentSection)
@@ -53,7 +57,7 @@ namespace Titan
 		mFirstVertex = true;
 		mDeclSize = 0;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ManualObject::ManualObjectSection* ManualObject::end()
 	{
 		if(!mCurrentSection)
@@ -103,7 +107,7 @@ namespace Titan
 		mCurrentSection = 0;
 		return pSection;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::clear()
 	{
 		mAABB.setNull();
@@ -117,7 +121,7 @@ namespace Titan
 		}
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::resetTempAreas(void)
 	{
 		TITAN_FREE(mTempVertexBuffer, MEMCATEGORY_GENERAL);
@@ -127,7 +131,7 @@ namespace Titan
 		mTempVertexSize = TEMP_INITIAL_VERTEX_SIZE;
 		mTempIndexSize = TEMP_INITIAL_INDEX_SIZE;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::position(float x, float y, float z)
 	{
 		if (mTempVertexPending)
@@ -154,12 +158,12 @@ namespace Titan
 
 		mTempVertexPending = true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::position(const Vector3& pos)
 	{
 		position(pos.x, pos.y, pos.z);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::index(uint idx)
 	{
 		RenderData* rd = mCurrentSection->getRenderData();
@@ -173,7 +177,7 @@ namespace Titan
 
 		mTempIndexBuffer[rd->indexData->indexCount - 1] = idx;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::triangle(uint32 i1, uint32 i2, uint32 i3)
 	{
 		RenderData* rd = mCurrentSection->getRenderData();
@@ -189,7 +193,7 @@ namespace Titan
 		index(i2);
 		index(i3);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::quad(uint32 i1, uint32 i2, uint32 i3, uint32 i4)
 	{
 		// first tri
@@ -197,7 +201,7 @@ namespace Titan
 		// second tri
 		triangle(i3, i4, i1);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::setShaderEffect(ShaderEffectPtr effect)
 	{
 		ManualObjectSectionVector::iterator it = mSectionVector.begin(), itend = mSectionVector.end();
@@ -208,7 +212,7 @@ namespace Titan
 			++it;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::copyTempVertexToBuffer()
 	{
 		RenderData* rd = mCurrentSection->getRenderData();
@@ -290,7 +294,7 @@ namespace Titan
 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::resizeTempVertexBufferIfNeeded(size_t numVerts)
 	{
 		size_t newSize;
@@ -327,7 +331,7 @@ namespace Titan
 			mTempVertexSize = newSize;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObject::resizeTempIndexBufferIfNeeded(size_t numInds)
 	{
 		size_t newSize = numInds * sizeof(uint16);
@@ -355,30 +359,46 @@ namespace Titan
 		}
 	}
 
-	ManualObject::ManualObjectSection::ManualObjectSection(ManualObject* parent, RenderData::OperationType ot)
+	typedef ManualObject::ManualObjectSection ManualObjectSection;
+
+	ManualObjectSection::ManualObjectSection(ManualObject* parent, RenderData::OperationType ot)
 		:mParent(parent)
 	{
 		mRenderData.operationType = ot;
 		mRenderData.useIndex = false;
 		mRenderData.vertexData = TITAN_NEW VertexData();
+
+		mMaterial = MaterialMgr::getSingleton().getDefaultMaterial();
 	}
-	//-------------------------------------------------------------//
-	ManualObject::ManualObjectSection::~ManualObjectSection()
+	//-------------------------------------------------------------------------------//
+	ManualObjectSection::~ManualObjectSection()
 	{
-		TITAN_DELETE mRenderData.vertexData;
-		TITAN_DELETE mRenderData.indexData;
 	}	
-	//-------------------------------------------------------------//
-	void ManualObject::ManualObjectSection::getRenderData(RenderData& rd)
+	//-------------------------------------------------------------------------------//
+	void ManualObjectSection::getRenderData(RenderData& rd)
 	{
 		rd = mRenderData;
 	}
-	//-------------------------------------------------------------//
-	void ManualObject::ManualObjectSection::getTransformMat(Matrix4* transMat)
+	//-------------------------------------------------------------------------------//
+	void ManualObjectSection::getTransformMat(Matrix4* transMat)
 	{
 		*transMat = mParent->_getAttachedNodeFullTransform();
 	}
-
+	//----------------------------------------------------------------------------//
+	const MaterialPtr& ManualObjectSection::getMaterial() const
+	{
+		return mMaterial;
+	}
+	//-------------------------------------------------------------------------------//
+	float ManualObjectSection::getSquaredDistance(Camera* cam)
+	{
+		return mParent->getAttachedNode()->getSquaredDistance(cam);
+	}
+	//-------------------------------------------------------------------------------//
+	const TexturePtr& ManualObjectSection::getTexture() const
+	{
+		return sNullTexPtr;
+	}
 	
 
 	//
@@ -389,17 +409,17 @@ namespace Titan
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ManualObjectFactory::~ManualObjectFactory()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneObject* ManualObjectFactory::createInstance(const String& name)
 	{
 		return TITAN_NEW ManualObject(name);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ManualObjectFactory::destroyInstance(SceneObject* object)
 	{
 		TITAN_DELETE object;

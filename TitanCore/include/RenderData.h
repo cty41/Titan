@@ -38,6 +38,20 @@ namespace Titan
 		{
 		}
 
+		~RenderData()
+		{
+			if(vertexData)
+			{
+				TITAN_DELETE vertexData;
+				vertexData = NULL;
+			}
+			if (indexData)
+			{
+				TITAN_DELETE indexData;
+				indexData = NULL;
+			}
+		}
+
 
 	};
 }

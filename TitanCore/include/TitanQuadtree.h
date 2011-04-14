@@ -88,7 +88,7 @@ namespace Titan
 
 		u32Flags	getLocalHeightMask() const { return mHeightLocalMask; }
 
-		void		_findVisibleObjects(SceneMgr::RenderableList& renderableList, 
+		void		_findVisibleObjects(RenderQueue* queue, 
 										u32Flags heightMask,
 										Camera* cam, 
 										bool state);

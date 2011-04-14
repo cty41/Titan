@@ -3,6 +3,7 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanShaderEffect.h"
+#include "TitanMatrix4.h"
 
 namespace Titan
 {
@@ -36,6 +37,10 @@ namespace Titan
 
 		SceneMgrType	getType() const { return mType; }
 
+		void useRenderableViewProjMode(Renderable* rend);
+
+		void resetViewProjMode();
+
 
 	protected:
 		SceneMgrType			mType;
@@ -50,17 +55,26 @@ namespace Titan
 
 		typedef map<String, Camera*>::type CameraMap;
 		CameraMap		mCameras;
+		Camera*			mCurrentCam;
+		RenderQueue*	mRenderQueue;
 
-		RenderableList mRenderableList;
+		Matrix4			mCachedViewMatrix;
+		Matrix4			mCachedProjMatrix;
+		bool			mResetIdentityView;
+		bool			mResetIdentityProj;
 
 	protected:
 		virtual void	_updateSceneGraph();
 
 		virtual void	_processVisibleObjects(Camera* cam);
 
-		virtual void	_renderOpaqueObjects();
+		virtual void	_renderVisibleObjects();
 
-		virtual void	_renderSingleObject(Renderable* rend);
+		void			_renderSingleObject(Renderable* rend);
+
+		void			_renderSingleObject(Renderable* rend, const Pass* pass);
+
+		void			_setPassSettings(const Pass* pass);
 
 		virtual void	_updateShaderParams(ShaderEffectPtr effect);
 	};

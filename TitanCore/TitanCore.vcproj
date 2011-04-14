@@ -18,11 +18,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="TitanCore.dir\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
-			DeleteExtensionsOnClean="*.obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;$(TargetPath)"
+			DeleteExtensionsOnClean="*.ilb;*.obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;$(TargetPath)"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./include/;./src/nedmalloc;..\Dependencies\include\OIS"
+				AdditionalIncludeDirectories="./include/;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TITAN_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -50,7 +50,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="TitanStableHeader.h"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
-				ProgramDataBaseFileName="..\bin\Debug\TitanCore_d.pdb"
+				ProgramDataBaseFileName="..\bin\$(ConfigurationName)\TitanCore_d.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -65,6 +65,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\Dependencies\lib\$(ConfigurationName)\freetype2311_D.lib"
 				OutputFile="..\bin\$(ConfigurationName)\TitanCore_d.dll"
 				Version="0.1"
 				LinkIncremental="2"
@@ -100,8 +101,8 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="1"
+			ConfigurationType="2"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -123,10 +124,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				AdditionalIncludeDirectories="./include/;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;TITAN_EXPORT"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="TitanStableHeader.h"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -141,11 +144,16 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\Dependencies\lib\$(ConfigurationName)\freetype2311.lib"
+				OutputFile="..\bin\$(ConfigurationName)\TitanCore.dll"
+				Version="0.1"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\bin\$(ConfigurationName)\TitanCore.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="..\lib\$(ConfigurationName)\TitanCore.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -179,10 +187,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\src\BaseTerrain.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\src\Camera.cpp"
 				>
@@ -256,10 +260,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Renderer.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\RenderTarget.cpp"
 				>
 			</File>
@@ -296,6 +296,38 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiChunkTerrain.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiChunkTerrainSection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiMaterial.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiMaterialMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiPass.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiResourceGroupMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiResourceMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanBaseTerrain.cpp"
 				>
 			</File>
@@ -320,6 +352,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TitanFont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanFontMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanMath.cpp"
 				>
 			</File>
@@ -329,6 +369,22 @@
 			</File>
 			<File
 				RelativePath=".\src\TitanMatrix4.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanOverlayElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanOverlayMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanOverlayPanelElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanOverlayTextElement.cpp"
 				>
 			</File>
 			<File
@@ -356,15 +412,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TitanRenderQueue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TitanRenderQueueGroup.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TitanResource.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanResourceGroupManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanResourceManager.cpp"
 				>
 			</File>
 			<File
@@ -390,6 +446,15 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\TitanStringFuncs.cpp"
@@ -413,6 +478,10 @@
 			</File>
 			<File
 				RelativePath=".\src\TitanVector4.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiTextureUnit.cpp"
 				>
 			</File>
 			<File
@@ -522,15 +591,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\Renderable.h"
+				RelativePath=".\include\rapidxml-1.13\rapidxml.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\rapidxml-1.13\rapidxml_iterators.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\rapidxml-1.13\rapidxml_print.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\rapidxml-1.13\rapidxml_utils.hpp"
 				>
 			</File>
 			<File
 				RelativePath=".\include\RenderData.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\Renderer.h"
 				>
 			</File>
 			<File
@@ -578,7 +655,47 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiChunkTerrain.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiChunkTerrainSection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMaterial.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMaterialMgr.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\Timer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiPass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRenderable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiResourceGroupMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiResourceMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiShader.h"
 				>
 			</File>
 			<File
@@ -610,6 +727,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TitanBlendMode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TitanColor.h"
 				>
 			</File>
@@ -631,6 +752,14 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanDynLib.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanFont.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanFontMgr.h"
 				>
 			</File>
 			<File
@@ -659,6 +788,22 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanNumericTools.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanOverlayElement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanOverlayMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanOverlayPanelElement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanOverlayTextElement.h"
 				>
 			</File>
 			<File
@@ -706,15 +851,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TitanRenderQueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TitanRenderQueueGroup.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TitanResource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanResourceGroupManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanResourceManager.h"
 				>
 			</File>
 			<File
@@ -763,6 +908,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanVector4.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiTextureUnit.h"
 				>
 			</File>
 			<File

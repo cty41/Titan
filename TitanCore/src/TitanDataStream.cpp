@@ -6,14 +6,14 @@
 
 namespace Titan {
 
-    //-----------------------------------------------------------------------
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
+    //-------------------------------------------------------------------------------//--
     template <typename T> DataStream& DataStream::operator >>(T& val)
     {
         read(static_cast<void*>(&val), sizeof(T));
         return *this;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     String DataStream::getLine(bool trimAfter)
     {
         char tmpBuf[STREAM_TEMP_SIZE];
@@ -55,7 +55,7 @@ namespace Titan {
 
         return retString;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t DataStream::readLine(char* buf, size_t maxCount, const String& delim)
     {
 		// Deal with both Unix & Windows LFs
@@ -111,7 +111,7 @@ namespace Titan {
 
         return totalCount;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t DataStream::skipLine(const String& delim)
     {
         char tmpBuf[STREAM_TEMP_SIZE];
@@ -142,7 +142,7 @@ namespace Titan {
 
         return total;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     String DataStream::getAsString(void)
     {
         // Read the entire buffer
@@ -156,8 +156,8 @@ namespace Titan {
         TITAN_FREE(pBuf, MEMCATEGORY_GENERAL);
         return str;
     }
-    //-----------------------------------------------------------------------
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(void* pMem, size_t size, bool freeOnClose, bool readOnly)
 		: DataStream(static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
     {
@@ -167,7 +167,7 @@ namespace Titan {
         mFreeOnClose = freeOnClose;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(const String& name, void* pMem, size_t size, 
         bool freeOnClose, bool readOnly)
         : DataStream(name, static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
@@ -178,7 +178,7 @@ namespace Titan {
         mFreeOnClose = freeOnClose;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(DataStream& sourceStream, 
         bool freeOnClose, bool readOnly)
         : DataStream(static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
@@ -191,7 +191,7 @@ namespace Titan {
         mFreeOnClose = freeOnClose;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(DataStreamPtr& sourceStream, 
         bool freeOnClose, bool readOnly)
         : DataStream(static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
@@ -204,7 +204,7 @@ namespace Titan {
         mFreeOnClose = freeOnClose;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(const String& name, DataStream& sourceStream, 
         bool freeOnClose, bool readOnly)
         : DataStream(name, static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
@@ -217,7 +217,7 @@ namespace Titan {
         mFreeOnClose = freeOnClose;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(const String& name, const DataStreamPtr& sourceStream, 
         bool freeOnClose, bool readOnly)
         : DataStream(name, static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
@@ -230,7 +230,7 @@ namespace Titan {
         mFreeOnClose = freeOnClose;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(size_t size, bool freeOnClose, bool readOnly)
         : DataStream(static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
     {
@@ -241,7 +241,7 @@ namespace Titan {
         mEnd = mData + mSize;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::MemoryDataStream(const String& name, size_t size, 
         bool freeOnClose, bool readOnly)
         : DataStream(name, static_cast<uint16>(readOnly ? READ : (READ | WRITE)))
@@ -253,12 +253,12 @@ namespace Titan {
         mEnd = mData + mSize;
         assert(mEnd >= mPos);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     MemoryDataStream::~MemoryDataStream()
     {
         close();
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t MemoryDataStream::read(void* buf, size_t count)
     {
         size_t cnt = count;
@@ -274,7 +274,7 @@ namespace Titan {
         mPos += cnt;
         return cnt;
     }
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	size_t MemoryDataStream::write(const void* buf, size_t count)
 	{
 		size_t written = 0;
@@ -293,7 +293,7 @@ namespace Titan {
 		}
 		return written;
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t MemoryDataStream::readLine(char* buf, size_t maxCount, 
         const String& delim)
     {
@@ -331,7 +331,7 @@ namespace Titan {
 
         return pos;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t MemoryDataStream::skipLine(const String& delim)
     {
         size_t pos = 0;
@@ -350,7 +350,7 @@ namespace Titan {
         return pos;
 
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void MemoryDataStream::skip(long count)
     {
         size_t newpos = (size_t)( ( mPos - mData ) + count );
@@ -358,24 +358,24 @@ namespace Titan {
 
         mPos = mData + newpos;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void MemoryDataStream::seek( size_t pos )
     {
         assert( mData + pos <= mEnd );
         mPos = mData + pos;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t MemoryDataStream::tell(void) const
 	{
 		//mData is start, mPos is current location
 		return mPos - mData;
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
     bool MemoryDataStream::eof(void) const
     {
         return mPos >= mEnd;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void MemoryDataStream::close(void)    
     {
         if (mFreeOnClose && mData)
@@ -385,8 +385,8 @@ namespace Titan {
         }
 
     }
-    //-----------------------------------------------------------------------
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
+    //-------------------------------------------------------------------------------//--
     FileStreamDataStream::FileStreamDataStream(std::ifstream* s, bool freeOnClose)
         : DataStream(), mpInStream(s), mpFStreamRO(s), mpFStream(0), mFreeOnClose(freeOnClose)
     {
@@ -396,7 +396,7 @@ namespace Titan {
         mpInStream->seekg(0, std::ios_base::beg);
 		determineAccess();
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     FileStreamDataStream::FileStreamDataStream(const String& name, 
         std::ifstream* s, bool freeOnClose)
         : DataStream(name), mpInStream(s), mpFStreamRO(s), mpFStream(0), mFreeOnClose(freeOnClose)
@@ -407,7 +407,7 @@ namespace Titan {
         mpInStream->seekg(0, std::ios_base::beg);
 		determineAccess();
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     FileStreamDataStream::FileStreamDataStream(const String& name, 
         std::ifstream* s, size_t size, bool freeOnClose)
         : DataStream(name), mpInStream(s), mpFStreamRO(s), mpFStream(0), mFreeOnClose(freeOnClose)
@@ -416,7 +416,7 @@ namespace Titan {
         mSize = size;
 		determineAccess();
     }
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	FileStreamDataStream::FileStreamDataStream(std::fstream* s, bool freeOnClose)
 		: DataStream(false), mpInStream(s), mpFStreamRO(0), mpFStream(s), mFreeOnClose(freeOnClose)
 	{
@@ -428,7 +428,7 @@ namespace Titan {
 		determineAccess();
 
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	FileStreamDataStream::FileStreamDataStream(const String& name, 
 		std::fstream* s, bool freeOnClose)
 		: DataStream(name, false), mpInStream(s), mpFStreamRO(0), mpFStream(s), mFreeOnClose(freeOnClose)
@@ -440,7 +440,7 @@ namespace Titan {
 		mpInStream->seekg(0, std::ios_base::beg);
 		determineAccess();
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	FileStreamDataStream::FileStreamDataStream(const String& name, 
 		std::fstream* s, size_t size, bool freeOnClose)
 		: DataStream(name, false), mpInStream(s), mpFStreamRO(0), mpFStream(s), mFreeOnClose(freeOnClose)
@@ -450,7 +450,7 @@ namespace Titan {
 		mSize = size;
 		determineAccess();
 	}
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	void FileStreamDataStream::determineAccess()
 	{
 		mAccess = 0;
@@ -459,18 +459,18 @@ namespace Titan {
 		if (mpFStream)
 			mAccess |= WRITE;
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     FileStreamDataStream::~FileStreamDataStream()
     {
         close();
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t FileStreamDataStream::read(void* buf, size_t count)
     {
 		mpInStream->read(static_cast<char*>(buf), static_cast<std::streamsize>(count));
         return mpInStream->gcount();
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	size_t FileStreamDataStream::write(const void* buf, size_t count)
 	{
 		size_t written = 0;
@@ -481,7 +481,7 @@ namespace Titan {
 		}
 		return written;
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     size_t FileStreamDataStream::readLine(char* buf, size_t maxCount, 
         const String& delim)
     {
@@ -548,7 +548,7 @@ namespace Titan {
 		}
 		return ret;
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void FileStreamDataStream::skip(long count)
     {
 #if defined(STLPORT)
@@ -567,24 +567,24 @@ namespace Titan {
 		mpInStream->clear(); //Clear fail status in case eof was set
 		mpInStream->seekg(static_cast<std::ifstream::pos_type>(count), std::ios::cur);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void FileStreamDataStream::seek( size_t pos )
     {
 		mpInStream->clear(); //Clear fail status in case eof was set
 		mpInStream->seekg(static_cast<std::streamoff>(pos), std::ios::beg);
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
     size_t FileStreamDataStream::tell(void) const
 	{
 		mpInStream->clear(); //Clear fail status in case eof was set
 		return mpInStream->tellg();
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
     bool FileStreamDataStream::eof(void) const
     {
         return mpInStream->eof();
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void FileStreamDataStream::close(void)
     {
         if (mpInStream)

@@ -9,6 +9,15 @@
 
 namespace Titan
 {
+	/** Enumerates the types of Font usable in the engine. */
+	enum FontType
+	{
+		/// Generated from a truetype (.ttf) font
+		FT_TRUETYPE = 1,
+		/// Loaded from an image created by an artist
+		FT_TEXTURE = 2
+	};
+
 	class _DllExport Font : public Resource
 	{
 	public:
@@ -36,11 +45,18 @@ namespace Titan
 
 		~Font();
 
+		void setType(FontType ftype){ mType = ftype;}
+
+		/** Gets the type of font. */
+		FontType getType(void) const{ return mType; }
+
 		void setSource(const String& source);
 
 		/** Gets the source this font (either an image or a truetype font).
 		*/
 		const String& getSource(void) const;
+
+		const TexturePtr&	getFontTexture() const { return mFontTexture; }
 
 		void setTrueTypeSize(float ttfSize);
 
@@ -149,6 +165,8 @@ namespace Titan
 		/// Source of the font (either an image name or a truetype font)
 		String mSource;
 
+		FontType	mType;
+
 		/// Size of the truetype font, in points
 		float mTtfSize;
 		/// Resolution (dpi) of truetype font
@@ -159,6 +177,9 @@ namespace Titan
 		FontCodeMap	mFontCodeMap;
 
 		TexturePtr	mFontTexture;
+
+		/// for TRUE_TYPE font only
+		bool mAntialiasColor;
 
 		FontCodeRangeVec	mFontCodeRangeVec;
 
@@ -171,7 +192,7 @@ namespace Titan
 
 	};
 
-	class _DllExport FontPtr : SharedPtr<Font>
+	class _DllExport FontPtr : public SharedPtr<Font>
 	{
 	public:
 		FontPtr()

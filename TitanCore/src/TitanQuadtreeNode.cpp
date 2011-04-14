@@ -1,6 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TitanQuadtreeNode.h"
 #include "TitanQuadtree.h"
+#include "TitanRenderQueue.h"
 
 namespace Titan
 {
@@ -8,12 +9,12 @@ namespace Titan
 		:SceneNode(name), mCreator(creator), mAttachQuadNode(NULL), mQuadTreeHeightMask(0)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	QuadtreeNode::~QuadtreeNode()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode* QuadtreeNode::createChild(const String& name, const Vector3& v, const Quaternion& q )
 	{
 		SceneNode* node = TITAN_NEW QuadtreeNode(mCreator, name);
@@ -24,7 +25,7 @@ namespace Titan
 		_attachToQuadTree();
 		return node;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode* QuadtreeNode::createChild(const Vector3& v, const Quaternion& q)
 	{
 		QuadtreeNode* node = TITAN_NEW QuadtreeNode(mCreator, msAutoNamer.getAutoName());
@@ -36,7 +37,7 @@ namespace Titan
 		node->_attachToQuadTree();
 		return node;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeNode::removeChild(const String& name)
 	{
 		SceneNodeMap::iterator it = mChildrenMap.find(name);
@@ -49,7 +50,7 @@ namespace Titan
 			mChildrenMap.erase(it);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeNode::removeChild(SceneNode* child)
 	{
 		SceneNodeMap::iterator it = mChildrenMap.find(child->getName());
@@ -62,31 +63,31 @@ namespace Titan
 			mChildrenMap.erase(it);
 		}
 	}
-	//-------------------------------------------------------------//
-	void QuadtreeNode::_findVisibleObjects(SceneMgr::RenderableList& renderableList, Camera* cam)
+	//-------------------------------------------------------------------------------//
+	void QuadtreeNode::_findVisibleObjects(RenderQueue* queue, Camera* cam)
 	{
 		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
 		while(it != itend)
 		{
-			it->second->_updateRenderableList(renderableList, cam);
+			it->second->_updateRenderQueue(queue, cam);
 			++it;
 		}
 		//do not find in child nodes, because we also add child node in quadtree
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeNode::_setQuadTreeData(Quadtree* attachedNode, u32Flags heightMask)
 	{
 		mAttachQuadNode = attachedNode;
 		mQuadTreeHeightMask = heightMask;
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeNode::_attachToQuadTree()
 	{
 		detachFromQuadTree();
 		mCreator->addOrUpdateSceneObject(this);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeNode::detachFromQuadTree()
 	{
 		if (mAttachQuadNode)

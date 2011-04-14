@@ -6,7 +6,7 @@
 #include "Singleton.h"
 #include "TitanCommon.h"
 #include "SceneMgr.h"
-#include "FileSystemManager.h"
+
 
 namespace Titan
 {
@@ -54,6 +54,10 @@ namespace Titan
 		void				removeAllSceneObjectFactory();
 
 		SceneObjectFactory*	getSceneObjectFactory(const String& typeName);
+
+		Timer*				getTimer() const { return mTimer; }
+
+		void				convertColor(const Color& col, uint32* pDest);
 	
 		static Root*		getSingletonPtr();
 
@@ -77,7 +81,11 @@ namespace Titan
 		SceneObjectFactoryMap		mSceneObjectFactoryMap;
 
 		FileSystemManager*		mFileSystemMgr;
-		ResourceGroupManager*	mResourceGroupMgr;
+		ResourceGroupMgr*		mResourceGroupMgr;
+		MaterialMgr*			mMaterialMgr;
+		OverlayMgr*				mOverlayMgr;
+
+		FontMgr*				mFontMgr;
 
 
 	};

@@ -6,17 +6,17 @@ namespace Titan
 		:mhWnd(0), mhInstance(hInstance), mpD3dDevice(0)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	D3D9RenderWindow::~D3D9RenderWindow()
 	{
 		destroy();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::destroy()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::create(const String& title, uint width, uint height, bool isFullScreen, const AnyMap* particularParams )
 	{
 		HRESULT hr;
@@ -44,12 +44,12 @@ namespace Titan
 			0,
 			0, 0 );
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::update()
 	{
 		RenderWindow::update();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::swapBuffer()
 	{
 		HRESULT hr;
@@ -60,7 +60,7 @@ namespace Titan
 				+ msg, "void D3D9RenderWindow::swapBuffer()" );
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::buildD3D9PrensentParameters(D3DPRESENT_PARAMETERS* params)
 	{
 		params->BackBufferWidth				= mWidth;
@@ -76,9 +76,9 @@ namespace Titan
 		params->AutoDepthStencilFormat		= D3DFMT_D24S8;
 		//params->Flags						= 0;
 		//params->FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
-		//params->PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
+		params->PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::getCustomParams(const String& name, void* pDst)
 	{
 		if(name == "WINDOW")
@@ -87,12 +87,12 @@ namespace Titan
 			*pHwnd = mhWnd;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::setD3D9Device(LPDIRECT3DDEVICE9 pD3d9Device)
 	{
 		mpD3dDevice = pD3d9Device;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	LRESULT D3D9RenderWindow::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if (uMsg == WM_CREATE)

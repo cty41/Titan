@@ -18,12 +18,12 @@ namespace Titan
 	{
 		mLoadOrder = 10;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	TextureMgr::~TextureMgr()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	TexturePtr TextureMgr::createManually(const String& name, const String& group, TexType type, 
 		uint width, uint height, uint mipmapLevel,TexUsage usage, PixelFormat format, TexPool pool)
 	{

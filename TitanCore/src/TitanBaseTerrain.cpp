@@ -6,20 +6,23 @@
 #include "HardwareBuffer.h"
 #include "TitanPixelFormat.h"
 #include "ShaderEffectMgr.h"
-#include "TitanResourceGroupManager.h"
+#include "TiResourceGroupMgr.h"
 
 namespace Titan
 {
+	static MaterialPtr	sMtrlPtr;
 	BaseTerrain::BaseTerrain()
 		:mSectorArray(NULL), mRootNode(NULL), mVertexDecl(NULL), mHeightTable(NULL),
-		mNormalTable(NULL)
-	{}
-	//-------------------------------------------------------------//
+		mNormalTable(NULL), mLodScale(1.33f), mRatioLimit(0.03f)
+	{
+
+	}
+	//-------------------------------------------------------------------------------//
 	BaseTerrain::~BaseTerrain()
 	{
 		destroy();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrain::create(SceneNode* rootNode, TexturePtr heightMap, const AABB& worldBound, uint8 shift )
 	{
 		mSectorShift = shift;
@@ -45,20 +48,22 @@ namespace Titan
 		mSectorSize = Vector2(mWorldSize.x / mSectorCountX,
 			mWorldSize.z / mSectorCountZ);
 
-		mEffect = Titan::ShaderEffectMgr::getSingletonPtr()->loadManually("single_texture_terrain.fx", Titan::ResourceGroupManager::GENERAL_RESOURCE_GROUP);
+		mEffect = Titan::ShaderEffectMgr::getSingletonPtr()->loadManually("single_texture_terrain.fx", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
 		
 		_buildHorzVertexData();
 		_buildVertexDecl();
 		_buildIndexData();
 		_createTerrainSections();
-
-
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrain::destroy()
 	{
-		//change later
-		//TITAN_DELETE [] mSectorArray;
+		for(int i = 0; i < mSectorCountX * mSectorCountZ; ++i)
+		{
+			TITAN_DELETE mSectorArray[i];
+		}
+		if (mSectorArray)
+			TITAN_DELETE [] mSectorArray;
 
 		if(mHeightTable)
 			delete [] mHeightTable;
@@ -67,7 +72,7 @@ namespace Titan
 			delete [] mNormalTable;
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_buildHeightAndNormalTables(TexturePtr heightMap)
 	{
 		if(mHeightTable)
@@ -104,7 +109,7 @@ namespace Titan
 		//add normal here
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_buildHorzVertexData()
 	{
 		Vector2	cellSize(mSectorSize.x / mSectorUnits,
@@ -140,7 +145,7 @@ namespace Titan
 	
 		delete [] pVerts;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_buildVertexDecl()
 	{
 		mVertexDecl = HardwareBufferManager::getSingletonPtr()->createVertexDeclaration();
@@ -150,7 +155,7 @@ namespace Titan
 		//mVertexDecl->addElement(1, 4, VET_FLOAT3, VES_NORMAL, 0);
 		//to do?
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_buildIndexData()
 	{
 		int total_strips = 
@@ -168,10 +173,14 @@ namespace Titan
 		mIndexData = HardwareBufferManager::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 		mIndexData->createSingleStripGrid(mSectorVerts, mSectorVerts, 1, 1, mSectorVerts, 0);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_createTerrainSections()
 	{
-		mSectorArray = TITAN_NEW BaseTerrainSection[mSectorCountX * mSectorCountZ];
+		mSectorArray = new BaseTerrainSection*[mSectorCountX * mSectorCountZ];
+		for(int i = 0; i < mSectorCountX * mSectorCountZ; ++i)
+		{
+			mSectorArray[i] = TITAN_NEW BaseTerrainSection();
+		}
 
 		for (int z=0; z<mSectorCountZ; ++z)
 		{
@@ -190,17 +199,17 @@ namespace Titan
 
 				uint16 index = (z*mSectorCountX)+x;
 
-				mRootNode->attachObject(&mSectorArray[index]);
-				mSectorArray[index].create(this, x, z, xPixel, zPixel, 
+				mRootNode->attachObject(mSectorArray[index]);
+				mSectorArray[index]->create(this, x, z, xPixel, zPixel, 
 					mSectorVerts, 
 					mSectorVerts, 
 					sectorRect);
-			
-
 			}
 		}
+
+		
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	float BaseTerrain::readWorldHeight(uint16 mapX, uint16 mapZ) const
 	{
 		if (mapX >= mTableWidth) mapX = mTableWidth-1;
@@ -208,7 +217,7 @@ namespace Titan
 
 		return mHeightTable[(mapZ * mTableWidth) + mapX];
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	float BaseTerrain::readWorldHeight(uint16 mapIndex) const
 	{
 		if(mapIndex < mTableWidth * mTableHeight)
@@ -224,7 +233,7 @@ namespace Titan
 			return -1.0f;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const Vector3& BaseTerrain::readWorldNormal(uint16 mapX, uint16 mapZ) const
 	{
 		if (mapX >= mTableWidth) mapX = mTableWidth - 1;
@@ -232,6 +241,99 @@ namespace Titan
 
 		return mNormalTable[(mapZ * mTableWidth) + mapX];
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
+	float BaseTerrain::computeErrorMetricOfGrid(uint16 xVerts, uint16 zVerts, uint16 xStep, uint16 zStep, uint16 xOffset, uint16 zOffset)
+	{
+		float result = 0.0f;
+		int total_rows = zVerts - 1;
+		int total_cells = xVerts - 1;
+
+		unsigned short start_vert = 
+			(zOffset * mTableWidth)+xOffset;
+		unsigned short lineStep = 
+			zStep * mTableWidth;
+
+		float invXStep = 1.0f/xStep;
+		float invZStep = 1.0f/zStep;
+
+		for (int j=0;j<total_rows;++j)
+		{
+			uint16 indexA = start_vert;
+			uint16 indexB = start_vert+lineStep;
+			float cornerA = readWorldHeight(indexA);
+			float cornerB = readWorldHeight(indexB);
+
+			for (int i=0; i<total_cells;++i)
+			{
+				// compute 2 new corner vertices
+				uint16 indexC = indexA+xStep;
+				uint16 indexD = indexB+xStep;
+
+				// grab 2 new corner height values
+				float cornerC = readWorldHeight(indexC);
+				float cornerD = readWorldHeight(indexD);
+
+				// setup the step values for 
+				// both triangles of this cell
+				float stepX0 = (cornerD-cornerA)*invXStep;
+				float stepZ0 = (cornerB-cornerA)*invZStep;
+				float stepX1 = (cornerB-cornerC)*invXStep;
+				float stepZ1 = (cornerD-cornerC)*invZStep;
+
+				// find the max error for all points
+				// covered by the two triangles
+				int subIndex = indexA;
+				for (int z=0; z<zStep;++z)
+				{
+					for (int x=0; x<xStep;++x)
+					{
+						float trueHeight = 
+							readWorldHeight(subIndex);
+						++subIndex;
+
+						float intepolatedHeight;
+
+						if (z < (xStep-x))
+						{
+							intepolatedHeight = 
+								cornerA 
+								+ (stepX0*x)
+								+ (stepZ0*z);
+						}
+						else
+						{
+							intepolatedHeight = 
+								cornerC 
+								+ (stepX1*x)
+								+ (stepZ1*z);
+						}
+
+						float delta = absoluteValue(
+							trueHeight - intepolatedHeight);
+
+						result = maximum(
+							result,delta);
+
+					}
+					subIndex = indexA+(z* mTableWidth);
+				}
+
+				// save the corners for the next cell
+				indexA = indexC;
+				indexB = indexD;
+				cornerA = cornerC;
+				cornerB = cornerD;
+			}
+
+			start_vert += lineStep;
+		}
+
+		return result;
+	}
+	//----------------------------------------------------------------------------//
+	inline const MaterialPtr& BaseTerrain::getMaterial() const 
+	{
+		return sMtrlPtr;
+	}
 
 }

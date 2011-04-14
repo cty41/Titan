@@ -3,6 +3,8 @@
 
 #include "TitanPrerequisites.h"
 #include "TitanShaderEffect.h"
+#include "TitanTexture.h"
+#include "TiMaterial.h"
 
 namespace Titan
 {
@@ -31,9 +33,21 @@ namespace Titan
 
 		virtual RenderData*		getRenderData() = 0;
 
+		virtual const MaterialPtr&	getMaterial() const = 0;
+
+		virtual	bool			hasTexture() const = 0;
+
+		virtual const TexturePtr&	getTexture() const = 0;
+		//temp method, will be deleted till we finished the material class
 		virtual ShaderEffectPtr	getShaderEffect() = 0;
 
 		virtual bool			hasShader() = 0;
+
+		virtual float			getSquaredDistance(Camera* cam) = 0;
+
+		virtual bool			IsUseIdentityView() const = 0;
+
+		virtual bool			IsUseIdentityProj() const = 0;
 
 		void	addListener(RenderableListener* listener){ mRenderableListenerList.push_back(listener); }
 		

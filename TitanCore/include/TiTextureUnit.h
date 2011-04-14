@@ -59,7 +59,7 @@ namespace Titan
 
 		inline void		setTexAddressMode(TexAddressMode tam);
 
-		const TexAddressModeSets&	getTexAddressMode() const { return mTexAddressModeSets;}
+		const TexAddressModeSets&	getTexAddressModeSets() const { return mTexAddressModeSets;}
 
 		inline void		setTexAddressMode(TexAddressMode uMode, TexAddressMode vMode, TexAddressMode wMode);
 

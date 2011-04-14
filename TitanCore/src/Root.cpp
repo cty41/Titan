@@ -1,13 +1,18 @@
 #include "TitanStableHeader.h"
 #include "Root.h"
+#include "FileSystemManager.h"
 #include "ConsoleDebugger.h"
 #include "TitanPlugin.h"
 #include "TitanDynLib.h"
 #include "SceneMgrSelector.h"
 #include "ManualObject.h"
 #include "CommonFileSystem.h"
-#include "TitanResourceGroupManager.h"
+#include "TiResourceGroupMgr.h"
 #include "TitanQuadtreeSceneMgr.h"
+#include "TitanOverlayMgr.h"
+#include "TitanFontMgr.h"
+#include "Timer.h"
+#include "TiMaterialMgr.h"
 
 namespace Titan
 {
@@ -25,12 +30,14 @@ namespace Titan
 	typedef void (*DLL_START_PLUGIN)(void);
 	typedef void (*DLL_STOP_PLUGIN)(void);
 
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Root::Root(const String& configName)
 		:mWindow(0), mConsoleDebugger(0), mActiveRenderer(0),
 		mConfigFileName(configName), mSceneMgrSelector(0), mFileSystemMgr(0),
-		mResourceGroupMgr(0)
+		mResourceGroupMgr(0), mFontMgr(0)
 	{
+		mTimer = TITAN_NEW Timer();
+
 		mConsoleDebugger = TITAN_NEW ConsoleDebugger();
 
 		mSceneMgrSelector = TITAN_NEW SceneMgrSelector();
@@ -38,22 +45,31 @@ namespace Titan
 
 		addSceneObjectFactory(TITAN_NEW ManualObjectFactory());
 
-//#ifdef DEBUG
+#ifdef _DEBUG
 		loadPlugin("Plugin_D3D9Renderer_d.dll");
-//#else
-//		loadPlugin("Plugin_D3D9Renderer.dll");
-//#endif
+#else
+		loadPlugin("Plugin_D3D9Renderer.dll");
+#endif
 		mActiveRenderer = mRendererVector[0];
 
 		mFileSystemMgr = TITAN_NEW FileSystemManager();
 		mFileSystemMgr->addFileSystemFactory(TITAN_NEW CommonFileSystemFactory());
 
-		mResourceGroupMgr = TITAN_NEW ResourceGroupManager();
+		mResourceGroupMgr = TITAN_NEW ResourceGroupMgr();
+
+		mMaterialMgr = TITAN_NEW MaterialMgr();
+
+		mOverlayMgr = TITAN_NEW OverlayMgr();
+
+		mFontMgr = TITAN_NEW FontMgr();
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Root::~Root()
 	{
+		TITAN_DELETE mFontMgr;
+		TITAN_DELETE mOverlayMgr;
+
 		TITAN_DELETE mResourceGroupMgr;
 		TITAN_DELETE mFileSystemMgr;
 
@@ -62,30 +78,31 @@ namespace Titan
 
 		unloadPlugin("Plugin_D3D9Renderer_d.dll");
 		TITAN_DELETE mConsoleDebugger;
+		TITAN_DELETE mTimer;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	RenderWindow* Root::initialise()
 	{
 		mWindow = mActiveRenderer->initialize();
 		return mWindow;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::renderOneFrame()
 	{
 		_updateAllTargets();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgr* Root::createSceneMgr(const String& name, SceneMgrType smt)
 	{
 		return mSceneMgrSelector->createSceneMgr(name, smt);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::destroySceneMgr(SceneMgr* mgr)
 	{
 		if(mgr)
 			mSceneMgrSelector->destroySceneMgr(mgr);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::saveConfig()
 	{
 		if(mConfigFileName.empty())
@@ -106,7 +123,7 @@ namespace Titan
 		of.close();
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	bool Root::loadConfig()
 	{
 		if(mConfigFileName.empty())
@@ -138,7 +155,7 @@ namespace Titan
 
 		return true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::addRenderer(Renderer* renderer)
 	{
 		mRendererVector.push_back(renderer);
@@ -153,7 +170,7 @@ namespace Titan
 		mActiveRenderer = renderer;
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::installPlugin(Plugin* plugin)
 	{
 		ConsoleDebugger::getSingleton().stream()
@@ -165,7 +182,7 @@ namespace Titan
 		ConsoleDebugger::getSingleton().stream()
 			<<"Plugin successfully installed";
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::uninstallPlugin(Plugin* plugin)
 	{
 		ConsoleDebugger::getSingleton().stream()
@@ -183,7 +200,7 @@ namespace Titan
 			<<"Plugin successfully uninstalled";
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::loadPlugin(const String& pluginName)
 	{
 		 DynLib* lib = TITAN_NEW DynLib(pluginName);
@@ -204,7 +221,7 @@ namespace Titan
 			 pFunc();
 		 }
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::unloadPlugin(const String& pluginName)
 	{
 		DynLibVector::iterator i;
@@ -225,14 +242,14 @@ namespace Titan
 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::_updateAllTargets()
 	{
 		 mActiveRenderer->updateAllTargets();
 
 		 mActiveRenderer->swapAllTargetBuffers();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::addSceneObjectFactory(SceneObjectFactory* factory)
 	{
 		SceneObjectFactoryMap::iterator it = mSceneObjectFactoryMap.find(factory->getType());
@@ -250,7 +267,7 @@ namespace Titan
 				"Root::addSceneObjectFactory");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Root::removeAllSceneObjectFactory()
 	{
 		SceneObjectFactoryMap::iterator it = mSceneObjectFactoryMap.begin(),
@@ -262,7 +279,7 @@ namespace Titan
 		}
 		mSceneObjectFactoryMap.clear();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneObjectFactory* Root::getSceneObjectFactory(const String& typeName)
 	{
 		SceneObjectFactoryMap::iterator it = mSceneObjectFactoryMap.find(typeName);
@@ -278,6 +295,12 @@ namespace Titan
 				"Root::getSceneObjectFactory");
 			return 0;
 		}
+	}
+	//-------------------------------------------------------------------------------//
+	void Root::convertColor(const Color& col, uint32* pDest)
+	{
+		assert(pDest != NULL);
+		mActiveRenderer->convertColor(col, pDest);
 	}
 	
 

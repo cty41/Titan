@@ -8,7 +8,7 @@ namespace Titan
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ConfigFile::~ConfigFile()
 	{
 		SectionMap::iterator it = mSectionMap.begin(), itend = mSectionMap.end();
@@ -20,7 +20,7 @@ namespace Titan
 		}
 		mSectionMap.clear();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ConfigFile::load(const String& name)
 	{
 		std::ifstream fp;
@@ -81,12 +81,12 @@ namespace Titan
 		}
 		fp.close();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ConfigFile::SectionMapIterator	ConfigFile::getSectionMapIterator()
 	{
 		return SectionMapIterator(mSectionMap.begin(), mSectionMap.end());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ConfigFile::PropertyMapIterator ConfigFile::getPropertyMapIterator(const String& sectionName)
 	{
 		SectionMap::iterator it = mSectionMap.find(sectionName);

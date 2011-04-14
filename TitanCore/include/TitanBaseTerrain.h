@@ -7,6 +7,7 @@
 #include "TitanVector3.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "TiMaterial.h"
 
 namespace Titan
 {
@@ -29,7 +30,7 @@ namespace Titan
 	public:
 		BaseTerrain();
 
-		~BaseTerrain();
+		virtual ~BaseTerrain();
 
 		virtual void	create(SceneNode* rootNode, TexturePtr heightMap, const AABB& worldBound, uint8 shift = 3);
 
@@ -55,6 +56,26 @@ namespace Titan
 
 		const AABB& getWorldBound() const { return mWorldBound; }
 
+		uint8 getSectorShift() const { return mSectorShift; }
+
+		float computeErrorMetricOfGrid(
+			uint16 xVerts,	// width of grid
+			uint16 zVerts,	// height of grid
+			uint16 xStep,	// horz vertex count per cell
+			uint16 zStep,	// vert vertex count per cell
+			uint16 xOffset,	// starting index X
+			uint16 zOffset);// starting index Z
+
+		float getLodErrorScale() const { return mLodScale;}
+
+		float getRatioLimit() const { return mRatioLimit; }
+
+		void setTessellationParams(float lodScale, float ratioLimit){ mLodScale = lodScale; mRatioLimit = ratioLimit;}
+
+		uint8	getSectorVertex() const { return mSectorVerts; }
+
+		const MaterialPtr&	getMaterial() const;
+
 		
 	protected:
 		void			_buildHeightAndNormalTables(TexturePtr heightMap);
@@ -69,7 +90,7 @@ namespace Titan
 		virtual void	_createTerrainSections();
 
 	protected:
-		BaseTerrainSection*		mSectorArray;
+		BaseTerrainSection**		mSectorArray;
 		SceneNode*				mRootNode;
 
 		float*					mHeightTable;
@@ -86,6 +107,8 @@ namespace Titan
 		Vector3			mWorldSize;
 		Vector3			mMapScale;
 		Vector2			mSectorSize;
+		float			mLodScale;
+		float			mRatioLimit;
 		uint16			mTableWidth;
 		uint16			mTableHeight;
 		uint16			mSectorCountX;

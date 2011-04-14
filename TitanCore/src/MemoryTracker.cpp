@@ -7,13 +7,13 @@
 
 namespace Titan
 {
-	//--------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//-----
 	MemoryTracker& MemoryTracker::get()
 	{
 		static MemoryTracker tracker;
 		return tracker;
 	}
-	//--------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//-----
 	void MemoryTracker::_recordAlloc(void* ptr, size_t sz, unsigned int pool, 
 		const char* file, size_t ln, const char* func)
 	{
@@ -28,7 +28,7 @@ namespace Titan
 		mAllocationsByPool[pool] += sz;
 		mTotalAllocations += sz;
 	}
-	//--------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//-----
 	void MemoryTracker::_recordDealloc(void* ptr)
 	{
 		// deal cleanly with null pointers
@@ -45,17 +45,17 @@ namespace Titan
 		mTotalAllocations -= i->second.bytes;
 		mAllocations.erase(i);
 	}	
-	//--------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//-----
 	size_t MemoryTracker::getTotalMemoryAllocated() const
 	{
 		return mTotalAllocations;
 	}
-	//--------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//-----
 	size_t MemoryTracker::getMemoryAllocatedForPool(unsigned int pool) const
 	{
 		return mAllocationsByPool[pool];
 	}
-	//--------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//-----
 	void MemoryTracker::reportLeaks()
 	{		
 		StringStream os;

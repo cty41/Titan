@@ -15,11 +15,11 @@
 
 namespace Titan {
 
-    const float Quaternion::ms_fEpsilon = 1e-03;
+    const float Quaternion::ms_fEpsilon = 1e-03f;
     const Quaternion Quaternion::ZERO(0.0,0.0,0.0,0.0);
     const Quaternion Quaternion::IDENTITY(1.0,0.0,0.0,0.0);
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::FromRotationMatrix (const Matrix3& kRot)
     {
         // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
@@ -59,7 +59,7 @@ namespace Titan {
             *apkQuat[k] = (kRot[k][i]+kRot[i][k])*fRoot;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::ToRotationMatrix (Matrix3& kRot) const
     {
         float fTx  = x+x;
@@ -85,7 +85,7 @@ namespace Titan {
         kRot[2][1] = fTyz+fTwx;
         kRot[2][2] = 1.0f-(fTxx+fTyy);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::FromAngleAxis (const Radian& rfAngle,
         const Vector3& rkAxis)
     {
@@ -101,7 +101,7 @@ namespace Titan {
         y = fSin*rkAxis.y;
         z = fSin*rkAxis.z;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::ToAngleAxis (Radian& rfAngle, Vector3& rkAxis) const
     {
         // The quaternion representing the rotation is
@@ -125,7 +125,7 @@ namespace Titan {
             rkAxis.z = 0.0;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::FromAxes (const Vector3* akAxis)
     {
         Matrix3 kRot;
@@ -139,7 +139,7 @@ namespace Titan {
 
         FromRotationMatrix(kRot);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::FromAxes (const Vector3& xaxis, const Vector3& yaxis, const Vector3& zaxis)
     {
         Matrix3 kRot;
@@ -159,7 +159,7 @@ namespace Titan {
         FromRotationMatrix(kRot);
 
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::ToAxes (Vector3* akAxis) const
     {
         Matrix3 kRot;
@@ -173,7 +173,7 @@ namespace Titan {
             akAxis[iCol].z = kRot[2][iCol];
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Quaternion::xAxis(void) const
     {
         //float fTx  = 2.0*x;
@@ -188,7 +188,7 @@ namespace Titan {
 
         return Vector3(1.0f-(fTyy+fTzz), fTxy+fTwz, fTxz-fTwy);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Quaternion::yAxis(void) const
     {
         float fTx  = 2.0f*x;
@@ -203,7 +203,7 @@ namespace Titan {
 
         return Vector3(fTxy-fTwz, 1.0f-(fTxx+fTzz), fTyz+fTwx);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Quaternion::zAxis(void) const
     {
         float fTx  = 2.0f*x;
@@ -218,7 +218,7 @@ namespace Titan {
 
         return Vector3(fTxz+fTwy, fTyz-fTwx, 1.0f-(fTxx+fTyy));
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::ToAxes (Vector3& xaxis, Vector3& yaxis, Vector3& zaxis) const
     {
         Matrix3 kRot;
@@ -238,17 +238,17 @@ namespace Titan {
         zaxis.z = kRot[2][2];
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::operator+ (const Quaternion& rkQ) const
     {
         return Quaternion(w+rkQ.w,x+rkQ.x,y+rkQ.y,z+rkQ.z);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::operator- (const Quaternion& rkQ) const
     {
         return Quaternion(w-rkQ.w,x-rkQ.x,y-rkQ.y,z-rkQ.z);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::operator* (const Quaternion& rkQ) const
     {
         // NOTE:  Multiplication is not generally commutative, so in most
@@ -262,33 +262,33 @@ namespace Titan {
             w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x
         );
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::operator* (float fScalar) const
     {
         return Quaternion(fScalar*w,fScalar*x,fScalar*y,fScalar*z);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion operator* (float fScalar, const Quaternion& rkQ)
     {
         return Quaternion(fScalar*rkQ.w,fScalar*rkQ.x,fScalar*rkQ.y,
             fScalar*rkQ.z);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::operator- () const
     {
         return Quaternion(-w,-x,-y,-z);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Quaternion::Dot (const Quaternion& rkQ) const
     {
         return w*rkQ.w+x*rkQ.x+y*rkQ.y+z*rkQ.z;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Quaternion::Norm () const
     {
         return w*w+x*x+y*y+z*z;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::Inverse () const
     {
         float fNorm = w*w+x*x+y*y+z*z;
@@ -303,13 +303,13 @@ namespace Titan {
             return ZERO;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::UnitInverse () const
     {
         // assert:  'this' is unit length
         return Quaternion(w,-x,-y,-z);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::Exp () const
     {
         // If q = A*(x*i+y*j+z*k) where (x,y,z) is unit length, then
@@ -338,7 +338,7 @@ namespace Titan {
 
         return kResult;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::Log () const
     {
         // If q = cos(A)+sin(A)*(x*i+y*j+z*k) where (x,y,z) is unit length, then
@@ -368,7 +368,7 @@ namespace Titan {
 
         return kResult;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Quaternion::operator* (const Vector3& v) const
     {
 		// nVidia SDK implementation
@@ -382,7 +382,7 @@ namespace Titan {
 		return v + uv + uuv;
 
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
 	bool Quaternion::equals(const Quaternion& rhs, const Radian& tolerance) const
 	{
         float fCos = Dot(rhs);
@@ -393,7 +393,7 @@ namespace Titan {
 
 
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::Slerp (float fT, const Quaternion& rkP,
         const Quaternion& rkQ, bool shortestPath)
     {
@@ -435,7 +435,7 @@ namespace Titan {
             return t;
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::SlerpExtraSpins (float fT,
         const Quaternion& rkP, const Quaternion& rkQ, int iExtraSpins)
     {
@@ -452,7 +452,7 @@ namespace Titan {
         float fCoeff1 = Math::Sin(fT*fAngle + fPhase)*fInvSin;
         return fCoeff0*rkP + fCoeff1*rkQ;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Quaternion::Intermediate (const Quaternion& rkQ0,
         const Quaternion& rkQ1, const Quaternion& rkQ2,
         Quaternion& rkA, Quaternion& rkB)
@@ -469,7 +469,7 @@ namespace Titan {
         rkA = rkQ1*kArg.Exp();
         rkB = rkQ1*kMinusArg.Exp();
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::Squad (float fT,
         const Quaternion& rkP, const Quaternion& rkA,
         const Quaternion& rkB, const Quaternion& rkQ, bool shortestPath)
@@ -479,7 +479,7 @@ namespace Titan {
         Quaternion kSlerpQ = Slerp(fT, rkA, rkB);
         return Slerp(fSlerpT, kSlerpP ,kSlerpQ);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Quaternion::normalise(void)
     {
         float len = Norm();
@@ -487,7 +487,7 @@ namespace Titan {
         *this = *this * factor;
         return len;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
 	Radian Quaternion::getRoll(bool reprojectAxis) const
 	{
 		if (reprojectAxis)
@@ -512,7 +512,7 @@ namespace Titan {
 			return Radian(Math::ATan2(2*(x*y + w*z), w*w + x*x - y*y - z*z));
 		}
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
 	Radian Quaternion::getPitch(bool reprojectAxis) const
 	{
 		if (reprojectAxis)
@@ -536,7 +536,7 @@ namespace Titan {
 			return Radian(Math::ATan2(2*(y*z + w*x), w*w - x*x - y*y + z*z));
 		}
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
 	Radian Quaternion::getYaw(bool reprojectAxis) const
 	{
 		if (reprojectAxis)
@@ -562,7 +562,7 @@ namespace Titan {
 			return Radian(Math::ASin(-2*(x*z - w*y)));
 		}
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Quaternion Quaternion::nlerp(float fT, const Quaternion& rkP,
         const Quaternion& rkQ, bool shortestPath)
     {

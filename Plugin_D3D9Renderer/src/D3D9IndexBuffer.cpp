@@ -16,12 +16,12 @@ namespace Titan
 
 		createD3D9Buffer();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	D3D9IndexBuffer::~D3D9IndexBuffer()
 	{
 		SAFE_RELEASE(mBuffer);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9IndexBuffer::createD3D9Buffer()
 	{
 		HRESULT hr ;
@@ -47,7 +47,7 @@ namespace Titan
 				}
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9IndexBuffer::writeData(size_t offset, size_t length, const void* pSource, bool discardWholeBuffer /* = false */)
 	{
 		void* pDst = this->lock(offset, length,
@@ -55,14 +55,14 @@ namespace Titan
 		memcpy(pDst, pSource, length);
 		this->unlock();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9IndexBuffer::readData(size_t offset, size_t length, void* pDest)
 	{
 		void* pSrc = this->lock(offset, length, HardwareBuffer::HBL_READ_ONLY);
 		memcpy(pDest, pSrc, length);
 		this->unlock();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void* D3D9IndexBuffer::lockImpl(size_t offset, size_t length, LockOptions lo)
 	{
 		HRESULT hr;
@@ -78,7 +78,7 @@ namespace Titan
 		}
 		return (void*)((char*)pDst + offset);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9IndexBuffer::unlockImpl()
 	{
 		HRESULT hr;

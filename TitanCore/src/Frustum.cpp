@@ -1,14 +1,14 @@
 #include "TitanStableHeader.h"
 #include "Frustum.h"
-#include "Renderer.h"
+#include "TiRenderer.h"
 #include "Root.h"
 
 namespace Titan
 {
-	const float Frustum::INFINITE_FAR_PLANE_ADJUST = 0.00001;
+	const float Frustum::INFINITE_FAR_PLANE_ADJUST = 0.00001f;
 	Frustum::Frustum()
 		:mProjType(PT_PERSPECTIVE),  mOrientation(Quaternion::IDENTITY),
-		mPosition(Vector3::ZERO), mUpdateView(true), mFarDist(1000.0f),
+		mPosition(Vector3::ZERO), mUpdateView(true), mFarDist(3000.0f),
 		mNearDist(1.0f), mAspect(4.0f/3.0f), mUpdateProj(true), mUpdateFrustumPlanes(true),
 		mUpdateWorldSpaceCorners(true)
 	{
@@ -18,31 +18,31 @@ namespace Titan
 		updateView();
 		updateProjection();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Frustum::~Frustum()
 	{
 	
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::notifyViewUpdate()
 	{
 		mUpdateView = true;
 		mUpdateWorldSpaceCorners = true;
 		mUpdateFrustumPlanes = true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	bool Frustum::needUpdateView() const
 	{
 		return mUpdateView;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::updateView()
 	{
 		if(needUpdateView())
 			updateViewImpl();
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::updateViewImpl()
 	{
 		Matrix3 rot;
@@ -52,14 +52,14 @@ namespace Titan
 		mViewMatrix = Math::makeViewMatrix(position, orientation, 0);
 		mUpdateView = false;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::notifyProjUpdate()
 	{
 		mUpdateProj = true;
 		mUpdateFrustumPlanes = true;
 		mUpdateWorldSpaceCorners = true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::updateProjection()
 	{
 		if(needUpdateProj())
@@ -67,7 +67,7 @@ namespace Titan
 			updateFrustumImpl();
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::updateFrustumImpl()
 	{
 		//calc the l,r,t,b
@@ -129,7 +129,7 @@ namespace Titan
 		}
 
 		Renderer* renderer = Root::getSingletonPtr()->getActiveRenderer();
-		renderer->_convertProjMatrix(mProjMatrix, mProjMatrixRS);
+		renderer->_convertProjMatrix(mProjMatrix, mProjMatrixRS, true);
 
 
 		float farDist = (mFarDist == 0) ? 100000 : mFarDist;
@@ -148,7 +148,7 @@ namespace Titan
 
 		mUpdateProj = false;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::calcProjectionParams(float& left, float& right, float& bottom, float& top)
 	{
 		if(mProjType == PT_PERSPECTIVE)
@@ -175,7 +175,7 @@ namespace Titan
 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::updateFrustumPlanes()
 	{
 		updateView();
@@ -186,7 +186,7 @@ namespace Titan
 			updateFrustumPlanesImpl();
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::updateFrustumPlanesImpl()
 	{
 		mProjViewMatrix = mProjMatrix * mViewMatrix;
@@ -230,7 +230,7 @@ namespace Titan
 
 		mUpdateFrustumPlanes = false;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const Vector3* Frustum::getWorldSpaceCorners() 
 	{
 		updateWorldSpaceCorners();
@@ -244,7 +244,7 @@ namespace Titan
 		if(mUpdateWorldSpaceCorners)
 			updateWorldSpaceCornersImpl();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::updateWorldSpaceCornersImpl()
 	{
 		Matrix4 eyeToWorld = mViewMatrix.inverseAffine();
@@ -284,48 +284,48 @@ namespace Titan
 
 		mUpdateWorldSpaceCorners = false;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const Matrix4& Frustum::getViewMatrix()
 	{
 		updateView();
 
 		return mViewMatrix;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const Matrix4&	Frustum::getProjMatrix()
 	{
 		updateProjection();
 
 		return mProjMatrix;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const Matrix4&	Frustum::getProjMatrixRS()
 	{
 		updateProjection();
 
 		return mProjMatrixRS;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::setFOVy(const Radian& fovy)
 	{
 		mFOVy = fovy;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::setNearClipDistance(float nearDist)
 	{
 		mNearDist = nearDist;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::setFarClipDistance(float farDist)
 	{
 		mFarDist = farDist;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Frustum::setAspectRatio(float ratio)
 	{
 		mAspect = ratio;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	bool Frustum::isVisible(const AABB& aabb)
 	{
 		if (aabb.isNull()) return false;
@@ -347,7 +347,7 @@ namespace Titan
 		}
 		return true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	bool Frustum::isVisible(const Sphere& sphere)
 	{
 		updateFrustumPlanes();
@@ -362,7 +362,7 @@ namespace Titan
 		}
 		return true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	bool Frustum::isVisible(const Vector3& pos)
 	{
         updateFrustumPlanes();

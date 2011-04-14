@@ -27,6 +27,8 @@ namespace Titan
 		size_t vertexStart;
 		/// The number of vertices used in this operation
 		size_t vertexCount;
+
+		bool mDeleteDclBinding;
 	};
 
 

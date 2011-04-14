@@ -14,9 +14,10 @@ namespace Titan
 		{
 			uint64	sortKey;
 			Renderable*	renderable;
+			Pass*		rendPass;
 
-			RenderQueueEntry(Renderable* rend, uint64 key)
-				:renderable(rend), sortKey(key)
+			RenderQueueEntry(Renderable* rend, Pass* pass, uint64 key)
+				:renderable(rend),rendPass(pass), sortKey(key)
 			{}
 		};
 
@@ -54,12 +55,15 @@ namespace Titan
 
 		RenderQueueEntryVecIterator getOpaqueEntryIterator() { return RenderQueueEntryVecIterator(mOpaqueEntryVec.begin(), mOpaqueEntryVec.end());}
 
-		RenderQueueEntryVecIterator getTransparentEntryIterator() { return RenderQueueEntryVecIterator(mTransparentEntryVec.begin(), mTransparentEntryVec.end());}
+		RenderQueueEntryVecIterator getSortedTransparentEntryIterator() { return RenderQueueEntryVecIterator(mSortedTransparentEntryVec.begin(), mSortedTransparentEntryVec.end());}
+
+		RenderQueueEntryVecIterator getUnsortedTransparentEntryIterator() { return RenderQueueEntryVecIterator(mUnsortedTransparentEntryVec.begin(), mUnsortedTransparentEntryVec.end());}
 
 	protected:
 		RenderQueue*			mParentQueue;
 		RenderQueueEntryVec		mOpaqueEntryVec;
-		RenderQueueEntryVec		mTransparentEntryVec;
+		RenderQueueEntryVec		mSortedTransparentEntryVec;
+		RenderQueueEntryVec		mUnsortedTransparentEntryVec;
 		uint					mType;
 		uint					mStrategy;
 	};

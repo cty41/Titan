@@ -6,6 +6,8 @@
 #include "HardwareBuffer.h"
 #include "TitanTexture.h"
 #include "TitanShaderParams.h"
+#include "TitanBlendMode.h"
+#include "TiTextureUnit.h"
 
 namespace Titan
 {
@@ -28,12 +30,25 @@ namespace Titan
 		static D3DDECLUSAGE convertToD3D9(VertexElementSemantic sem);
 
 		static DWORD convertToD3D9(HardwareBuffer::LockOptions options, HardwareBuffer::Usage usage);
+		static D3DBLEND convertToD3D9(SceneBlendFactor sbf);
+
+		static D3DBLENDOP convertToD3D9(SceneBlendOperation sbo);
+
+		static D3DTEXTUREADDRESS convertToD3D9(TexAddressMode tam);
+
+		static D3DSAMPLERSTATETYPE convertToD3D9(FilterType ft);
+
+		static DWORD convertToD3D9(FilterType ft, FilterOptions fo);
+
+		static DWORD convertToD3D9(CompareFunction cf);
 
 		static D3DXMATRIX makeD3DXMatrix( const Matrix4& mat, bool isColumn = false);
 
 		static Matrix4 convertD3DXMatrix( const D3DXMATRIX& mat );
 
 		static D3DFORMAT convertD3D9Format(PixelFormat format);
+
+		static PixelFormat convertToTitan(D3DFORMAT format);
 
 		static D3DPOOL	convertD3D9Pool(TexPool pool);
 

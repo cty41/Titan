@@ -16,7 +16,7 @@ namespace Titan
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ChunkTerrainSection::~ChunkTerrainSection()
 	{
 		for(uint i = 0; i < CHUNK_MAX_LOD; ++i)
@@ -24,7 +24,7 @@ namespace Titan
 			delete [] mErrorMerticTree[i];
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::create(BaseTerrain* creator, uint16 sectorX, uint16 sectorZ, uint16 heightMapX, uint16 heightMapZ, uint16 xVerts, uint16 zVerts, const Rect2D& worldRect)
 	{
 		BaseTerrainSection::create(creator, sectorX, sectorZ, heightMapX, heightMapZ, xVerts, zVerts, worldRect);
@@ -41,7 +41,7 @@ namespace Titan
 		_buildErrorMetricTree();
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_updateRenderQueue(RenderQueue* queue, Camera* cam)
 	{
 		if(cam->isVisible(mWorldBound))
@@ -62,7 +62,7 @@ namespace Titan
 			}
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_buildErrorMetricTree()
 	{
 		// the sector shift tells us how large our 
@@ -131,7 +131,7 @@ namespace Titan
 			}
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_buildVertexBuffer()
 	{
 		mWorldBound.getMinimum().y = MAX_REAL32;
@@ -178,12 +178,12 @@ namespace Titan
 		mVertexBufferBinding->setBinding(0, mCreator->getHorzVertexData());
 		mVertexBufferBinding->setBinding(1, mSectorVerts);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_buildRenderData(RenderData* rend)
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_calcLod(Camera* cam)
 	{
 		// compute a 2d point for each corner of the section
@@ -205,7 +205,7 @@ namespace Titan
 			mCreator->getLodErrorScale(), mCreator->getRatioLimit());
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_recursiveTessellate(float distA, float distB, float distC, float distD, int level, int levelX, int levelZ, float vScale, float vLimit)
 	{
 		bool split = false;

@@ -9,7 +9,7 @@ namespace Titan
 		:line(0), number(number), description(desc), source(src)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Exception::Exception(int number, const String& desc, const String& src, const char* type, const char* file, long line)
 		:line(line), number(number), typeName(type), description(desc), source(src), file(file)
 	{
@@ -20,7 +20,7 @@ namespace Titan
 					CML_CRITICAL);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Exception::Exception(const Exception& rhs)
 		: line( rhs.line ), 
 		number( rhs.number ), 
@@ -30,7 +30,7 @@ namespace Titan
 		file( rhs.file )
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Exception::operator = ( const Exception& rhs )
 	{
 		description = rhs.description;
@@ -40,7 +40,7 @@ namespace Titan
 		line = rhs.line;
 		typeName = rhs.typeName;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const String& Exception::getFullDescription() const
 	{
 		if(fullDesc.empty())

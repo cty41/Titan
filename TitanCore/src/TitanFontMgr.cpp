@@ -17,11 +17,16 @@ namespace Titan
 	FontMgr::FontMgr()
 		:ResourceMgr()
 	{
-		mLoadOrder =200.0f;
+		mLoadOrder = 200;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	FontMgr::~FontMgr()
 	{
 
+	}
+	//-------------------------------------------------------------------------------//
+	Resource* FontMgr::createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams)
+	{
+		return TITAN_NEW Font(this, name, id, group);
 	}
 }

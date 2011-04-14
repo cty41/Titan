@@ -82,6 +82,13 @@ namespace Titan
 		/** Gets the background colour.
 		*/
 		const Color& getBackgroundColor(void) const;
+
+		unsigned int getNumRenderedFaces(void) const;
+
+        /** Gets the number of rendered batches in the last update.
+        */
+        unsigned int getNumRenderedBatches(void) const;
+
 	protected:
 		Camera*			mCamera;
 		RenderTarget*	mTarget;

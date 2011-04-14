@@ -2,21 +2,31 @@
 #include "TitanBaseTerrainSection.h"
 #include "TitanBaseTerrain.h"
 #include "HardwareBufferManager.h"
+#include "TitanRenderQueue.h"
 
 namespace Titan
 {
+	static const TexturePtr sNullTexPtr;
+
+
 	BaseTerrainSection::BaseTerrainSection()
-		: mCreator(NULL), mXVerts(0), mZVerts(0)
+		: mCreator(NULL), mXVerts(0), mZVerts(0), mTerrainSectionRend(NULL), mVertexBufferBinding(NULL)
 	{
 		mType = "BaseTerrainSection";
-		mWorldBound.setInfinite();
+		mWorldBound.setFinite();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	BaseTerrainSection::~BaseTerrainSection()
 	{
-		destroy();
+		if(mTerrainSectionRend)
+			TITAN_DELETE mTerrainSectionRend;
+#if 0
+		TerrainSectionRendVec::iterator it = mTerrainSectionRendVec.begin(), itend = mTerrainSectionRendVec.end();
+		for(;it != itend; ++it)
+			TITAN_DELETE (*it);
+#endif
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::create(BaseTerrain* creator, uint16 sectorX, uint16 sectorZ, uint16 heightMapX, uint16 heightMapZ, uint16 xVerts, uint16 zVerts, const Rect2D& worldRect)
 	{
 		mCreator = creator;
@@ -35,19 +45,8 @@ namespace Titan
 			mCreator->getWorldBound().getMinimum().z + sectorSize.y * mSectorZ);
 
 		_buildVertexBuffer();
-		_buildRenderData();
-
 	}
-	//-------------------------------------------------------------//
-	void BaseTerrainSection::destroy()
-	{
-		if(mRenderData.indexData)
-			TITAN_DELETE mRenderData.indexData;
-
-		if (mRenderData.vertexData)
-			TITAN_DELETE mRenderData.vertexData;
-	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::_buildVertexBuffer()
 	{
 		mWorldBound.getMinimum().y = MAX_REAL32;
@@ -82,53 +81,77 @@ namespace Titan
 		mSectorVerts->writeData(0, mXVerts * mZVerts * sizeof(BaseTerrain::SectorVertex), (void*)pVerts);
 
 		delete  [] pVerts;
+		
+		mVertexBufferBinding = HardwareBufferManager::getSingletonPtr()->createVertexBufferBinding();
+		mVertexBufferBinding->setBinding(0, mCreator->getHorzVertexData());
+		mVertexBufferBinding->setBinding(1, mSectorVerts);
+
+		mTerrainSectionRend = TITAN_NEW TerrainSectionRend(this);
+		mTerrainSectionRend->_buildRenderData(this);
+
 	}
-	//-------------------------------------------------------------//
-	void BaseTerrainSection::_buildRenderData()
+	//-------------------------------------------------------------------------------//
+	void BaseTerrainSection::_buildRenderData(RenderData* rend)
 	{
-		mRenderData.operationType = RenderData::OT_TRIANGLE_STRIP;
-		mRenderData.useIndex = true;
+		rend->operationType = RenderData::OT_TRIANGLE_STRIP;
+		rend->vertexData = TITAN_NEW VertexData(mCreator->getVertexDecl(), mVertexBufferBinding);
+		rend->vertexData->vertexCount = mCreator->getHorzVertexData()->getNumVertices();
 
-		VertexBufferBinding* binding = HardwareBufferManager::getSingletonPtr()->createVertexBufferBinding();
-		binding->setBinding(0, mCreator->getHorzVertexData());
-		binding->setBinding(1, mSectorVerts);
-		mRenderData.vertexData = TITAN_NEW VertexData(mCreator->getVertexDecl(), binding);
-		mRenderData.vertexData->vertexCount = mCreator->getHorzVertexData()->getNumVertices();
-
-		mRenderData.indexData = TITAN_NEW IndexData();
-		mRenderData.indexData->indexBuffer = mCreator->getSharedIndexData();
-		mRenderData.indexData->indexStart = 0;
-		mRenderData.indexData->indexCount = mRenderData.indexData->indexBuffer->getNumIndexes();
-
+		rend->useIndex = true;
+		rend->indexData = TITAN_NEW IndexData();
+		rend->indexData->indexBuffer = mCreator->getSharedIndexData();
+		rend->indexData->indexStart = 0;
+		rend->indexData->indexCount = rend->indexData->indexBuffer->getNumIndexes();
 	}
-	//-------------------------------------------------------------//
-	void BaseTerrainSection::_updateRenderableList(SceneMgr::RenderableList& renderableList, Camera* cam)
+	//-------------------------------------------------------------------------------//
+	void BaseTerrainSection::_updateRenderQueue(RenderQueue* queue, Camera* cam)
 	{
 		if(cam->isVisible(mWorldBound))
-			renderableList.push_back(this);
+		{
+			if(mTerrainSectionRend)
+				queue->addRenderable(mTerrainSectionRend);
+#if 0
+			TerrainSectionRendVec::iterator it = mTerrainSectionRendVec.begin(), itend = mTerrainSectionRendVec.end();
+			for(;it != itend; ++it)
+				queue->addRenderable(*it);
+#endif
+		}
 		else
 			return;
 	}
-	//-------------------------------------------------------------//
-	void BaseTerrainSection::getTransformMat(Matrix4* transMat)
-	{
-		*transMat = _getAttachedNodeFullTransform();
-	}
-	//-------------------------------------------------------------//
-	ShaderEffectPtr BaseTerrainSection::getShaderEffect()
-	{
-		return mCreator->getShaderEffect();
-	}
-	//-------------------------------------------------------------//
-	bool BaseTerrainSection::hasShader()
-	{
-		return (!mCreator->getShaderEffect().isNull());
-	}
-	//-------------------------------------------------------------//
-	void BaseTerrainSection::customUpdate()
+	//-------------------------------------------------------------------------------//
+
+
+
+
+	BaseTerrainSection::TerrainSectionRend::TerrainSectionRend(BaseTerrainSection* creator)
+		:mCreator(creator)
 	{
 
-		mCreator->getShaderEffect()->setNamedParamByIndex(mPosOffsetIdx, (const float*)&mPosOffset);
-		
 	}
+	//-------------------------------------------------------------------------------//
+	BaseTerrainSection::TerrainSectionRend::~TerrainSectionRend()
+	{
+	}
+	//-------------------------------------------------------------------------------//
+	float BaseTerrainSection::TerrainSectionRend::getSquaredDistance(Camera* cam)
+	{
+		Vector3 diff = mCreator->getWorldBound().getCenter() - cam->getPosition();
+		return diff.squaredLength();
+	}
+	const TexturePtr& BaseTerrainSection::TerrainSectionRend::getTexture() const 
+	{
+		return sNullTexPtr;
+	}
+	//-------------------------------------------------------------------------------//
+	void BaseTerrainSection::TerrainSectionRend::customUpdate()
+	{
+		mCreator->getCreator()->getShaderEffect()->setNamedParamByIndex(mCreator->getPosOffsetIndex(), (const float*)&mCreator->getPosOffset());
+	}
+	//-------------------------------------------------------------------------------//
+	void BaseTerrainSection::TerrainSectionRend::_buildRenderData(BaseTerrainSection* creator)
+	{
+		mCreator->_buildRenderData(&mRenderData);
+	}
+	
 }

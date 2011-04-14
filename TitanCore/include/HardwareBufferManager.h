@@ -29,11 +29,11 @@ namespace Titan
 
 		virtual VertexBufferSharedPtr	createVertexBuffer(
 			size_t vertexSize, size_t numVertices,
-			VertexBuffer::Usage usage, bool useSystemMemory) = 0;
+			VertexBuffer::Usage usage, bool useSystemMemory = false) = 0;
 
 		virtual IndexBufferSharedPtr	createIndexBuffer(
 			size_t numIndexes, HardwareBuffer::Usage usage,
-			bool useSystemMemory) = 0;
+			bool useSystemMemory = false) = 0;
 
 		virtual VertexDeclaration*		createVertexDeclaration() = 0;
 

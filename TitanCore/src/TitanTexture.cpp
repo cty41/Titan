@@ -4,15 +4,15 @@
 namespace Titan
 {
 	Texture::Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group)
-		: Resource(mgr, name, id, group)
+		: Resource(mgr, name, id, group), mType(TT_2D), mMipmapsLevel(0), mPixelFormat(PF_UNKNOWN)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Texture::~Texture()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Texture::generatePerlinNoise(float scale, int octaves, float falloff)
 	{
 		if(mType == TT_2D)
@@ -27,4 +27,10 @@ namespace Titan
 		}
 
 	}
+	//-------------------------------------------------------------------------------//
+	bool Texture::hasAlpha() const 
+	{
+		return PixelFuncs::hasAlpha(mPixelFormat);
+	}
+
 }

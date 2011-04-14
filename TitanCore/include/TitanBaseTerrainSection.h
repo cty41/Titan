@@ -3,27 +3,69 @@
 
 #include "TitanPrerequisites.h"
 #include "SceneObject.h"
-#include "Renderable.h"
+#include "TiRenderable.h"
 #include "TitanShaderEffect.h"
 #include "TitanRect2D.h"
 #include "VertexBuffer.h"
+#include "TitanBaseTerrain.h"
 
 
 namespace Titan
 {
-	class _DllExport BaseTerrainSection : public SceneObject, public Renderable
+	class _DllExport BaseTerrainSection : public SceneObject
 	{
+	public:
+		class _DllExport TerrainSectionRend : public Renderable
+		{
+		public:
+			TerrainSectionRend(BaseTerrainSection* creator = NULL);
+
+			~TerrainSectionRend();
+
+			virtual void			getRenderData(RenderData& rd){ rd = mRenderData; }
+
+			virtual void			getTransformMat(Matrix4* transMat){ *transMat = mCreator->_getAttachedNodeFullTransform(); }
+
+			virtual RenderData*		getRenderData() {return &mRenderData; }
+
+			const MaterialPtr&		getMaterial() const { return mCreator->getMaterial();}
+
+			virtual bool			hasTexture() const { return false; }
+
+			virtual const TexturePtr& getTexture() const ;
+
+			virtual ShaderEffectPtr	getShaderEffect(){ return mCreator->getCreator()->getShaderEffect();}
+
+			virtual bool			hasShader(){return (!mCreator->getCreator()->getShaderEffect().isNull());}
+
+			virtual float			getSquaredDistance(Camera* cam);
+
+			virtual bool			IsUseIdentityView() const {return false;}
+
+			virtual bool			IsUseIdentityProj() const { return false;}
+
+			virtual void			customUpdate();
+
+			void	setCreator(BaseTerrainSection* creator){ mCreator = creator; }
+
+			void	_buildRenderData(BaseTerrainSection* creator);
+
+		protected:
+			BaseTerrainSection*		mCreator;
+			RenderData				mRenderData;
+
+		};
+
+		typedef vector<TerrainSectionRend*>::type TerrainSectionRendVec;
 	public:
 		BaseTerrainSection();
 
-		~BaseTerrainSection();
+		virtual ~BaseTerrainSection();
 
 		virtual void create(BaseTerrain* creator, uint16 sectorX, uint16 sectorZ,
 			uint16 heightMapX, uint16 heightMapZ,
 			uint16 xVerts, uint16 zVerts, 
 			const Rect2D& worldRect);
-
-		virtual void destroy();
 
 		virtual uint16 getSectorX() const { return mSectorX; }
 
@@ -33,38 +75,35 @@ namespace Titan
 
 		VertexBufferSharedPtr	getSectorVertices() { return mSectorVerts; }
 
+		const AABB&		getWorldBound() const { return mWorldBound; }
+
+		uint			getPosOffsetIndex() const { return mPosOffsetIdx;}
+
+		const Vector4&	getPosOffset() const { return mPosOffset; }
+
+		const MaterialPtr&	getMaterial() const { return mCreator->getMaterial(); }
+
 		//interface implement
 		virtual const String&	getType() const { return mType; }
 
-		//temp method, which will be removed when we add render queue
-		virtual void			_updateRenderableList(SceneMgr::RenderableList& renderableList, Camera* cam);
+		virtual void			_updateRenderQueue(RenderQueue* queue, Camera* cam);
 
 		virtual const AABB&		getAABB() const { return mWorldBound; }
-
-		virtual void			getRenderData(RenderData& rd){ rd = mRenderData; }
-
-		virtual void			getTransformMat(Matrix4* transMat);
-
-		virtual RenderData*		getRenderData() {return &mRenderData; }
-
-		virtual ShaderEffectPtr	getShaderEffect();
-
-		virtual bool			hasShader();
-
-		virtual void			customUpdate();
-
 
 
 	protected:
 
-		void		_buildVertexBuffer();
+		virtual void		_buildVertexBuffer();
 
-		void		_buildRenderData();
+		virtual void		_buildRenderData(RenderData* rend);
 
 	protected:
 		BaseTerrain*			mCreator;
 		VertexBufferSharedPtr	mSectorVerts;
-		RenderData				mRenderData;
+		VertexBufferBinding*	mVertexBufferBinding;
+
+		TerrainSectionRend*		mTerrainSectionRend;
+		TerrainSectionRendVec	mTerrainSectionRendVec;
 		AABB					mWorldBound;
 		
 		uint16					mHeightMapX;

@@ -79,13 +79,15 @@ namespace Titan
 
 		virtual	void _updateAABB();
 
-		virtual void _findVisibleObjects(Camera* cam, SceneMgr::RenderableList& renderableList);
+		virtual void _findVisibleObjects(Camera* cam, RenderQueue* queue);
 
 		SceneNode*	getParent() const { return mParent; }
 
 		const String& getName() const { return mName; }
 
 		const AABB& getAABB() const { return mAABB; }
+
+		float		getSquaredDistance(Camera* cam);
 
 		virtual ObjectIterator 	getAttachedObjectIterator();
 

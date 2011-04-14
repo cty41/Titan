@@ -67,6 +67,8 @@ namespace Titan
 
 		TexPool		getTexPool() const { return mPool; }
 
+		bool		hasAlpha() const;
+
 		typedef HardwareBuffer::LockOptions LockOptions;
 
 		virtual void		lockRect(uint level, PixelBox* lockRect, const Box* rect,  LockOptions options)  = 0;
@@ -90,7 +92,7 @@ namespace Titan
 		virtual void		_perlinNoiseImpl(float scale, int octaves, float falloff) = 0;
 	};
 
-	class TexturePtr : public SharedPtr<Texture>
+	class _DllExport TexturePtr : public SharedPtr<Texture>
 	{
 	public:
 		TexturePtr()

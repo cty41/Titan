@@ -11,12 +11,12 @@ namespace Titan
 		mIndexSize = sizeof(unsigned short);
 		mSizeInBytes = mIndexSize * mNumIndexes;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	IndexBuffer::~IndexBuffer()
 	{
 		mMgr->_notifyIndexBufferDestroyed(this);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void IndexBuffer::createSingleStripGrid(uint16 xVerts, uint16 yVerts, uint16 xStep, uint16 yStep, uint16 stride, uint16 flags)
 	{
 		int total_strips = 
@@ -77,7 +77,7 @@ namespace Titan
 	}
 
 
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	IndexBufferSharedPtr::IndexBufferSharedPtr(IndexBuffer* buf)
 		: SharedPtr<IndexBuffer>(buf)
 	{

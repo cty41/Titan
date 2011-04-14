@@ -4,15 +4,33 @@
 #include "TitanPrerequisites.h"
 #include "TitanResource.h"
 #include "TitanSharedPtr.h"
+#include "TitanIteratorWrapper.h"
+#include "TiPass.h"
 
 namespace Titan
 {
 	class _DllExport Material : public Resource
 	{
 	public:
+		typedef vector<Pass*>::type		PassVec;
+		typedef VectorIterator<PassVec>	PassVecIterator;
+	public:
 		Material(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
 
-		~Material();
+		virtual ~Material();
+
+		bool	isTransparent() const { return mPassVec.at(0)->isTransparent();}
+
+		bool	isTransparentSorted() const { return mPassVec.at(0)->isTransparentSort();}
+
+		Pass*	createPass();
+
+		void	removeAllPasses();
+		
+		PassVecIterator	getPassIterator(){ return PassVecIterator(mPassVec.begin(), mPassVec.end()); }
+
+		Pass*	getPass(size_t index);
+
 
 	protected:
 		virtual void prepareImpl();
@@ -24,6 +42,11 @@ namespace Titan
 		virtual void unloadImpl();
 
 	protected:
+		//set default material at the creation of material
+		void	setDefault();
+
+	protected:
+		PassVec		mPassVec;
 	};
 
 	class _DllExport MaterialPtr : public SharedPtr<Material>
@@ -32,8 +55,8 @@ namespace Titan
 		MaterialPtr()
 			:SharedPtr<Material>(){}
 
-		explicit MaterialPtr(Material* mtrl, SharedPtrFreeMethod freeMethod = SPFM_DELETE)
-			:SharedPtr<Material>(mtrl, freeMethod){}
+		explicit MaterialPtr(Material* mtrl)
+			:SharedPtr<Material>(mtrl){}
 
 		MaterialPtr(const MaterialPtr& r)
 			:SharedPtr<Material>(r){}
@@ -42,7 +65,7 @@ namespace Titan
 			:SharedPtr<Material>()
 		{
 			pRep = static_cast<Material*>(r.getPointer());
-			pUseCount = ++r.useCountPointer();
+			pUseCount = r.useCountPointer();
 			if (pUseCount)
 			{
 				++(*pUseCount);
@@ -55,7 +78,7 @@ namespace Titan
 				return *this;
 			release();
 
-			pRep = static_cast<Texture*>(r.getPointer());
+			pRep = static_cast<Material*>(r.getPointer());
 			pUseCount = r.useCountPointer();
 			if (pUseCount)
 			{

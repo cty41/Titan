@@ -5,9 +5,9 @@
 
 namespace Titan {
 
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	const String StringUtil::BLANK;
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
     void StringUtil::trim(String& str, bool left, bool right)
     {
         /*
@@ -40,7 +40,7 @@ namespace Titan {
             str.erase(0, str.find_first_not_of(delims)); // trim left
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     vector<String>::type StringUtil::split( const String& str, const String& delims, unsigned int maxSplits)
     {
         vector<String>::type ret;
@@ -82,7 +82,7 @@ namespace Titan {
 
         return ret;
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	vector< String >::type StringUtil::tokenise( const String& str, const String& singleDelims, const String& doubleDelims, unsigned int maxSplits)
 	{
         vector<String>::type ret;
@@ -150,7 +150,7 @@ namespace Titan {
 
         return ret;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void StringUtil::toLowerCase(String& str)
     {
         std::transform(
@@ -160,7 +160,7 @@ namespace Titan {
 			tolower);
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void StringUtil::toUpperCase(String& str) 
     {
         std::transform(
@@ -169,7 +169,7 @@ namespace Titan {
             str.begin(),
 			toupper);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool StringUtil::startsWith(const String& str, const String& pattern, bool lowerCase)
     {
         size_t thisLen = str.length();
@@ -183,7 +183,7 @@ namespace Titan {
 
         return (startOfThis == pattern);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool StringUtil::endsWith(const String& str, const String& pattern, bool lowerCase)
     {
         size_t thisLen = str.length();
@@ -197,7 +197,7 @@ namespace Titan {
 
         return (endOfThis == pattern);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     String StringUtil::standardisePath(const String& init)
     {
         String path = init;
@@ -208,7 +208,7 @@ namespace Titan {
 
         return path;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void StringUtil::splitFilename(const String& qualifiedName, 
         String& outBasename, String& outPath)
     {
@@ -230,7 +230,7 @@ namespace Titan {
         }
 
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	void StringUtil::splitBaseFilename(const String& fullName, 
 		String& outBasename, String& outExtention)
 	{
@@ -254,7 +254,7 @@ namespace Titan {
 		splitFilename( qualifiedName, fullName, outPath );
 		splitBaseFilename( fullName, outBasename, outExtention );
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool StringUtil::match(const String& str, const String& pattern, bool caseSensitive)
     {
         String tmpStr = str;
@@ -323,7 +323,7 @@ namespace Titan {
 		}
 
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	const String StringUtil::replaceAll(const String& source, const String& replaceWhat, const String& replaceWithWhat)
 	{
 		String result = source;

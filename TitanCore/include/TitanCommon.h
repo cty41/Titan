@@ -82,6 +82,89 @@ namespace Titan
 		size_t getDepth() const { return back-front; }
 	};
 
+	template< typename T > struct TRect
+	{
+		T left, top, right, bottom;
+		TRect() : left(0), top(0), right(0), bottom(0) {}
+		TRect( T const & l, T const & t, T const & r, T const & b )
+			: left( l ), top( t ), right( r ), bottom( b )
+		{
+		}
+		TRect( TRect const & o )
+			: left( o.left ), top( o.top ), right( o.right ), bottom( o.bottom )
+		{
+		}
+		TRect & operator=( TRect const & o )
+		{
+			left = o.left;
+			top = o.top;
+			right = o.right;
+			bottom = o.bottom;
+			return *this;
+		}
+		T width() const
+		{
+			return right - left;
+		}
+		T height() const
+		{
+			return bottom - top;
+		}
+		bool isNull() const
+		{
+			return width() == 0 || height() == 0;
+		}
+		void setNull()
+		{
+			left = right = top = bottom = 0;
+		}
+		TRect & merge(const TRect& rhs)
+		{
+			if (isNull())
+			{
+				*this = rhs;
+			}
+			else if (!rhs.isNull())
+			{
+				left = std::min(left, rhs.left);
+				right = std::max(right, rhs.right);
+				top = std::min(top, rhs.top);
+				bottom = std::max(bottom, rhs.bottom);
+			}
+
+			return *this;
+
+		}
+		TRect intersect(const TRect& rhs) const
+		{
+			TRect ret;
+			if (isNull() || rhs.isNull())
+			{
+				// empty
+				return ret;
+			}
+			else
+			{
+				ret.left = std::max(left, rhs.left);
+				ret.right = std::min(right, rhs.right);
+				ret.top = std::max(top, rhs.top);
+				ret.bottom = std::min(bottom, rhs.bottom);
+			}
+
+			if (ret.left > ret.right || ret.top > ret.bottom)
+			{
+				// no intersection, return empty
+				ret.left = ret.top = ret.right = ret.bottom = 0;
+			}
+
+			return ret;
+
+		}
+
+	};
+
+	typedef TRect<float> FloatRect;
+
 	class _DllExport AutoNamer: public GeneralAlloc
 	{
 	public:
@@ -89,21 +172,21 @@ namespace Titan
 			:mPrefix(prefix), mCount(0)
 		{
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		AutoNamer(const AutoNamer& rhs)
 			:mPrefix(rhs.mPrefix), mCount(rhs.mCount)
 		{
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		~AutoNamer(){}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		String		getAutoName()
 		{
 			std::ostringstream s;
 			s << mPrefix << mCount++;
 			return s.str();
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		void		setPrefix(const String& prefix)
 		{
 			mPrefix = prefix;
@@ -113,6 +196,41 @@ namespace Titan
 		String	mPrefix;
 		uint	mCount;
 	};
+
+	/** Comparison functions used for the depth/stencil buffer operations and 
+	others. */
+    enum CompareFunction
+    {
+        CMPF_ALWAYS_FAIL,
+        CMPF_ALWAYS_PASS,
+        CMPF_LESS,
+        CMPF_LESS_EQUAL,
+        CMPF_EQUAL,
+        CMPF_NOT_EQUAL,
+        CMPF_GREATER_EQUAL,
+        CMPF_GREATER
+    };
+
+	enum FilterType
+	{
+		/// The filter used when shrinking a texture
+		FT_MIN,
+		/// The filter used when magnifying a texture
+		FT_MAG,
+		/// The filter used when determining the mipmap
+		FT_MIP
+	};
+	/** Filtering options for textures / mipmaps. */
+	enum FilterOptions
+	{
+		/// No filtering, used for FILT_MIP to turn off mipmapping
+		FO_NONE,
+		/// Use the closest pixel
+		FO_POINT,
+		/// Average of a 2x2 pixel area, denotes bilinear for MIN and MAG, trilinear for MIP
+		FO_LINEAR,
+	};
+
 
 	/** Light shading modes. */
 	enum ShadeOptions
@@ -144,7 +262,7 @@ namespace Titan
 		/// Hardware culls triangles whose vertices are listed clockwise in the view (default).
 		CULL_CLOCKWISE = 2,
 		/// Hardware culls triangles whose vertices are listed anticlockwise in the view.
-		CULL_ANTICLOCKWISE = 3
+		CULL_COUNTERCLOCKWISE = 3
 	};
 
 	/** Manual culling modes based on vertex normals.

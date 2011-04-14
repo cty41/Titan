@@ -21,12 +21,12 @@ namespace Titan
 	{
 		mLoadOrder = 50;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ShaderEffectMgr::~ShaderEffectMgr()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ShaderEffectPtr ShaderEffectMgr::loadManually(const String& name, const String& group)
 	{
 		ShaderEffectPtr shaderPtr = load(name, group);

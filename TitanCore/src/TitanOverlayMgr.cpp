@@ -2,6 +2,9 @@
 #include "TitanOverlayMgr.h"
 #include "TitanOverlayElement.h"
 #include "TitanRenderQueue.h"
+#include "TitanOverlayPanelElement.h"
+#include "TitanOverlayTextElement.h"
+#include "Viewport.h"
 
 namespace Titan
 {
@@ -16,16 +19,19 @@ namespace Titan
 	}
 
 	OverlayMgr::OverlayMgr()
+		:mViewportHeight(0), mViewportWidth(0),
+		mViewportChanged(false)
 	{
-
+		addFactory(TITAN_NEW OverlayPanelElementFactory());
+		addFactory(TITAN_NEW OverlayTextElementFactory());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	OverlayMgr::~OverlayMgr()
 	{
 		removeAllFactories();
 		removeAllElements();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	OverlayElement* OverlayMgr::createElement(const String& type, const String& name)
 	{
 		OverlayElementMap::iterator it = mOverlayElementMap.find(name);
@@ -55,7 +61,7 @@ namespace Titan
 		}
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayMgr::removeElement(const String& name)
 	{
 		OverlayElementMap::iterator it = mOverlayElementMap.find(name);
@@ -86,7 +92,7 @@ namespace Titan
 			mOverlayElementMap.erase(it);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayMgr::removeAllElements()
 	{
 		OverlayElementMap::iterator it = mOverlayElementMap.begin(), itend = mOverlayElementMap.end();
@@ -97,7 +103,39 @@ namespace Titan
 		}
 		mOverlayElementMap.clear();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
+	OverlayElement* OverlayMgr::findElement(const String& name)
+	{
+		OverlayElementMap::iterator it = mOverlayElementMap.find(name);
+		if(it == mOverlayElementMap.end())
+		{
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				"We do not find overlay element named" + name,
+				"OverlayMgr::findElement");
+			return NULL;
+		}
+		else
+			return it->second;
+	}
+	//-------------------------------------------------------------------------------//
+	void OverlayMgr::renameElement(const String& old, const String& newName)
+	{
+		OverlayElementMap::iterator it = mOverlayElementMap.find(old);
+		if(it == mOverlayElementMap.end())
+		{
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				"We do not find overlay element named" + old,
+				"OverlayMgr::findElement");
+
+		}
+		else
+		{
+			OverlayElement* element = it->second;
+			mOverlayElementMap.erase(it);
+			mOverlayElementMap.insert(OverlayElementMap::value_type(newName, element));
+		}
+	}
+	//-------------------------------------------------------------------------------//
 	void OverlayMgr::addFactory(OverlayElementFactory* factory)
 	{
 		OverlayElementFactoryMap::iterator it = mOverlayElementFactoryMap.find(factory->getTypeName());
@@ -112,7 +150,7 @@ namespace Titan
 				"OverlayMgr::addFactory");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayMgr::removeFactory(const String& type)
 	{
 		OverlayElementFactoryMap::iterator it = mOverlayElementFactoryMap.find(type);
@@ -128,7 +166,7 @@ namespace Titan
 				"OverlayMgr::removeFactory");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayMgr::removeAllFactories()
 	{
 		OverlayElementFactoryMap::iterator it = mOverlayElementFactoryMap.begin(), itend = mOverlayElementFactoryMap.end();
@@ -139,13 +177,25 @@ namespace Titan
 		}
 		mOverlayElementFactoryMap.clear();
 	}
-	//-------------------------------------------------------------//
-	void OverlayMgr::updateRenderQueue(RenderQueue* queue)
+	//-------------------------------------------------------------------------------//
+	void OverlayMgr::updateRenderQueue(RenderQueue* queue, Viewport* vp)
 	{
+		if(mViewportHeight != vp->getActualHeight() ||
+			mViewportWidth != vp->getActualWidth())
+		{
+			mViewportChanged = true;
+			mViewportHeight = vp->getActualHeight();
+			mViewportWidth = vp->getActualWidth();
+		}
+		else
+			mViewportChanged = false;
+
+
 		OverlayElementMap::iterator it = mOverlayElementMap.begin(), itend = mOverlayElementMap.end();
 		while (it != itend)
 		{
-			queue->addRenderable(it->second, RenderQueue::RGT_HUD, it->second->getZOrder());
+			it->second->update();
+			it->second->updateRenderQueue(queue);
 			++it;
 		}
 	}

@@ -138,6 +138,9 @@ namespace Titan
 		PriorityTargetMap		mPriorityTargetMap;
 		bool					mWaitForVSync;
 
+		CullingMode				mCullMode;
+		ShadeOptions			mShadeMode;
+
 		size_t					mBatchCount;
 		size_t					mFaceCount;
 		size_t					mVertexCount;

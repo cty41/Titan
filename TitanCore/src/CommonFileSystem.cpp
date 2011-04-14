@@ -25,18 +25,18 @@ namespace Titan
 		:FileSystem(name, type)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	CommonFileSystem::~CommonFileSystem()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void CommonFileSystem::load()
 	{
 		//for test
 		String testTmp(mName);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	DataStreamPtr CommonFileSystem::open(const String& filename)
 	{
 		//comment first, I did not come up any good design to deal with path problem
@@ -87,7 +87,7 @@ namespace Titan
 		}
 		return DataStreamPtr(stream);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	StringVectorPtr CommonFileSystem::find(const String& wildcard, bool recursive)
 	{
 		StringVectorPtr namesPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
@@ -97,7 +97,7 @@ namespace Titan
 
 		return namesPtr;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void CommonFileSystem::find(const String& wildcard, bool recursive, StringVectorPtr *nameArray, StringVectorPtr* relPathArray)
 	{
 		StringVectorPtr namesPtr(TITAN_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
@@ -106,7 +106,7 @@ namespace Titan
 
 		searchDir(wildcard, recursive,namesPtr, pathsPtr);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void CommonFileSystem::searchDir(const String& pattern, bool recursive, StringVectorPtr stringVector, StringVectorPtr pathVector)
 	{
 		_finddata_t findData;
@@ -173,7 +173,7 @@ namespace Titan
 	{
 		return TITAN_NEW CommonFileSystem(name, type);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void CommonFileSystemFactory::destroyInstance(FileSystem* file)
 	{
 		TITAN_DELETE file;

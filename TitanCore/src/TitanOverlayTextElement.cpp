@@ -6,7 +6,7 @@
 #include "TitanOverlayMgr.h"
 #include "TitanRenderQueue.h"
 #include "Root.h"
-#include "Renderer.h"
+#include "TiRenderer.h"
 
 namespace Titan
 {
@@ -29,12 +29,12 @@ namespace Titan
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	OverlayTextElement::~OverlayTextElement()
 	{
-		TITAN_DELETE mRenderData.vertexData;
+	
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::updateRenderQueue(RenderQueue* queue)
 	{
 		if (mIsVisible)
@@ -45,7 +45,7 @@ namespace Titan
 			}
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::initialise(const String& fontName, float left, float top, ushort pixelCharSize, TexAlignment ali)
 	{
 		setFontName(fontName);
@@ -81,7 +81,7 @@ namespace Titan
 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::checkMemoryAllocation( size_t numChars )
 	{
 		if( mAllocSize < numChars)
@@ -119,7 +119,7 @@ namespace Titan
 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::update()
 	{
 		float vpWidth, vpHeight;
@@ -147,7 +147,7 @@ namespace Titan
 			mColorsChanged;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::updateGeometryData()
 	{
 		if(mpFont.isNull())
@@ -249,7 +249,7 @@ namespace Titan
 			const Font::UVRect& uvRect = mpFont->getGlyphTexCoords(character);
 
 			// each vert is (x, y, z, u, v)
-			//-------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------//----------------
 			// First tri
 			//
 			// Upper left
@@ -277,9 +277,9 @@ namespace Titan
 			*pVert++ = -1.0;
 			*pVert++ = uvRect.right;
 			*pVert++ = uvRect.top;
-			//-------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------//----------------
 
-			//-------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------//----------------
 			// Second tri
 			//
 			// Top right (again)
@@ -307,7 +307,7 @@ namespace Titan
 			*pVert++ = -1.0;
 			*pVert++ = uvRect.right;
 			*pVert++ = uvRect.bottom;
-			//-------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------//----------------
 
 			// Go back up with top
 			top += mCharHeight * 2.0f;
@@ -333,7 +333,7 @@ namespace Titan
 			setWidth(largestWidth);
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::updateColor()
 	{
 		RGBA topColor, bottomColor;
@@ -357,7 +357,7 @@ namespace Titan
 		}
 		vbuf->unlock();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	inline void OverlayTextElement::setCaption(const String& content)
 	{
 		mCaption = content;
@@ -365,7 +365,7 @@ namespace Titan
 		notifyGeometryOld();
 		notifyTexDataOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::setFontName(const String& name)
 	{
 		mpFont = FontMgr::getSingleton().load(name);
@@ -377,7 +377,7 @@ namespace Titan
 		notifyGeometryOld();
 		notifyTexDataOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::setCharHeight(float height)
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -390,7 +390,7 @@ namespace Titan
 		}
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::setSpaceWidth( float width )
 	{
 		if (mMetricsMode == OMM_ABSOLUTE)
@@ -402,25 +402,25 @@ namespace Titan
 			mSpaceWidth = width;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::setColor(const Color& col)
 	{
 		mColorBottom = mColorTop = col;
 		mColorsChanged = true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::setColorBottom(const Color& col)
 	{
 		mColorBottom = col;
 		mColorsChanged = true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::setColorTop(const Color& col)
 	{
 		mColorTop = col;
 		mColorsChanged;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElement::setMetricsMode(OverlayMetricsMode mode)
 	{
 		float vpWidth, vpHeight;
@@ -444,12 +444,12 @@ namespace Titan
 	{
 		mTypeName = "OverlayTextElement";
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	OverlayElement* OverlayTextElementFactory::createInstance(const String& name)
 	{
 		return TITAN_NEW OverlayTextElement(name);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayTextElementFactory::destroyInstance(OverlayElement* element)
 	{
 		TITAN_DELETE element;

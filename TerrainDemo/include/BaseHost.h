@@ -12,7 +12,7 @@ class BaseHost : public OIS::KeyListener,public OIS::MouseListener, public Titan
 public:
 	BaseHost();
 
-	~BaseHost();
+	virtual ~BaseHost();
 
 	void setup();
 
@@ -30,12 +30,12 @@ protected:
 
 	virtual void loadResources();
 
+	virtual void updateLogic(float frameTime);
+
 	//we create buffed keyboard and mouse
-	virtual void initInputDevice();
+	void initInputDevice();
 
-	void CaptureInput();
-
-	void updateLogic(float frameTime);
+	void captureInput();
 
 	bool keyPressed(const OIS::KeyEvent &arg);
 
@@ -51,16 +51,14 @@ protected:
 	Titan::Root*					mRoot;
 	Titan::SceneMgr*				mSceneMgr;
 	Titan::RenderWindow*			mWindow;
-	Titan::BaseTerrain*				mTerrain;
-
 	Titan::Timer*					mTimer;
-	Titan::ManualObject*			mManualObject;
 	Titan::Camera*					mCamera;
 	CameraController*				mCamController;
 	float							mCurrTime, mPreTime;
+	Titan::OverlayTextElement*		mFPSLabel;
 
-	OIS::InputManager*			mInputMgr;
-	OIS::Mouse*					mMouse;
-	OIS::Keyboard*				mKeyboard;
+	OIS::InputManager*				mInputMgr;
+	OIS::Mouse*						mMouse;
+	OIS::Keyboard*					mKeyboard;
 };
 #endif

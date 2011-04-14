@@ -6,6 +6,7 @@
 
 namespace Titan
 {
+	//warning!!now I do not consider the multi pass rendering ,so if you use that there will get error!
 	class _DllExport RenderQueue : public GeneralAlloc
 	{
 	public:

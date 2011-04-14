@@ -6,7 +6,7 @@
 #include "StringConverter.h"
 #include "Singleton.h"
 #include "Exception.h"
-#include "Renderer.h"
+#include "TiRenderer.h"
 #include "TitanAABB.h"
 #include "TitanMath.h"
 #include "TitanMatrix3.h"

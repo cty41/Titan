@@ -19,12 +19,12 @@ namespace Titan
 	void RenderWindow::create(const String& title, uint width, uint height, bool isFullScreen, const AnyMap* particularParams)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void RenderWindow::update()
 	{
 		RenderTarget::update();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void RenderWindow::destroy()
 	{
 	}

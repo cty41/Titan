@@ -2,7 +2,7 @@
 #define _TITAN_SHADEREFFECTMGR__HH
 
 #include "TitanPrerequisites.h"
-#include "TitanResourceManager.h"
+#include "TiResourceMgr.h"
 #include "Singleton.h"
 #include "TitanShaderEffect.h"
 

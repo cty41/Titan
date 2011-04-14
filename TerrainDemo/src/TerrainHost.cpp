@@ -6,12 +6,12 @@ mTerrain(NULL)
 {
 
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 TerrainHost::~TerrainHost()
 {
 	destroy();
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void TerrainHost::destroy()
 {
 	if(mTerrain)
@@ -19,7 +19,7 @@ void TerrainHost::destroy()
 
 	BaseHost::destroy();
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void TerrainHost::loadResources()
 {
 	BaseHost::loadResources();
@@ -35,8 +35,8 @@ void TerrainHost::loadResources()
 
 	mCamController = TITAN_NEW CameraController(mCamera);
 
-#if 1
-	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupManager::GENERAL_RESOURCE_GROUP,
+#if 0
+	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
 		Titan::TT_2D, 128, 128, 0,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
 
 	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
@@ -47,7 +47,7 @@ void TerrainHost::loadResources()
 #endif
 
 #if 0
-	Titan::ShaderEffectPtr pEffect = Titan::ShaderEffectMgr::getSingletonPtr()->loadManually("DefaultMesh.fx", Titan::ResourceGroupManager::GENERAL_RESOURCE_GROUP);
+	Titan::ShaderEffectPtr pEffect = Titan::ShaderEffectMgr::getSingletonPtr()->loadManually("DefaultMesh.fx", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
 
 
 	mManualObject = mSceneMgr->createManualObject("test");
@@ -74,9 +74,9 @@ void TerrainHost::loadResources()
 	node->attachObject(mManualObject);
 #endif
 
-	mCamera->setPosition(0.0f, 0.0f, 0.0f);
+	mCamera->setPosition(0.0f, 0.0f, 10.0f);
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void TerrainHost::render(float frameTime)
 {
 
@@ -91,7 +91,7 @@ void TerrainHost::render(float frameTime)
 	}
 	BaseHost::render(frameTime);
 }
-//-------------------------------------------------------------//
+//-------------------------------------------------------------------------------//
 void TerrainHost::updateLogic(float frameTime)
 {
 	BaseHost::updateLogic(frameTime);

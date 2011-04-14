@@ -13,7 +13,7 @@ namespace Titan
 		mDefaultGroup = getRenderQueueGroup(RGT_SceneObject);
 		mDefaultGroup->setSortStrategy(SS_Shader_Tex_Dist);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	RenderQueue::~RenderQueue()
 	{
 		RenderQueueGroupMap::iterator it = mRenderQueueGroupMap.begin(), itend = mRenderQueueGroupMap.end();
@@ -25,7 +25,7 @@ namespace Titan
 		}
 		mRenderQueueGroupMap.clear();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void RenderQueue::clear()
 	{
 		RenderQueueGroupMap::iterator it = mRenderQueueGroupMap.begin(), itend = mRenderQueueGroupMap.end();
@@ -36,12 +36,29 @@ namespace Titan
 		}
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
+	void RenderQueue::addRenderable(Renderable* rend, uint type, ushort priority)
+	{
+		RenderQueueGroupMap::iterator it = mRenderQueueGroupMap.find(type);
+		if(it == mRenderQueueGroupMap.end())
+		{
+			StringStream err;
+			err<<type;
+			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+				"Render Queue Group with this type:"+ err.str() + "does not exist",
+				"RenderQueue::addRenderable");
+		}
+		else
+		{
+			it->second->addRenderable(rend, priority);
+		}
+	}
+	//-------------------------------------------------------------------------------//
 	void RenderQueue::addRenderable(Renderable* rend)
 	{
-		mDefaultGroup->addRenderable(rend, RGT_SceneObject);
+		mDefaultGroup->addRenderable(rend, 0);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void RenderQueue::addRenderQueueGroup(uint type)
 	{
 		RenderQueueGroupMap::iterator it = mRenderQueueGroupMap.find(type);
@@ -50,7 +67,7 @@ namespace Titan
 			mRenderQueueGroupMap.insert(RenderQueueGroupMap::value_type(type, TITAN_NEW RenderQueueGroup(this,type))); 
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	RenderQueueGroup*	RenderQueue::getRenderQueueGroup(uint type)
 	{
 		RenderQueueGroupMap::iterator it = mRenderQueueGroupMap.find(type);
@@ -64,7 +81,7 @@ namespace Titan
 			return it->second;
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void RenderQueue::sort()
 	{
 		RenderQueueGroupMap::iterator it = mRenderQueueGroupMap.begin(), itend = mRenderQueueGroupMap.end();
@@ -74,7 +91,7 @@ namespace Titan
 			++it;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void RenderQueue::setSortStrategy(SortStrategy ss)
 	{
 		mDefaultGroup->setSortStrategy(ss);

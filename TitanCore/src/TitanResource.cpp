@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TitanResource.h"
-#include "TitanResourceGroupManager.h"
-#include "TitanResourceManager.h"
+#include "TiResourceGroupMgr.h"
+#include "TiResourceMgr.h"
 #include "TitanDataStream.h"
 
 namespace Titan
@@ -11,23 +11,23 @@ namespace Titan
 	{
 		
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Resource::~Resource()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Resource::prepareImpl()
 	{
-		DataStreamPtr dataStream = ResourceGroupManager::getSingltonPtr()->openResource(mName, mGroup);
-		mPreparedData = MemoryDataStreamPtr(new MemoryDataStream(dataStream));
+		DataStreamPtr dataStream = ResourceGroupMgr::getSingltonPtr()->openResource(mName, mGroup);
+		mPreparedData = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(dataStream));
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Resource::unprepareImpl()
 	{
 		mPreparedData.setNull();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Resource::prepare()
 	{
 		if(!isPrepared())
@@ -37,7 +37,7 @@ namespace Titan
 			mLoadState = LS_PREPARED;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Resource::unprapare()
 	{
 		if(isPrepared())
@@ -46,7 +46,7 @@ namespace Titan
 			mLoadState = LS_UNPREPARED;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Resource::load()
 	{
 		prepare();
@@ -58,7 +58,7 @@ namespace Titan
 			mLoadState = LS_LOADED;
 		}	
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Resource::unload()
 	{
 		if(isLoaded())
@@ -67,7 +67,7 @@ namespace Titan
 			mLoadState = LS_PREPARED;
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void Resource::changeGroup(const String& newGroup)
 	{
 	}

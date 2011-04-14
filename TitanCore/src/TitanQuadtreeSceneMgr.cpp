@@ -12,12 +12,12 @@ namespace Titan
 	{
 		memset(mLevelNodes, 0, sizeof(mLevelNodes));
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	QuadtreeSceneMgr::~QuadtreeSceneMgr()
 	{
 		clearOctreeConfigs();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode* QuadtreeSceneMgr::getRootSceneNode()
 	{
 		if(!mRootSceneNode)
@@ -30,7 +30,7 @@ namespace Titan
 		
 		return mRootSceneNode;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeSceneMgr::setOctreeConfigs(const AABB& extent, int depth)
 	{
 		if(isInitialized())
@@ -78,7 +78,7 @@ namespace Titan
 
 		mIsInitialized = true;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeSceneMgr::clearOctreeConfigs()
 	{
 		for(int i = 0; i < mMaxDepth; ++i)
@@ -89,12 +89,12 @@ namespace Titan
 		mMaxDepth = 0;
 		mIsInitialized = false;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeSceneMgr::buildQuadTreeAABB(const AABB& worldAABB, QuadTreeAABB& worldByteAABB)
 	{
 		worldByteAABB.convert(worldAABB, mWorldOffset, mWorldScale);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Quadtree* QuadtreeSceneMgr::findQuadtreeNode(const QuadTreeAABB& aabb)
 	{
 		int level, levelX, levelZ;
@@ -102,7 +102,7 @@ namespace Titan
 
 		return _getNodeFromLevelXZ(level, levelX, levelZ);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeSceneMgr::addOrUpdateSceneObject(QuadtreeNode* sceneNode)
 	{
 		QuadTreeAABB byteAABB;
@@ -115,7 +115,7 @@ namespace Titan
 		//to update quadtree
 		quadNode->addOrUpdateNode(sceneNode, byteAABB);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeSceneMgr::_findTreeNodeInfo(const QuadTreeAABB& worldByteAABB, int& level, int& levelX, int& levelZ)
 	{
 		int xPattern = worldByteAABB.x0 ^ worldByteAABB.x1;
@@ -133,7 +133,7 @@ namespace Titan
 		levelX = worldByteAABB.x1 >> shift;
 		levelZ = worldByteAABB.z1 >> shift;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void QuadtreeSceneMgr::_processVisibleObjects(Camera* cam)
 	{
 		QuadTreeAABB byteAABB;
@@ -177,7 +177,7 @@ namespace Titan
 						{
 
 							// test all members of this node against the world rect
-							node->_findVisibleObjects(mRenderableList, heightMask, 
+							node->_findVisibleObjects(mRenderQueue, heightMask, 
 								cam, true);
 
 						}
@@ -185,7 +185,7 @@ namespace Titan
 						{
 							// test all members of this node against 
 							// the world Z extents only
-							node->_findVisibleObjects(mRenderableList, heightMask, 
+							node->_findVisibleObjects(mRenderQueue, heightMask, 
 										cam, false);
 
 						}
@@ -207,12 +207,12 @@ namespace Titan
 	{
 		mType = SNT_QUADTREE;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	QuadtreeSceneMgrFactory::~QuadtreeSceneMgrFactory()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgr*	QuadtreeSceneMgrFactory::createSceneMgr(const String& name)
 	{
 		return TITAN_NEW QuadtreeSceneMgr(name);

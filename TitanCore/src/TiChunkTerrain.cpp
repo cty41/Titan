@@ -10,12 +10,12 @@ namespace Titan
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ChunkTerrain::~ChunkTerrain()
 	{
 		destroy();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrain::create(SceneNode* rootNode, TexturePtr heightMap, const AABB& worldBound, uint8 shift /* = 5 */)
 	{
 		// chunk terrain sections 
@@ -24,12 +24,12 @@ namespace Titan
 
 		BaseTerrain::create(rootNode, heightMap, worldBound, shift);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrain::destroy()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrain::_createTerrainSections()
 	{
 		mSectorArray = new BaseTerrainSection*[mSectorCountX * mSectorCountZ];
@@ -64,7 +64,7 @@ namespace Titan
 		}
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrain::_buildHorzVertexData()
 	{
 		Vector2	cellSize(mSectorSize.x / mSectorUnits,
@@ -110,7 +110,7 @@ namespace Titan
 
 		delete [] pVerts;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void ChunkTerrain::_buildIndexData()
 	{
 
@@ -226,7 +226,7 @@ namespace Titan
 
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	IndexBufferSharedPtr ChunkTerrain::getLodIndexBuffer(uint8 indexType, uint8 lod)
 	{
 		assert(indexType < 2 && lod < CHUNK_MAX_LOD);

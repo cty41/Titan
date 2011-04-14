@@ -15,12 +15,12 @@ namespace Titan
 		mU2(1.0f), mV2(1.0f), mTexCoordNum(0)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	OverlayPanelElement::~OverlayPanelElement()
 	{
-		TITAN_DELETE mRenderData.vertexData;
+
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayPanelElement::initialise(const String& texName, float width, float height, float left, float top)
 	{
 		mTexture = TextureMgr::getSingletonPtr()->load(texName);
@@ -49,14 +49,14 @@ namespace Titan
 
 		notifyGeometryOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayPanelElement::setUV(float u1, float v1, float u2, float v2)
 	{
 		mU1 = u1; mV1 = v1;
 		mU2 = u2; mV2 = v2;
 		notifyTexDataOld();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayPanelElement::updateGeometryData()
 	{
 		/*
@@ -100,7 +100,7 @@ namespace Titan
 
 		
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayPanelElement::updateTexData()
 	{
 		if(!mTexture.isNull() &&mIsInitialised)
@@ -143,7 +143,7 @@ namespace Titan
 			
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayPanelElement::updateRenderQueue(RenderQueue* queue)
 	{
 		if (mIsVisible)
@@ -154,23 +154,23 @@ namespace Titan
 			}
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 
 
 
 
 
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	OverlayPanelElementFactory::OverlayPanelElementFactory()
 	{
 		mTypeName = "OverlayPanelElement";
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	OverlayElement* OverlayPanelElementFactory::createInstance(const String& name)
 	{
 		return TITAN_NEW OverlayPanelElement(name);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void OverlayPanelElementFactory::destroyInstance(OverlayElement* element)
 	{
 		TITAN_DELETE element;

@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib DxErr.lib .\..\lib\Debug\TitanCore_d.lib"
+				AdditionalDependencies="d3d9.lib d3dx9d.lib DxErr.lib .\..\lib\Debug\TitanCore_d.lib"
 				OutputFile="..\bin\$(ConfigurationName)\Plugin_D3D9Renderer_d.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -99,7 +99,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -121,10 +121,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="include; ..\TitanCore\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PLUGIN_D3D9RENDERER_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\bin\$(ConfigurationName)\Plugin_D3D9Renderer.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -139,11 +141,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="d3d9.lib d3dx9.lib DxErr.lib .\..\lib\$(ConfigurationName)\TitanCore.lib"
+				OutputFile="..\bin\$(ConfigurationName)\Plugin_D3D9Renderer.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\bin\$(ConfigurationName)\Plugin_D3D9Renderer.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="..\lib\$(ConfigurationName)\Plugin_D3D9Renderer.lib"
 				TargetMachine="1"
 			/>
 			<Tool

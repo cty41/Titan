@@ -69,7 +69,7 @@ namespace Titan
 	{
 		enum { number = num };
 	};
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	class _DllExport FileNotFoundException: public Exception
 	{
 	public:
@@ -77,7 +77,7 @@ namespace Titan
 			: Exception(number, description,source, "FileNotFoundException", file, line){}
 
 	};
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	class _DllExport ItemNotFoundException: public Exception
 	{
 	public:
@@ -85,7 +85,7 @@ namespace Titan
 			: Exception(number, description,source, "ItemNotFoundException", file, line){}
 
 	};
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	class _DllExport CanNotWriteToFileException: public Exception
 	{
 	public:
@@ -93,28 +93,28 @@ namespace Titan
 			: Exception(number, description,source, "CanNotWriteToFileException", file, line){}
 
 	};
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	class _DllExport RenderAPIException: public Exception
 	{
 	public:
 		RenderAPIException(int number, const String& description, const String& source, const char* file, long line)
 			: Exception(number, description,source, "RenderAPIException", file, line){}
 	};
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	class _DllExport InternalErrorException: public Exception
 	{
 	public:
 		InternalErrorException(int number, const String& description, const String& source, const char* file, long line)
 			: Exception(number, description,source, "InternalErrorException", file, line){}
 	};
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	class _DllExport InvalidParamsException: public Exception
 	{
 	public:
 		InvalidParamsException(int number, const String& description, const String& source, const char* file, long line)
 			: Exception(number, description,source, "InvalidParamsException", file, line){}
 	};
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	class _DllExport InternalWarnningsException: public Exception
 	{
 	public:
@@ -135,7 +135,7 @@ namespace Titan
 		{
 			return FileNotFoundException(code.number, desc, src, file, line);
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		static ItemNotFoundException create(
 			ExceptionCodeType<Exception::EXCEP_ITEM_NOT_FOUND> code,
 			const String& desc,

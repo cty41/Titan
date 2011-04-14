@@ -31,7 +31,7 @@ namespace Titan
     float *Math::mSinTable = NULL;
     float *Math::mTanTable = NULL;
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Math::Math( unsigned int trigTableSize )
     {
         msAngleUnit = AU_DEGREE;
@@ -45,14 +45,14 @@ namespace Titan
         buildTrigTables();
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Math::~Math()
     {
         TITAN_FREE(mSinTable, MEMCATEGORY_GENERAL);
         TITAN_FREE(mTanTable, MEMCATEGORY_GENERAL);
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     void Math::buildTrigTables(void)
     {
         // Build trig lookup tables
@@ -67,7 +67,7 @@ namespace Titan
             mTanTable[i] = tan(angle);
         }
     }
-	//-----------------------------------------------------------------------	
+	//-------------------------------------------------------------------------------//--	
 	float Math::SinTable (float fValue)
     {
         // Convert range to index values, wrap if required
@@ -83,19 +83,19 @@ namespace Titan
 
         return mSinTable[idx];
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	float Math::TanTable (float fValue)
     {
         // Convert range to index values, wrap if required
 		int idx = int(fValue *= mTrigTableFactor) % mTrigTableSize;
 		return mTanTable[idx];
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     int Math::ISign (int iValue)
     {
         return ( iValue > 0 ? +1 : ( iValue < 0 ? -1 : 0 ) );
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Radian Math::ACos (float fValue)
     {
         if ( -1.0 < fValue )
@@ -110,7 +110,7 @@ namespace Titan
             return Radian(PI);
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Radian Math::ASin (float fValue)
     {
         if ( -1.0 < fValue )
@@ -125,7 +125,7 @@ namespace Titan
             return Radian(-HALF_PI);
         }
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::Sign (float fValue)
     {
         if ( fValue > 0.0 )
@@ -136,40 +136,40 @@ namespace Titan
 
         return 0.0;
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	float Math::InvSqrt(float fValue)
 	{
 		return float(asm_rsq(fValue));
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::UnitRandom ()
     {
         return asm_rand() / asm_rand_max();
     }
     
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::RangeRandom (float fLow, float fHigh)
     {
         return (fHigh-fLow)*UnitRandom() + fLow;
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::SymmetricRandom ()
     {
 		return 2.0f * UnitRandom() - 1.0f;
     }
 
-   //-----------------------------------------------------------------------
+   //-------------------------------------------------------------------------------//--
     void Math::setAngleUnit(Math::AngleUnit unit)
    {
        msAngleUnit = unit;
    }
-   //-----------------------------------------------------------------------
+   //-------------------------------------------------------------------------------//--
    Math::AngleUnit Math::getAngleUnit(void)
    {
        return msAngleUnit;
    }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::AngleUnitsToRadians(float angleunits)
     {
        if (msAngleUnit == AU_DEGREE)
@@ -178,7 +178,7 @@ namespace Titan
            return angleunits;
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::RadiansToAngleUnits(float radians)
     {
        if (msAngleUnit == AU_DEGREE)
@@ -187,7 +187,7 @@ namespace Titan
            return radians;
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::AngleUnitsToDegrees(float angleunits)
     {
        if (msAngleUnit == AU_RADIAN)
@@ -196,7 +196,7 @@ namespace Titan
            return angleunits;
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     float Math::DegreesToAngleUnits(float degrees)
     {
        if (msAngleUnit == AU_RADIAN)
@@ -205,7 +205,7 @@ namespace Titan
            return degrees;
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
 	bool Math::pointInTri2D(const Vector2& p, const Vector2& a, 
 		const Vector2& b, const Vector2& c)
     {
@@ -220,14 +220,14 @@ namespace Titan
 		// Note we don't care about normalisation here since sign is all we need
 		// It means we don't have to worry about magnitude of cross products either
 		dot[0] = v1.crossProduct(v2);
-		zeroDot[0] = Math::floatEqual(dot[0], 0.0f, 1e-3);
+		zeroDot[0] = Math::floatEqual(dot[0], 0.0f, 1e-3f);
 
 
 		v1 = c - b;
 		v2 = p - b;
 
 		dot[1] = v1.crossProduct(v2);
-		zeroDot[1] = Math::floatEqual(dot[1], 0.0f, 1e-3);
+		zeroDot[1] = Math::floatEqual(dot[1], 0.0f, 1e-3f);
 
 		// Compare signs (ignore colinear / coincident points)
 		if(!zeroDot[0] && !zeroDot[1] 
@@ -240,7 +240,7 @@ namespace Titan
 		v2 = p - c;
 
 		dot[2] = v1.crossProduct(v2);
-		zeroDot[2] = Math::floatEqual(dot[2], 0.0f, 1e-3);
+		zeroDot[2] = Math::floatEqual(dot[2], 0.0f, 1e-3f);
 		// Compare signs (ignore colinear / coincident points)
 		if((!zeroDot[0] && !zeroDot[2] 
 			&& Math::Sign(dot[0]) != Math::Sign(dot[2])) ||
@@ -253,7 +253,7 @@ namespace Titan
 
 		return true;
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	bool Math::pointInTri3D(const Vector3& p, const Vector3& a, 
 		const Vector3& b, const Vector3& c, const Vector3& normal)
 	{
@@ -268,14 +268,14 @@ namespace Titan
 		// Note we don't care about normalisation here since sign is all we need
 		// It means we don't have to worry about magnitude of cross products either
         dot[0] = v1.crossProduct(v2).dotProduct(normal);
-		zeroDot[0] = Math::floatEqual(dot[0], 0.0f, 1e-3);
+		zeroDot[0] = Math::floatEqual(dot[0], 0.0f, 1e-3f);
 
 
         v1 = c - b;
         v2 = p - b;
 
 		dot[1] = v1.crossProduct(v2).dotProduct(normal);
-		zeroDot[1] = Math::floatEqual(dot[1], 0.0f, 1e-3);
+		zeroDot[1] = Math::floatEqual(dot[1], 0.0f, 1e-3f);
 
 		// Compare signs (ignore colinear / coincident points)
 		if(!zeroDot[0] && !zeroDot[1] 
@@ -288,7 +288,7 @@ namespace Titan
         v2 = p - c;
 
 		dot[2] = v1.crossProduct(v2).dotProduct(normal);
-		zeroDot[2] = Math::floatEqual(dot[2], 0.0f, 1e-3);
+		zeroDot[2] = Math::floatEqual(dot[2], 0.0f, 1e-3f);
 		// Compare signs (ignore colinear / coincident points)
 		if((!zeroDot[0] && !zeroDot[2] 
 			&& Math::Sign(dot[0]) != Math::Sign(dot[2])) ||
@@ -301,7 +301,7 @@ namespace Titan
 
         return true;
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Math::floatEqual( float a, float b, float tolerance )
     {
         if (fabs(b-a) <= tolerance)
@@ -310,7 +310,7 @@ namespace Titan
             return false;
     }
 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     std::pair<bool, float> Math::intersects(const Ray& ray, const Plane& plane)
     {
 
@@ -328,7 +328,7 @@ namespace Titan
         }
         
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     std::pair<bool, float> Math::intersects(const Ray& ray, 
         const vector<Plane>::type& planes, bool normalIsOutside)
     {
@@ -339,7 +339,7 @@ namespace Titan
 		}
 		return intersects(ray, planesList, normalIsOutside);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     std::pair<bool, float> Math::intersects(const Ray& ray, 
         const list<Plane>::type& planes, bool normalIsOutside)
     {
@@ -422,7 +422,7 @@ namespace Titan
 		}
 		return ret;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     std::pair<bool, float> Math::intersects(const Ray& ray, const Sphere& sphere, 
         bool discardInside)
     {
@@ -464,7 +464,7 @@ namespace Titan
 
 
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
 	std::pair<bool, float> Math::intersects(const Ray& ray, const AABB& box)
 	{
 		if (box.isNull()) return std::pair<bool, float>(false, 0);
@@ -592,7 +592,7 @@ namespace Titan
 		return std::pair<bool, float>(hit, lowt);
 
 	} 
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Math::intersects(const Ray& ray, const AABB& box,
         float* d1, float* d2)
     {
@@ -680,7 +680,7 @@ namespace Titan
 
         return true;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     std::pair<bool, float> Math::intersects(const Ray& ray, const Vector3& a,
         const Vector3& b, const Vector3& c, const Vector3& normal,
         bool positiveSide, bool negativeSide)
@@ -773,7 +773,7 @@ namespace Titan
 
         return std::pair<bool, float>(true, t);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     std::pair<bool, float> Math::intersects(const Ray& ray, const Vector3& a,
         const Vector3& b, const Vector3& c,
         bool positiveSide, bool negativeSide)
@@ -781,7 +781,7 @@ namespace Titan
         Vector3 normal = calculateBasicFaceNormalWithoutNormalize(a, b, c);
         return intersects(ray, a, b, c, normal, positiveSide, negativeSide);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Math::intersects(const Sphere& sphere, const AABB& box)
     {
         if (box.isNull()) return false;
@@ -811,7 +811,7 @@ namespace Titan
 		return d <= radius * radius;
 
     }
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	bool Math::intersects(const AABB& a, const AABB& b, AABB& result)
 	{
 		result.getMinimum().x = maximum(a.getMinimum().x, b.getMinimum().x);
@@ -826,19 +826,19 @@ namespace Titan
 			&&(result.getMinimum().y <= result.getMaximum().y)
 			&&(result.getMinimum().z <= result.getMaximum().z));
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Math::intersects(const Plane& plane, const AABB& box)
     {
         return (plane.getSide(box) == Plane::BOTH_SIDE);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     bool Math::intersects(const Sphere& sphere, const Plane& plane)
     {
         return (
             Math::Abs(plane.getDistance(sphere.getCenter()))
             <= sphere.getRadius() );
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Math::calculateTangentSpaceVector(
         const Vector3& position1, const Vector3& position2, const Vector3& position3,
         float u1, float v1, float u2, float v2, float u3, float v3)
@@ -876,7 +876,7 @@ namespace Titan
         return tangent;
 
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Matrix4 Math::buildReflectionMatrix(const Plane& p)
     {
         return Matrix4(
@@ -885,34 +885,34 @@ namespace Titan
             -2 * p.normal.z * p.normal.x,       -2 * p.normal.z * p.normal.y,       -2 * p.normal.z * p.normal.z + 1,   -2 * p.normal.z * p.d, 
             0,                                  0,                                  0,                                  1);
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector4 Math::calculateFaceNormal(const Vector3& v1, const Vector3& v2, const Vector3& v3)
     {
         Vector3 normal = calculateBasicFaceNormal(v1, v2, v3);
         // Now set up the w (distance of tri from origin
         return Vector4(normal.x, normal.y, normal.z, -(normal.dotProduct(v1)));
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Math::calculateBasicFaceNormal(const Vector3& v1, const Vector3& v2, const Vector3& v3)
     {
         Vector3 normal = (v2 - v1).crossProduct(v3 - v1);
         normal.normalise();
         return normal;
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector4 Math::calculateFaceNormalWithoutNormalize(const Vector3& v1, const Vector3& v2, const Vector3& v3)
     {
         Vector3 normal = calculateBasicFaceNormalWithoutNormalize(v1, v2, v3);
         // Now set up the w (distance of tri from origin)
         return Vector4(normal.x, normal.y, normal.z, -(normal.dotProduct(v1)));
     }
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Vector3 Math::calculateBasicFaceNormalWithoutNormalize(const Vector3& v1, const Vector3& v2, const Vector3& v3)
     {
         Vector3 normal = (v2 - v1).crossProduct(v3 - v1);
         return normal;
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	float Math::gaussianDistribution(float x, float offset, float scale)
 	{
 		float nom = Math::Exp(
@@ -922,7 +922,7 @@ namespace Titan
 		return nom / denom;
 
 	}
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	Matrix4 Math::makeViewMatrix(const Vector3& position, const Quaternion& orientation, 
 		const Matrix4* reflectMatrix)
 	{
@@ -961,7 +961,7 @@ namespace Titan
 		return viewMatrix;
 
 	}
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	float Math::boundingRadiusFromAABB(const AABB& aabb)
 	{
 		Vector3 max = aabb.getMaximum();

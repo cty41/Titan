@@ -16,28 +16,28 @@ namespace Titan
 		// Calculate the size of the vertices
 		mSizeInBytes = mVertexSize * numVertices;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	VertexBuffer::~VertexBuffer()
 	{
 		mMgr->_notifyVertexBufferDestroyed(this);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	//
 	//class VertexElement
 	//
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	VertexElement::VertexElement(unsigned short source, size_t offset, 
 		VertexElementType theType, VertexElementSemantic semantic, unsigned short index)
 		: mSource(source), mOffset(offset), mType(theType), 
 		mSemantic(semantic), mIndex(index)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	size_t VertexElement::getSize(void) const
 	{
 		return getTypeSize(mType);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	size_t VertexElement::getTypeSize(VertexElementType etype)
 	{
 		switch(etype)
@@ -67,16 +67,28 @@ namespace Titan
 		}
 		return 0;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
+	uint32 VertexElement::convertColor(const Color& src, VertexElementType dst)
+	{
+		switch(dst)
+		{
+		default:
+		case VET_COLOR_ARGB:
+			return src.getAsARGB();
+		case VET_COLOR_ABGR:
+			return src.getAsABGR();
+		};
+	}
+	//-------------------------------------------------------------------------------//
 	VertexElementType VertexElement::getColorVertexElementType()
 	{
 		return Root::getSingleton().getActiveRenderer()->getColorVertexElementType();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	//
 	//class VertexDeclaration
 	//
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const VertexElement* VertexDeclaration::getElement(unsigned short index)
 	{
 		assert(index < mElementList.size() && "Index out of bounds");
@@ -87,7 +99,7 @@ namespace Titan
 
 		return &(*i);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const VertexElement& VertexDeclaration::addElement(unsigned short source, 
 		size_t offset, VertexElementType theType, VertexElementSemantic semantic, 
 		unsigned short index /* = 0 */)
@@ -99,7 +111,7 @@ namespace Titan
 		mElementList.push_back(VertexElement(source,offset, theType, semantic, index));
 		return mElementList.back();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const VertexElement& VertexDeclaration::insertElement(unsigned short atPosition, 
 		unsigned short source, size_t offset, VertexElementType theType, 
 		VertexElementSemantic semantic, unsigned short index /* = 0 */)
@@ -117,7 +129,7 @@ namespace Titan
 			VertexElement(source, offset, theType, semantic, index));
 		return *i;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void VertexDeclaration::removeElement(
 		VertexElementSemantic semantic, unsigned short index /* = 0 */)
 	{
@@ -133,7 +145,7 @@ namespace Titan
 			}
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void VertexDeclaration::removeElement(unsigned short elem_index)
 	{
 		assert(elem_index < mElementList.size() && "Index out of bounds");
@@ -142,12 +154,12 @@ namespace Titan
 			++i;
 		mElementList.erase(i);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void VertexDeclaration::removeAllElements()
 	{
 		mElementList.clear();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	size_t VertexDeclaration::getVertexSize(unsigned short source)
 	{
 		VertexElementList::const_iterator i, iend;
@@ -164,22 +176,22 @@ namespace Titan
 		}
 		return sz;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	VertexBufferBinding::VertexBufferBinding(): mHighestIndex(0)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	VertexBufferBinding::~VertexBufferBinding()
 	{
 		unsetAllBindings();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void VertexBufferBinding::setBinding(ushort index, const VertexBufferSharedPtr& buffer)
 	{
 		mBindingMap[index] = buffer;
 		mHighestIndex = std::max(mHighestIndex, (ushort)(index));
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void VertexBufferBinding::unsetBinding(ushort index)
 	{
 		VertexBufferBindingMap::iterator i = mBindingMap.find(index);
@@ -192,7 +204,7 @@ namespace Titan
 		}
 		mBindingMap.erase(i);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void VertexBufferBinding::unsetAllBindings()
 	{
 #if 1
@@ -207,13 +219,13 @@ namespace Titan
 #endif
 		mHighestIndex = 0;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const VertexBufferBinding::VertexBufferBindingMap& 
 		VertexBufferBinding::getBindings() const
 	{
 		return mBindingMap;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const VertexBufferSharedPtr& VertexBufferBinding::getBuffer(ushort index)
 	{
 		VertexBufferBindingMap::iterator i = mBindingMap.find(index);
@@ -225,12 +237,12 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND, errorMsg, "VertexBufferBinding::getBuffer");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	bool VertexBufferBinding::isBufferBound(unsigned short index) const
 	{
 		return mBindingMap.find(index) != mBindingMap.end();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ushort VertexBufferBinding::getLastBoundIndex(void) const
 	{
 		return mBindingMap.empty() ? 0 : mBindingMap.rbegin()->first + 1;

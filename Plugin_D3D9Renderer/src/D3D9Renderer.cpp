@@ -10,6 +10,7 @@
 #include "D3D9VertexDeclaration.h"
 #include "D3D9TextureMgr.h"
 #include "D3D9ShaderEffectMgr.h"
+#include "D3D9Texture.h"
 
 namespace Titan
 {
@@ -98,12 +99,12 @@ namespace Titan
 
 		return mWindow;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const String& D3D9Renderer::getName() const
 	{
 		return mName;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::loadDefaultConfigOptions()
 	{
 		ConfigOption resolutionMode;
@@ -122,7 +123,7 @@ namespace Titan
 		mConfigOptions[fullScreen.name] = fullScreen;
 		mConfigOptions[windowTitle.name] = windowTitle;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::createD3D9Device()
 	{
 		int vp = 0;
@@ -143,7 +144,7 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,"D3D9 CreateDevice Failed", "void D3D9Renderer::initialize()");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	RenderWindow* D3D9Renderer::createRenderWindow(const String& caption, uint width, uint height, bool fullscreen)
 	{
 		mWindow = TITAN_NEW D3D9RenderWindow(mhInstance);
@@ -157,52 +158,52 @@ namespace Titan
 
 		return mWindow;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::preRender()
 	{
 		_beginFrame();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::render()
 	{
 		_clearFrameBuffer(FBT_COLOR | FBT_DEPTH, Color::Blue);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::postRender()
 	{
 		_endFrame();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	String D3D9Renderer::getErrorDiscription(long result) const 
 	{
 		const String errMsg = DXGetErrorDescription(result);
 		return errMsg;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setLightEnable(bool enable)
 	{
 		if(FAILED(__setRenderState(D3DRS_LIGHTING, enable)))
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 switch lights failed ", "void D3D9Renderer::_setLightEnable(bool enable)");
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setShadeMode(ShadeOptions so)
 	{
 		if(FAILED(__setRenderState(D3DRS_SHADEMODE, D3D9Mappings::convertToD3D9(so))))
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 set Shading mode failed ", "void D3D9Renderer::_setShadeMode(ShadeOptions so)");
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setFillMode(PolygonMode pm)
 	{
 		if(FAILED(__setRenderState(D3DRS_FILLMODE, D3D9Mappings::convertToD3D9(pm))))
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 set Polygon mode failed ", "void D3D9Renderer::_setFillMode(PolygonMode pm)");
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setCullingMode(CullingMode cm)
 	{
 		if(FAILED(__setRenderState(D3DRS_CULLMODE, D3D9Mappings::convertToD3D9(cm, false))))
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 set Culling mode failed ", "void D3D9Renderer::_setCullingMode(CullingMode cm)");
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	HRESULT D3D9Renderer::__setRenderState(D3DRENDERSTATETYPE state, DWORD value)
 	{
 		HRESULT hr;
@@ -216,7 +217,7 @@ namespace Titan
 		}
 		return S_OK;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	HRESULT D3D9Renderer::__SetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value)
 	{
 		HRESULT hr;
@@ -230,7 +231,23 @@ namespace Titan
 		}
 		return S_OK;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
+	HRESULT D3D9Renderer::__SetTexStageState(DWORD stage, D3DTEXTURESTAGESTATETYPE stageType, DWORD value)
+	{
+		HRESULT hr;
+		DWORD oldValue;
+		if(FAILED(hr = mpD3dDevice->GetTextureStageState(stage, stageType, &oldValue)))
+			return hr;
+		
+		if(value != oldValue)
+		{
+			if(FAILED(hr = mpD3dDevice->SetTextureStageState(stage, stageType, value)))
+				return hr;
+		}
+		return S_OK;
+
+	}
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_beginFrame()
 	{
 		HRESULT hr;
@@ -240,7 +257,7 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 BeginScene failed", "void D3D9Renderer::_beginFrame()");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_endFrame()
 	{
 		HRESULT hr;
@@ -250,7 +267,7 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 EndScene failed", "void D3D9Renderer::_endFrame()");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_clearFrameBuffer(unsigned int buffers, const Color& color /* = Color::Black */, float depth /* = 1.0f */, unsigned short stencil /* = 0 */)
 	{
 		DWORD flags = 0;
@@ -283,12 +300,7 @@ namespace Titan
 				+ msg, "void D3D9Renderer::_clearFrameBuffer" );
 		}
 	}
-	//-------------------------------------------------------------//
-	VertexElementType D3D9Renderer::getColorVertexElementType() const
-	{
-		return VET_COLOR_ARGB;
-	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::setVertexDeclaration(VertexDeclaration* decl)
 	{
 		HRESULT hr;
@@ -303,7 +315,7 @@ namespace Titan
 		}
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::setVertexBufferBinding(VertexBufferBinding* binding)
 	{
 		HRESULT hr;
@@ -354,7 +366,7 @@ namespace Titan
 		}
 		mLastVertexSourceCount = source;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_render(const RenderData& rd)
 	{
 		if (rd.vertexData->vertexCount == 0)
@@ -440,8 +452,8 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to DrawPrimitive or DrawIndexedPrimitive: " + msg, "D3D9Renderer::_render" );
 		}
 	}
-	//-------------------------------------------------------------//
-	void D3D9Renderer::_convertProjMatrix(Matrix4& projSrc, Matrix4& projDst)
+	//-------------------------------------------------------------------------------//
+	void D3D9Renderer::_convertProjMatrix(const Matrix4& projSrc, Matrix4& projDst, bool forGpuProgram)
 	{
 		projDst = projSrc;
 
@@ -450,7 +462,7 @@ namespace Titan
 		projDst[2][2] = (projDst[2][2] + projDst[3][2]) / 2;
 		projDst[2][3] = (projDst[2][3] + projDst[3][3]) / 2;
 
-		if (false)//!forGpuProgram)
+		if (!forGpuProgram)
 		{
 			// Convert right-handed to left-handed
 			projDst[0][2] = -projDst[0][2];
@@ -459,7 +471,7 @@ namespace Titan
 			projDst[3][2] = -projDst[3][2];
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setViewMatrix(const Matrix4& view)
 	{
 		mViewMatrix = view;
@@ -469,33 +481,188 @@ namespace Titan
 		mViewMatrix[2][3] = -mViewMatrix[2][3];
 		D3DXMATRIX viewMatrix = D3D9Mappings::makeD3DXMatrix(mViewMatrix);
 		HRESULT hr;
-		if(FAILED(mpD3dDevice->SetTransform(D3DTS_VIEW, &viewMatrix)))
+		if(FAILED( hr = mpD3dDevice->SetTransform(D3DTS_VIEW, &viewMatrix)))
 		{
 			String msg = DXGetErrorDescription(hr);
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set view matrix" + msg, "D3D9Renderer::_setViewMatrix");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setProjMatrix(const Matrix4& proj)
 	{
 		D3DXMATRIX projMatrix = D3D9Mappings::makeD3DXMatrix(proj);
 		HRESULT hr;
-		if(FAILED(mpD3dDevice->SetTransform(D3DTS_PROJECTION, &projMatrix)))
+		if(FAILED(hr = mpD3dDevice->SetTransform(D3DTS_PROJECTION, &projMatrix)))
 		{
 			String msg = DXGetErrorDescription(hr);
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set proj matrix" + msg, "D3D9Renderer::_setProjMatrix");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setWorldMatrix(const Matrix4& world)
 	{
 		D3DXMATRIX worldMatrix = D3D9Mappings::makeD3DXMatrix(world);
 		HRESULT hr;
-		if(FAILED(mpD3dDevice->SetTransform(D3DTS_WORLD, &worldMatrix)))
+		if(FAILED(hr = mpD3dDevice->SetTransform(D3DTS_WORLD, &worldMatrix)))
 		{
 			String msg = DXGetErrorDescription(hr);
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set world matrix" + msg, "D3D9Renderer::_setWorldMatrix");
 		}
+	}
+	//----------------------------------------------------------------------------//
+	void D3D9Renderer::_setDepthCheck(bool state)
+	{
+		HRESULT hr;
+		if(state)
+		{
+			if(mD3dCaps.RasterCaps & D3DPRASTERCAPS_WBUFFER )
+			{
+				if(FAILED(hr = __setRenderState(D3DRS_ZENABLE, D3DZB_USEW)))
+				{
+					String msg = DXGetErrorDescription(hr);
+					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to enable wbuffer because of " + msg, "D3D9Renderer::_setDepthCheck");
+				}
+			}
+			else
+			{
+				if (FAILED(hr = __setRenderState(D3DRS_ZENABLE, D3DZB_TRUE)))
+				{
+					String msg = DXGetErrorDescription(hr);
+					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to enable zbuffer because of " + msg, "D3D9Renderer::_setDepthCheck");
+				}
+			}
+		}
+		else
+		{
+			if (FAILED(hr = __setRenderState(D3DRS_ZENABLE, D3DZB_FALSE)))
+			{
+				String msg = DXGetErrorDescription(hr);
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to disable zbuffer because of " + msg, "D3D9Renderer::_setDepthCheck");
+			}
+		}
+
+	}
+	//----------------------------------------------------------------------------//
+	void D3D9Renderer::_setDepthWrite(bool state)
+	{
+		HRESULT hr ;
+		if(FAILED(hr = __setRenderState(D3DRS_ZWRITEENABLE, state)))
+		{
+			String msg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set depth write because of " + msg, "D3D9Renderer::_setDepthWrite");
+		}
+	}
+	//----------------------------------------------------------------------------//
+	void D3D9Renderer::_setDepthFuntion(CompareFunction cf)
+	{
+		HRESULT hr;
+		if(FAILED(hr = __setRenderState(D3DRS_ZFUNC, D3D9Mappings::convertToD3D9(cf))))
+		{
+			String msg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set depth function because of " + msg, "D3D9Renderer::_setDepthFuntion");
+		}
+	}
+	//-------------------------------------------------------------------------------//
+	void D3D9Renderer::_setTexture(size_t stage, const TexturePtr& pTex)
+	{
+		HRESULT hr;
+		if(!pTex.isNull())
+		{
+			D3D9Texture* dTex = static_cast<D3D9Texture*>(pTex.getPointer());
+			IDirect3DBaseTexture9*  iTex = dTex->getBaseTexture();
+			hr = mpD3dDevice->SetTexture(stage, iTex);
+			if(FAILED(hr))
+			{
+				String str = String("Unable to set texture '" + pTex->getName() + "' in D3D9");
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+					str,
+					"D3D9Renderer::_setTexture");
+			}
+		}
+	}
+	void D3D9Renderer::_setSamplerFilter(uint sampler, FilterType type, FilterOptions fo)
+	{
+		HRESULT hr;
+		if(FAILED(hr = __SetSamplerState(sampler, D3D9Mappings::convertToD3D9(type),D3D9Mappings::convertToD3D9(type, fo))))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"Got error:" + errMsg + " when set Sampler Filter",
+				"D3D9Renderer::_setSamplerFilter");
+		}
+	}	
+	//----------------------------------------------------------------------------//
+	void D3D9Renderer::_setTexAddressMode(uint stage, const TexAddressModeSets& tam)
+	{
+		HRESULT hr ;
+		if(FAILED(hr = __SetSamplerState(stage, D3DSAMP_ADDRESSU, D3D9Mappings::convertToD3D9(tam.UTexAddrMode))))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"Got error:" + errMsg + " when set U",
+				"D3D9Renderer::_setTexAddressMode");
+		}
+
+		if(FAILED(hr = __SetSamplerState(stage, D3DSAMP_ADDRESSV, D3D9Mappings::convertToD3D9(tam.VTexAddrMode))))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"Got error:" + errMsg + " when set V",
+				"D3D9Renderer::_setTexAddressMode");
+		}
+
+		if(FAILED(hr = __SetSamplerState(stage, D3DSAMP_ADDRESSW, D3D9Mappings::convertToD3D9(tam.WTexAddrMode))))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"Got error:" + errMsg + " when set W",
+				"D3D9Renderer::_setTexAddressMode");
+		}
+
+	}
+	//----------------------------------------------------------------------------//
+	void D3D9Renderer::_setTexCoordSet(uint stage, size_t texcoordSet)
+	{
+		HRESULT hr;
+		if(FAILED(hr = __SetTexStageState(stage, D3DTSS_TEXCOORDINDEX, texcoordSet)))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"Got error:" + errMsg + " when set TexCoordSet",
+				"D3D9Renderer::_setTexCoordSet");
+		}
+	}
+	//-------------------------------------------------------------------------------//
+	void D3D9Renderer::resumeFixFunction()
+	{
+		mpD3dDevice->SetVertexShader(NULL);
+		mpD3dDevice->SetPixelShader(NULL);
+	}
+	//-------------------------------------------------------------------------------//
+	void D3D9Renderer::_setSceneBlending(SceneBlendFactor sourceFactor, SceneBlendFactor destFactor, SceneBlendOperation op)
+	{
+		HRESULT hr;
+		if(sourceFactor == SBF_ONE && destFactor == SBF_ZERO)
+		{
+			if (FAILED(hr = __setRenderState(D3DRS_ALPHABLENDENABLE, FALSE)))
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set alpha blending option", "D3D9Renderer::_setSceneBlending" );
+		}
+		else
+		{
+			if (FAILED(hr = __setRenderState(D3DRS_ALPHABLENDENABLE, TRUE)))
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set alpha blending option", "D3D9Renderer::_setSceneBlending" );
+			if (FAILED(hr = __setRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE)))
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set separate alpha blending option", "D3D9Renderer::_setSceneBlending" );
+			if( FAILED( hr = __setRenderState( D3DRS_SRCBLEND, D3D9Mappings::convertToD3D9(sourceFactor) ) ) )
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set source blend", "D3D9Renderer::_setSceneBlending" );
+			if( FAILED( hr = __setRenderState( D3DRS_DESTBLEND, D3D9Mappings::convertToD3D9(destFactor) ) ) )
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set destination blend", "D3D9Renderer::_setSceneBlending" );
+		}
+
+		if (FAILED(hr = __setRenderState(D3DRS_BLENDOP, D3D9Mappings::convertToD3D9(op))))
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set scene blending operation option", "D3D9Renderer::_setSceneBlendingOperation" );
+		if (FAILED(hr = __setRenderState(D3DRS_BLENDOPALPHA, D3D9Mappings::convertToD3D9(op))))
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set scene blending operation option", "D3D9Renderer::_setSceneBlendingOperation" );
 	}
 
 

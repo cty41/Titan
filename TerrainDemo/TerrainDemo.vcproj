@@ -49,7 +49,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				AssemblerListingLocation="Debug"
-				ProgramDataBaseFileName="..\bin\Debug\TerrainDemo_d.pdb"
+				ProgramDataBaseFileName="..\bin\$(ConfigurationName)\TerrainDemo_d.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -65,12 +65,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
-				AdditionalDependencies="..\lib\$(ConfigurationName)\TitanCore_d.lib ..\lib\$(ConfigurationName)\Plugin_D3D9Renderer_d.lib ..\Dependencies\lib\$(ConfigurationName)\OIS_d.lib d3d9.lib d3dx9.lib DxErr.lib"
+				AdditionalDependencies="..\lib\$(ConfigurationName)\TitanCore_d.lib ..\lib\$(ConfigurationName)\Plugin_D3D9Renderer_d.lib ..\Dependencies\lib\$(ConfigurationName)\OIS_d.lib"
 				OutputFile="..\bin\$(ConfigurationName)\TerrainDemo_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="..\bin\Debug\TerrainDemo_d.pdb"
+				ProgramDatabaseFile="..\bin\$(ConfigurationName)\TerrainDemo_d.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -123,10 +123,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="./include/;../TitanCore/include;../Dependencies\include\OIS\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\bin\$(ConfigurationName)\TerrainDemo.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -141,8 +143,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\lib\$(ConfigurationName)\TitanCore.lib ..\lib\$(ConfigurationName)\Plugin_D3D9Renderer.lib ..\Dependencies\lib\$(ConfigurationName)\OIS.lib"
+				OutputFile="..\bin\$(ConfigurationName)\TerrainDemo.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\bin\$(ConfigurationName)\TerrainDemo.pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -191,6 +196,10 @@
 				RelativePath=".\src\TerrainDemo.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\src\TerrainHost.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -203,6 +212,10 @@
 			</File>
 			<File
 				RelativePath=".\include\CameraController.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TerrainHost.h"
 				>
 			</File>
 		</Filter>

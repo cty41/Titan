@@ -5,27 +5,36 @@
 #include "Viewport.h"
 #include "TitanShaderParamsUpdater.h"
 #include "ConsoleDebugger.h"
+#include "TitanRenderQueue.h"
+#include "TitanRenderQueueGroup.h"
+#include "TitanOverlayMgr.h"
+#include "TiPass.h"
 
 namespace Titan
 {
 	SceneMgr::SceneMgr(const String& name)
 		: mType(SMT_GENERAL), mName(name),
-		mRootSceneNode(0)
+		mRootSceneNode(0), mResetIdentityView(false), mResetIdentityProj(false),
+		mCachedViewMatrix(Matrix4::IDENTITY), mCachedProjMatrix(Matrix4::IDENTITY),
+		mCurrentCam(NULL)
 	{
 		mRelatedRenderer = Root::getSingletonPtr()->getActiveRenderer();
 
 		mShaderParamsUpdater = TITAN_NEW ShaderParamsUpdater();
+
+		mRenderQueue = TITAN_NEW RenderQueue();
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgr::~SceneMgr()
 	{
 		if(mRootSceneNode)
 			TITAN_DELETE mRootSceneNode;
 		removeAllSceneObjects();
 
+		TITAN_DELETE(mRenderQueue);
 		TITAN_DELETE(mShaderParamsUpdater);
 	}	
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneNode*	SceneMgr::getRootSceneNode()
 	{
 		if(!mRootSceneNode)
@@ -35,7 +44,7 @@ namespace Titan
 		}
 		return mRootSceneNode;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	Camera*	SceneMgr::createCamera(const String& name)
 	{
 		CameraMap::iterator it = mCameras.find(name);
@@ -52,7 +61,7 @@ namespace Titan
 	
 		return cam;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgr::removeCamera(const String& name)
 	{
 		CameraMap::iterator it = mCameras.find(name);
@@ -67,51 +76,98 @@ namespace Titan
 				"SceneMgr::removeCamera");
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgr::_updateSceneGraph()
 	{
-		mRootSceneNode->_update();
-	}
-	//-------------------------------------------------------------//
-	void SceneMgr::_processVisibleObjects(Camera* cam)
-	{
-		mRootSceneNode->_findVisibleObjects(cam, mRenderableList);
-	}
-	//-------------------------------------------------------------//
-	void SceneMgr::_renderOpaqueObjects()
-	{
-		RenderableList::iterator it = mRenderableList.begin(),
-			itend = mRenderableList.end();
-		while (it != itend)
+		if(mRootSceneNode)
 		{
-			_renderSingleObject(*it++);
+			mRootSceneNode->_update();
 		}
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
+	void SceneMgr::_processVisibleObjects(Camera* cam)
+	{
+		mRootSceneNode->_findVisibleObjects(cam, mRenderQueue);
+	}
+	//-------------------------------------------------------------------------------//
+	void SceneMgr::_renderVisibleObjects()
+	{
+		RenderQueue::RenderQueueGroupMapIterator git = mRenderQueue->getGroupIterator();
+		while(git.hasMoreElements())
+		{
+			//mRelatedRenderer->_setSceneBlending(SBF_ONE, SBF_ZERO);
+			RenderQueueGroup::RenderQueueEntryVecIterator oit = git.peekNextValue()->getOpaqueEntryIterator();
+			while (oit.hasMoreElements())
+			{
+				_setPassSettings(oit.peekNext().rendPass);
+				_renderSingleObject(oit.peekNext().renderable);
+				oit.next();
+			}
+
+
+			//mRelatedRenderer->_setSceneBlending(SBF_SOURCE_ALPHA, SBF_ONE_MINUS_SOURCE_ALPHA);
+			RenderQueueGroup::RenderQueueEntryVecIterator tit = git.peekNextValue()->getSortedTransparentEntryIterator();
+			while (tit.hasMoreElements())
+			{
+				_setPassSettings(tit.peekNext().rendPass);
+				_renderSingleObject(tit.peekNext().renderable);
+				tit.next();
+			}
+			git.next();
+		}
+	}
+	//-------------------------------------------------------------------------------//
 	void SceneMgr::_renderScene(Camera* cam, Viewport* vp)
 	{
+		mCurrentCam = cam;
+		mRenderQueue->setCurrentCam(cam);
+
 		_updateSceneGraph();
 
 		_processVisibleObjects(cam);
 
+		OverlayMgr::getSingleton().updateRenderQueue(mRenderQueue, vp);
+
+		mRenderQueue->sort();
+
+		//begin geometry count
+		mRelatedRenderer->_beginGeometryCount();
+		//clear viewport
 		mRelatedRenderer->_clearFrameBuffer(vp->getClearBuffers(), vp->getBackgroundColor());
+		//begin frame
 		mRelatedRenderer->_beginFrame();
 
-		mRelatedRenderer->_setViewMatrix(cam->getViewMatrix());
+		mCachedViewMatrix = cam->getViewMatrix();
+		mRelatedRenderer->_setViewMatrix(mCachedViewMatrix);
 
-		mRelatedRenderer->_setProjMatrix(cam->getProjMatrixRS());
+		mCachedProjMatrix = cam->getProjMatrixRS();
+		mRelatedRenderer->_setProjMatrix(mCachedProjMatrix);
 
 		mShaderParamsUpdater->setCurrentCamera(cam);
 
-		_renderOpaqueObjects();
+		_renderVisibleObjects();
 
 		mRelatedRenderer->_endFrame();
 
-		mRenderableList.clear();
+		//clean the render queue
+		mRenderQueue->clear();
+
+		// Notify camera of vis faces
+		cam->_notifyRenderedFaces(mRelatedRenderer->_getFaceCount());
+
+		// Notify camera of vis batches
+		cam->_notifyRenderedBatches(mRelatedRenderer->_getBatchCount());
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgr::_renderSingleObject(Renderable* rend)
 	{
+		mRelatedRenderer->_setFillMode(mCurrentCam->getPolyMode());
+		//temp texture setting 
+		if(rend->hasTexture())
+		{
+			mRelatedRenderer->_setTexture(0, rend->getTexture());
+		}
+
 		Matrix4 transformMat;
 		rend->getTransformMat(&transformMat);
 
@@ -126,9 +182,9 @@ namespace Titan
 			mShaderParamsUpdater->setWorldMatrix(transformMat);
 			_updateShaderParams(effectPtr);
 
-			RenderData rd;
-			rend->getRenderData(rd);
-			mRelatedRenderer->_render(rd);
+			RenderData* rd;
+			rd = rend->getRenderData();
+			mRelatedRenderer->_render(*rd);
 
 			effectPtr->end();
 		}
@@ -137,17 +193,80 @@ namespace Titan
 			//fixed pipeline
 			mRelatedRenderer->_setWorldMatrix(transformMat);
 
-			RenderData rd;
-			rend->getRenderData(rd);
-			mRelatedRenderer->_render(rd);
+			useRenderableViewProjMode(rend);
+
+			RenderData* rd;
+			rd = rend->getRenderData();
+			mRelatedRenderer->resumeFixFunction();
+			mRelatedRenderer->_render(*rd);
+
+			resetViewProjMode();
+		}
+
+	}
+	//----------------------------------------------------------------------------//
+	void SceneMgr::_setPassSettings(const Pass* pass)
+	{
+		//alpha blend settings
+		mRelatedRenderer->_setSceneBlending(pass->getSrcBlendFactor(), pass->getDstBlendFactor(), pass->getSceneBlendOperation());
+
+		//depth settings
+		mRelatedRenderer->_setDepthWrite(pass->isDepthWritable());
+		if(pass->isDepthCheck())
+		{
+			mRelatedRenderer->_setDepthCheck(pass->isDepthCheck());
+			mRelatedRenderer->_setDepthFuntion(pass->getDepthFunc());
+		}
+
+		size_t texIdx = 0;
+		Pass::ConstTextureUnitVecIterator tit = pass->getTextureUnitVecIterator();
+		while (tit.hasMoreElements())
+		{
+			mRelatedRenderer->_setTextureUnit(texIdx, *tit.current());
+			tit.next();
+			++texIdx;
 		}
 	}
-	//-------------------------------------------------------------//
+	//----------------------------------------------------------------------------//	
+	void SceneMgr::_renderSingleObject(Renderable* rend, const Pass* pass)
+	{
+		//programmable
+		if(pass->useShader())
+		{
+			//to do later
+		}
+		else 
+		{
+			//fixed pipeline  will be removed in later version
+			Matrix4 transformMat;
+			rend->getTransformMat(&transformMat);
+			mRelatedRenderer->_setWorldMatrix(transformMat);
+
+			useRenderableViewProjMode(rend);
+
+			if (pass->IsLightEnable())
+			{
+				//to do in later version
+			}
+			else
+			{
+				mRelatedRenderer->_setLightEnable(false);
+			}
+
+			RenderData* rd;
+			rd = rend->getRenderData();
+			mRelatedRenderer->resumeFixFunction();
+			mRelatedRenderer->_render(*rd);
+
+			resetViewProjMode();
+		}
+	}
+	//-------------------------------------------------------------------------------//
 	void SceneMgr::_updateShaderParams(ShaderEffectPtr effect)
 	{
 		effect->updateParams(mShaderParamsUpdater);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneObject* SceneMgr::createSceneObject(const String& name, const String& typeName)
 	{
 		SceneObjectFactory* factory = Root::getSingletonPtr()->getSceneObjectFactory(typeName);
@@ -182,12 +301,12 @@ namespace Titan
 
 		return object;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	ManualObject* SceneMgr::createManualObject(const String& name)
 	{
 		return static_cast<ManualObject*>(createSceneObject(name, "ManualObject"));
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgr::removeAllSceneObjects()
 	{
 		SceneObjectCollection::iterator it = mCollection.begin(),
@@ -210,6 +329,42 @@ namespace Titan
 		mCollection.clear();
 
 	}
+	//-------------------------------------------------------------------------------//
+	void SceneMgr::useRenderableViewProjMode(Renderable* rend)
+	{
+		if(rend->IsUseIdentityView())
+		{
+			mRelatedRenderer->_setViewMatrix(Matrix4::IDENTITY);
+			mResetIdentityView = true;
+		}
+
+		if (rend->IsUseIdentityProj())
+		{
+			Matrix4 mat;
+			mRelatedRenderer->_convertProjMatrix(Matrix4::IDENTITY, mat, false);
+			mRelatedRenderer->_setProjMatrix(mat);
+			mResetIdentityProj = true;
+		}
+	}
+	//-------------------------------------------------------------------------------//
+	void SceneMgr::resetViewProjMode()
+	{
+		if(mResetIdentityView)
+		{
+			mRelatedRenderer->_setViewMatrix(mCachedViewMatrix);
+			mResetIdentityView = false;
+		}
+
+		if(mResetIdentityProj)
+		{
+			mRelatedRenderer->_setProjMatrix(mCachedProjMatrix);
+			mResetIdentityProj = false;
+		}
+	}
+
+
+
+
 
 	//
 	//SceneMgrFactory
@@ -218,17 +373,17 @@ namespace Titan
 		:mType(SMT_GENERAL)
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgrFactory::~SceneMgrFactory()
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	SceneMgr*	SceneMgrFactory::createSceneMgr(const String& name)
 	{
 		return TITAN_NEW SceneMgr(name);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	void SceneMgrFactory::destroySceneMgr(SceneMgr* mgr)
 	{
 		TITAN_DELETE mgr;

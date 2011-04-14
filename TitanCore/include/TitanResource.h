@@ -9,7 +9,7 @@
 namespace Titan
 {
 	//unique id for every resource, is this type right for gcc?
-	typedef unsigned long long int ResourceHandle;
+	typedef uint64 ResourceHandle;
 
 	enum LoadState
 	{

@@ -182,7 +182,12 @@ namespace Titan
 	{
 		_setTexture(stage, tu->getTexture());
 
+		_setTexAddressMode(stage, tu->getTexAddressModeSets());
+
+		_setTexCoordSet(stage, tu->getTexCoordSet());
 		
+		_setSamplerFilter(stage, tu->getMinFilter(), tu->getMaxFilter(), tu->getMipFilter());
+
 	}
 	//----------------------------------------------------------------------------//
 	void Renderer::_setSamplerFilter(uint sampler, FilterOptions minFilter, FilterOptions magFilter, FilterOptions mipFilter)

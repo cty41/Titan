@@ -9,11 +9,11 @@ namespace Titan
 	{
 
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	D3D9HardwareBufferManager::~D3D9HardwareBufferManager()
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	VertexBufferSharedPtr D3D9HardwareBufferManager::createVertexBuffer(size_t vertexSize, size_t numVertices, VertexBuffer::Usage usage, bool useSystemMemory)
 	{
 		assert(numVertices > 0);
@@ -21,7 +21,7 @@ namespace Titan
 		mVertexBuffers.insert(buf);
 		return VertexBufferSharedPtr(buf);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	IndexBufferSharedPtr D3D9HardwareBufferManager::createIndexBuffer(size_t numIndexes, HardwareBuffer::Usage usage, bool useSystemMemory)
 	{
 		assert(numIndexes > 0);
@@ -29,7 +29,7 @@ namespace Titan
 		mIndexBuffers.insert(buf);
 		return IndexBufferSharedPtr(buf);
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	VertexDeclaration* D3D9HardwareBufferManager::createVertexDeclaration()
 	{
 		D3D9VertexDeclaration* decl = TITAN_NEW D3D9VertexDeclaration();

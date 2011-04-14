@@ -4,46 +4,46 @@
 #include "TitanAABB.h" 
 
 namespace Titan {
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Plane::Plane ()
 	{
 		normal = Vector3::ZERO;
 		d = 0.0;
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Plane::Plane (const Plane& rhs)
 	{
 		normal = rhs.normal;
 		d = rhs.d;
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Plane::Plane (const Vector3& rkNormal, float fConstant)
 	{
 		normal = rkNormal;
 		d = -fConstant;
 	}
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	Plane::Plane (float a, float b, float c, float _d)
 		: normal(a, b, c), d(_d)
 	{
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Plane::Plane (const Vector3& rkNormal, const Vector3& rkPoint)
 	{
 		redefine(rkNormal, rkPoint);
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Plane::Plane (const Vector3& rkPoint0, const Vector3& rkPoint1,
 		const Vector3& rkPoint2)
 	{
 		redefine(rkPoint0, rkPoint1, rkPoint2);
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	float Plane::getDistance (const Vector3& rkPoint) const
 	{
 		return normal.dotProduct(rkPoint) + d;
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Plane::Side Plane::getSide (const Vector3& rkPoint) const
 	{
 		float fDistance = getDistance(rkPoint);
@@ -58,7 +58,7 @@ namespace Titan {
 	}
 
 
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Plane::Side Plane::getSide (const AABB& box) const
 	{
 		if (box.isNull()) 
@@ -68,7 +68,7 @@ namespace Titan {
 
         return getSide(box.getCenter(), box.getHalfSize());
 	}
-    //-----------------------------------------------------------------------
+    //-------------------------------------------------------------------------------//--
     Plane::Side Plane::getSide (const Vector3& centre, const Vector3& halfSize) const
     {
         // Calculate the distance between box centre and the plane
@@ -86,7 +86,7 @@ namespace Titan {
 
         return Plane::BOTH_SIDE;
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	void Plane::redefine(const Vector3& rkPoint0, const Vector3& rkPoint1,
 		const Vector3& rkPoint2)
 	{
@@ -96,13 +96,13 @@ namespace Titan {
 		normal.normalise();
 		d = -normal.dotProduct(rkPoint0);
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	void Plane::redefine(const Vector3& rkNormal, const Vector3& rkPoint)
 	{
 		normal = rkNormal;
 		d = -rkNormal.dotProduct(rkPoint);
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	Vector3 Plane::projectVector(const Vector3& p) const
 	{
 		// We know plane normal is unit length, so use simple method
@@ -119,7 +119,7 @@ namespace Titan {
 		return xform * p;
 
 	}
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
     float Plane::normalise(void)
     {
         float fLength = normal.length();
@@ -134,7 +134,7 @@ namespace Titan {
 
         return fLength;
     }
-	//-----------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//--
 	std::ostream& operator<< (std::ostream& o, const Plane& p)
 	{
 		o << "Plane(normal=" << p.normal << ", d=" << p.d << ")";

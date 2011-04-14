@@ -17,6 +17,8 @@ namespace Titan
 
 		void unlockRect(uint level);
 
+		IDirect3DBaseTexture9* getBaseTexture(){ return m2DTexture; }	
+
 	protected:
 		void	loadImpl();
 

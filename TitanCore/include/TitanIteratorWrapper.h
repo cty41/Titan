@@ -26,17 +26,17 @@ namespace Titan
 		: mBegin(begin), mCurrent(begin), mEnd(end)
 		{
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		bool hasMoreElements() const
 		{
 			return mCurrent != mEnd;
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		void next()
 		{
 			++mCurrent;
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		const IteratorType& begin(){ return mBegin; }
 
 		const IteratorType& current() { return mCurrent; }
@@ -56,7 +56,7 @@ namespace Titan
 		: IteratorWrapper<T, IteratorType, typename T::value_type>(begin, end)
 		{
 		}
-		//-------------------------------------------------------------//
+		//-------------------------------------------------------------------------------//
 		/** Returns the next(=current) element in the collection, without advancing to the next. */
 		ValueType peekNext (  ) const
 		{
@@ -123,7 +123,7 @@ public:
 		: IteratorWrapper<T, IteratorType, typename T::mapped_type>( begin, end ) 
 	{
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	KeyType peekNextKey(void) const
 	{
 		return this->mCurrent->first;
@@ -133,7 +133,7 @@ public:
 	{
 		return this->mCurrent->second;
 	}
-	//-------------------------------------------------------------//
+	//-------------------------------------------------------------------------------//
 	const PointerType peekNextValuePtr (  )  const
 	{
 		return &(this->mCurrent->second);

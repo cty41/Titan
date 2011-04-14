@@ -9,7 +9,7 @@
 
 namespace Titan
 {
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	void* NedAllocImpl::allocBytes(size_t count, 
 		const char* file, int line, const char* func)
 	{
@@ -20,7 +20,7 @@ namespace Titan
 #endif
 		return ptr;
 	}
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	void NedAllocImpl::deallocBytes(void* ptr)
 	{
 		// deal with null
@@ -31,7 +31,7 @@ namespace Titan
 #endif
 		nedalloc::nedfree(ptr);
 	}
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	void* NedAllocImpl::allocBytesAligned(size_t align, size_t count, 
 		const char* file, int line, const char* func)
 	{
@@ -44,7 +44,7 @@ namespace Titan
 #endif
 		return ptr;
 	}
-	//---------------------------------------------------------------------
+	//-------------------------------------------------------------------------------//
 	void NedAllocImpl::deallocBytesAligned(size_t align, void* ptr)
 	{
 		// deal with null

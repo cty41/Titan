@@ -55,6 +55,25 @@ namespace Titan
 
 		void _renderScene(Viewport* vp);
 
+		void setPolyMode(PolygonMode mode){ mPolygonMode = mode;}
+
+		PolygonMode	getPolyMode() const { return mPolygonMode; }
+
+		/** Internal method to notify camera of the visible faces in the last render.
+        */
+        void _notifyRenderedFaces(unsigned int numfaces);
+
+        /** Internal method to notify camera of the visible batches in the last render.
+        */
+        void _notifyRenderedBatches(unsigned int numbatches);
+        /** Internal method to retrieve the number of visible faces in the last render.
+        */
+		unsigned int _getNumRenderedFaces(void) const;
+
+        /** Internal method to retrieve the number of visible batches in the last render.
+        */
+        unsigned int _getNumRenderedBatches(void) const;
+
 
 	protected:
 
@@ -62,6 +81,11 @@ namespace Titan
 	protected:
 		String			mName;
 		SceneMgr*		mSceneMgr;
+		PolygonMode		mPolygonMode;
+        /// Stored number of visible faces in the last render
+		uint			mVisFacesLastRender;
+		/// Stored number of visible faces in the last render
+		uint			mVisBatchesLastRender;
 
 	};
 }
