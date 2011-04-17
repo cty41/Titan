@@ -1,8 +1,8 @@
 #ifndef __TITAN_TEXTUREUNIT__HH
 #define __TITAN_TEXTUREUNIT__HH
 
-#include "TitanPrerequisites.h"
-#include "TitanTexture.h"
+#include "TiPrerequisites.h"
+#include "TiTexture.h"
 #include "TitanCommon.h"
 
 namespace Titan

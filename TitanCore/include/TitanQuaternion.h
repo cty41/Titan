@@ -9,7 +9,7 @@
 #ifndef __Quaternion_H__
 #define __Quaternion_H__
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanMath.h"
 
 namespace Titan 

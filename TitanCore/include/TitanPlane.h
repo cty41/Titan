@@ -9,9 +9,9 @@
 #ifndef __Plane_H__
 #define __Plane_H__
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
-#include "TitanVector3.h"
+#include "TiVector3.h"
 
 namespace Titan 
 {

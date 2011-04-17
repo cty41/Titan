@@ -2,7 +2,7 @@
 #define _D3D9_TEXTUREMGR_HH
 
 #include "D3D9Prerequisites.h"
-#include "TitanTextureMgr.h"
+#include "TiTextureMgr.h"
 
 namespace Titan
 {

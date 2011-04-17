@@ -1,9 +1,9 @@
 #include "TitanStableHeader.h"
 #include "TiRenderer.h"
-#include "RenderTarget.h"
-#include "ConsoleDebugger.h"
-#include "RenderData.h"
-#include "VertexBuffer.h"
+#include "TiRenderTarget.h"
+#include "TiConsoleDebugger.h"
+#include "TiRenderData.h"
+#include "TiVertexBuffer.h"
 
 namespace Titan
 {
@@ -195,6 +195,50 @@ namespace Titan
 		_setSamplerFilter(sampler, FT_MIN, minFilter);
 		_setSamplerFilter(sampler, FT_MAG, magFilter);
 		_setSamplerFilter(sampler, FT_MIP, mipFilter);
+	}
+	//----------------------------------------------------------------------------//
+	void Renderer::_setShader(Shader* shader)
+	{
+
+		switch(shader->getShaderType())
+		{
+		case ST_VERTEX_SHADER:
+			{
+				mSetVertexShader = true;
+				break;
+			}
+		case ST_PIXEL_SHADER:
+			{
+				mSetPixelShader = true;
+				break;
+			}
+		}
+	}
+	//------------------------------------------------------------------------------//
+	void Renderer::_clearShader(ShaderType st)
+	{
+		switch(st)
+		{
+		case ST_VERTEX_SHADER:
+			mSetVertexShader = false;
+			break;
+		case ST_PIXEL_SHADER:
+			mSetPixelShader = false;
+			break;
+		default: break;
+		}
+	}
+	//------------------------------------------------------------------------------//
+	inline bool Renderer::isShaderSet(ShaderType st) const 
+	{
+		switch(st)
+		{
+		case ST_VERTEX_SHADER:
+			return mSetVertexShader;
+		case ST_PIXEL_SHADER:
+			return mSetPixelShader;
+		}
+		return false;
 	}
 
 }

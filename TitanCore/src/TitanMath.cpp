@@ -2,9 +2,9 @@
 
 #include "TitanMath.h"
 #include "asm_math.h"
-#include "TitanVector2.h"
-#include "TitanVector3.h"
-#include "TitanVector4.h"
+#include "TiVector2.h"
+#include "TiVector3.h"
+#include "TiVector4.h"
 #include "TitanRay.h"
 #include "TitanSphere.h"
 #include "TitanAABB.h"

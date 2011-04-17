@@ -1,10 +1,10 @@
 #ifndef __TITAN_MATERIAL__HH
 #define __TITAN_MATERIAL__HH
 
-#include "TitanPrerequisites.h"
-#include "TitanResource.h"
-#include "TitanSharedPtr.h"
-#include "TitanIteratorWrapper.h"
+#include "TiPrerequisites.h"
+#include "TiResource.h"
+#include "TiSharedPtr.h"
+#include "TiIteratorWrapper.h"
 #include "TiPass.h"
 
 namespace Titan

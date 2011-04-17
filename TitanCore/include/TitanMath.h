@@ -1,7 +1,7 @@
 #ifndef _TITAN_MATH_H
 #define _TITAN_MATH_H
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 namespace Titan
 {

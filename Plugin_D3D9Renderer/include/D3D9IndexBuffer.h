@@ -2,14 +2,14 @@
 #define __D3D9_INDEXBUFFER_HH
 
 #include "D3D9Prerequisites.h"
-#include "IndexBuffer.h"
+#include "TiIndexBuffer.h"
 
 namespace Titan
 {
 	class _D3D9DllExport D3D9IndexBuffer : public IndexBuffer
 	{
 	public:
-		D3D9IndexBuffer(HardwareBufferManager *mgr, size_t numIndexes, 
+		D3D9IndexBuffer(HardwareBufferMgr *mgr, size_t numIndexes, 
 			HardwareBuffer::Usage usage, bool useSystemMem);
 
 		 ~D3D9IndexBuffer();

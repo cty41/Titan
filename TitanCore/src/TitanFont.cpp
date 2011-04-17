@@ -1,8 +1,10 @@
 #include "TitanStableHeader.h"
 #include "TitanFont.h"
-#include "TitanTextureMgr.h"
-#include "ConsoleDebugger.h"
+#include "TiTextureMgr.h"
+#include "TiConsoleDebugger.h"
 #include "TitanBitOperation.h"
+#include "TiResourceGroupMgr.h"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
@@ -43,6 +45,17 @@ namespace Titan
 		{
 			mFontTexture.setNull();
 		}
+	}
+	//------------------------------------------------------------------------------//
+	void Font::prepareImpl()
+	{
+		DataStreamPtr dataStream = ResourceGroupMgr::getSingltonPtr()->openResource(mName, mGroup);
+		mPreparedData = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(dataStream));
+	}
+	//------------------------------------------------------------------------------//
+	void Font::unprepareImpl()
+	{
+		mPreparedData.setNull();
 	}
 	//-------------------------------------------------------------------------------//
 	void Font::createTextureFromFont()

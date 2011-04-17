@@ -2,7 +2,7 @@
 #define __TITAN_D3D9RENDERWINDOW_HH
 
 #include "D3D9Prerequisites.h"
-#include "RenderWindow.h"
+#include "TiRenderWindow.h"
 
 namespace Titan
 {

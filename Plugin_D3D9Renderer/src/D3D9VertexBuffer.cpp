@@ -1,11 +1,11 @@
 #include "D3D9VertexBuffer.h"
-#include "Exception.h"
+#include "TiException.h"
 #include "D3D9Renderer.h"
 #include "D3D9Mappings.h"
 
 namespace Titan
 {
-	D3D9VertexBuffer::D3D9VertexBuffer(HardwareBufferManager *mgr, size_t vertexSize, size_t numVertices, 
+	D3D9VertexBuffer::D3D9VertexBuffer(HardwareBufferMgr *mgr, size_t vertexSize, size_t numVertices, 
 		VertexBuffer::Usage usage, bool useSystemMemory)
 		: VertexBuffer(mgr, vertexSize, numVertices, usage,useSystemMemory),
 		mBuffer(0)

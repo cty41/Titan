@@ -28,9 +28,9 @@ THE SOFTWARE.
 #ifndef __Matrix3_H__
 #define __Matrix3_H__
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
-#include "TitanVector3.h"
+#include "TiVector3.h"
 
 // NB All code adapted from Wild Magic 0.2 Matrix math (free source code)
 // http://www.geometrictools.com/

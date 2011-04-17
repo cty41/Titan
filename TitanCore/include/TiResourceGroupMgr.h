@@ -1,10 +1,10 @@
 #ifndef _TITAN_RESOURCEGROUPMANAGER__HH
 #define _TITAN_RESOURCEGROUPMANAGER__HH
 
-#include "TitanPrerequisites.h"
-#include "Singleton.h"
-#include "TitanResource.h"
-#include "TitanDataStream.h"
+#include "TiPrerequisites.h"
+#include "TiSingleton.h"
+#include "TiResource.h"
+#include "TiDataStream.h"
 
 namespace Titan
 {

@@ -2,7 +2,7 @@
 #ifndef _TITAN_COLOR_HH
 #define _TITAN_COLOR_HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 namespace Titan
 {

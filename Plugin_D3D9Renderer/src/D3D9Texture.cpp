@@ -1,9 +1,10 @@
 #include "D3D9Texture.h"
-#include "PerlinNoise.h"
+#include "TiPerlinNoise.h"
 #include "D3D9Mappings.h"
 #include "D3D9Renderer.h"
 #include "TitanNumericTools.h"
-#include "Exception.h"
+#include "TiException.h"
+#include "TiResourceGroupMgr.h"
 
 namespace Titan
 {
@@ -175,6 +176,17 @@ namespace Titan
 		{
 			SAFE_RELEASE(m2DTexture);
 		}
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Texture::prepareImpl()
+	{
+		DataStreamPtr dataStream = ResourceGroupMgr::getSingltonPtr()->openResource(mName, mGroup);
+		mPreparedData = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(dataStream));
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Texture::unprepareImpl()
+	{
+		mPreparedData.setNull();
 	}
 	//-------------------------------------------------------------//
 	void D3D9Texture::_loadNormalTex()

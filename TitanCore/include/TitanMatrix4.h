@@ -2,11 +2,11 @@
 #define __Matrix4__
 
 // Precompiler options
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
-#include "TitanVector3.h"
+#include "TiVector3.h"
 #include "TitanMatrix3.h"
-#include "TitanVector4.h"
+#include "TiVector4.h"
 #include "TitanPlane.h"
 namespace Titan
 {

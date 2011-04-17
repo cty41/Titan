@@ -2,9 +2,9 @@
 #define __Ray_H_
 
 // Precompiler options
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
-#include "TitanVector3.h"
+#include "TiVector3.h"
 #include "TitanPlaneBoundedVolume.h"
 
 namespace Titan 

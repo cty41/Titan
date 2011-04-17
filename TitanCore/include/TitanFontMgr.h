@@ -1,10 +1,10 @@
 #ifndef __TITAN_FONT_MGR__HH
 #define __TITAN_FONT_MGR__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanFont.h"
 #include "TiResourceMgr.h"
-#include "Singleton.h"
+#include "TiSingleton.h"
 
 namespace Titan
 {

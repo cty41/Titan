@@ -1,9 +1,9 @@
 #ifndef __TITAN_OCTREE_SCENEMGR__HH
 #define __TITAN_OCTREE_SCENEMGR__HH
 
-#include "TitanPrerequisites.h"
-#include "SceneMgr.h"
-#include "TitanVector3.h"
+#include "TiPrerequisites.h"
+#include "TiSceneMgr.h"
+#include "TiVector3.h"
 #include "TitanQuadtree.h"
 
 namespace Titan

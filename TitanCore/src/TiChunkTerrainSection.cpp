@@ -1,9 +1,9 @@
 #include "TitanStableHeader.h"
 #include "TiChunkTerrainSection.h"
 #include "TiChunkTerrain.h"
-#include "HardwareBufferManager.h"
-#include "TitanRenderQueue.h"
-#include "ConsoleDebugger.h"
+#include "TiHardwareBufferMgr.h"
+#include "TiRenderQueue.h"
+#include "TiConsoleDebugger.h"
 
 namespace Titan
 {
@@ -169,12 +169,12 @@ namespace Titan
 			}
 		}
 
-		mSectorVerts = HardwareBufferManager::getSingletonPtr()->createVertexBuffer(sizeof(BaseTerrain::SectorVertex), bufferSize, HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false);
+		mSectorVerts = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(sizeof(BaseTerrain::SectorVertex), bufferSize, HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false);
 		mSectorVerts->writeData(0, bufferSize * sizeof(BaseTerrain::SectorVertex), (void*)pVerts);
 
 		delete  [] pVerts;
 
-		mVertexBufferBinding = HardwareBufferManager::getSingletonPtr()->createVertexBufferBinding();
+		mVertexBufferBinding = HardwareBufferMgr::getSingletonPtr()->createVertexBufferBinding();
 		mVertexBufferBinding->setBinding(0, mCreator->getHorzVertexData());
 		mVertexBufferBinding->setBinding(1, mSectorVerts);
 	}

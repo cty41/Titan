@@ -1,7 +1,7 @@
 #ifndef __TITAN_PLUGIN_HH
 #define __TITAN_PLUGIN_HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 namespace Titan
 {

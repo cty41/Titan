@@ -1,10 +1,10 @@
 #ifndef __TITAN_OVERLAY_PANELELEMENT__HH
 #define __TITAN_OVERLAY_PANELELEMENT__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanOverlayElement.h"
-#include "RenderData.h"
-#include "TitanTexture.h"
+#include "TiRenderData.h"
+#include "TiTexture.h"
 
 namespace Titan
 {

@@ -1,7 +1,7 @@
 #ifndef __TITAN_CHUNK_TERRAIN_HH
 #define __TITAN_CHUNK_TERRAIN_HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanBaseTerrain.h"
 
 namespace Titan

@@ -1,11 +1,12 @@
 #ifndef __TITAN_PASS_HH
 #define __TITAN_PASS_HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TiTextureUnit.h"
 #include "TitanCommon.h"
 #include "TitanBlendMode.h"
-#include "TitanIteratorWrapper.h"
+#include "TiIteratorWrapper.h"
+#include "TiShaderUnit.h"
 
 namespace Titan
 {
@@ -33,8 +34,6 @@ namespace Titan
 		ConstTextureUnitVecIterator	getTextureUnitVecIterator() const{ return ConstTextureUnitVecIterator(mTextureUnitVec.begin(), mTextureUnitVec.end());}
 
 		size_t		getPassIndex() const { return mIndex; }
-
-		bool		useShader() const { return mUseShader; }
 
 		bool		isTransparent() const { return !(mDstBlendFactor == SBF_ZERO &&
 			mSrcBlendFactor != SBF_DEST_COLOR &&
@@ -93,9 +92,31 @@ namespace Titan
 		SceneBlendOperation getSceneBlendOperation() const { return mBlendOperation; }
 
 		void		setSceneBlendOperation(SceneBlendOperation sbo){ mBlendOperation = sbo; }
-		
 
-		//to do...
+		bool		isProgrammable() const {  return (mVertexShaderUnit || mPixelShaderUnit);}
+
+		bool		hasVertexShader() const { return (mVertexShaderUnit? true : false);}
+
+		bool		hasPixelShader() const { return (mPixelShaderUnit? true : false);}
+
+		const ShaderUnit*	getVertexShaderUnit() const { return mVertexShaderUnit;}
+
+		const ShaderUnit*	getPixelShaderUnit() const { return mPixelShaderUnit; }
+		
+		void		updateAutoParams(AutoParamsSetter* setter) const;
+
+		void		setVertexShader(const String& name);
+
+		const String&	getVertexShaderName() const;
+
+		void		setPixelShader(const String& name);
+
+		const String&	getPixelShaderName() const;
+
+		const ShaderParamsPtr&	getVertexShaderParams() const { return mVertexShaderUnit->getShaderParams();}
+
+		const ShaderParamsPtr&	getPixelShaderParams() const { return mPixelShaderUnit->getShaderParams();}
+
 		void		_load();
 
 		void		_unload();
@@ -105,8 +126,6 @@ namespace Titan
 		TextureUnitVec	mTextureUnitVec;
 		uint32			mHashCode;
 		size_t			mIndex;
-		bool			mUseShader;
-
 
 		CullingMode		mCullMode;
 		PolygonMode		mPolygonMode;
@@ -130,6 +149,8 @@ namespace Titan
 		bool	mSortTransparent;
 		bool	mIsLightEnable;
 
+		ShaderUnit*		mVertexShaderUnit;
+		ShaderUnit*		mPixelShaderUnit;
 	};
 }
 

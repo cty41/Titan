@@ -1,12 +1,12 @@
 #ifndef __TITAN_BASETERRAINSECTION__HH
 #define __TITAN_BASETERRAINSECTION__HH
 
-#include "TitanPrerequisites.h"
-#include "SceneObject.h"
+#include "TiPrerequisites.h"
+#include "TiSceneObject.h"
 #include "TiRenderable.h"
-#include "TitanShaderEffect.h"
+
 #include "TitanRect2D.h"
-#include "VertexBuffer.h"
+#include "TiVertexBuffer.h"
 #include "TitanBaseTerrain.h"
 
 
@@ -29,14 +29,6 @@ namespace Titan
 			virtual RenderData*		getRenderData() {return &mRenderData; }
 
 			const MaterialPtr&		getMaterial() const { return mCreator->getMaterial();}
-
-			virtual bool			hasTexture() const { return false; }
-
-			virtual const TexturePtr& getTexture() const ;
-
-			virtual ShaderEffectPtr	getShaderEffect(){ return mCreator->getCreator()->getShaderEffect();}
-
-			virtual bool			hasShader(){return (!mCreator->getCreator()->getShaderEffect().isNull());}
 
 			virtual float			getSquaredDistance(Camera* cam);
 

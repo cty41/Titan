@@ -1,7 +1,7 @@
 #ifndef __TITAN_OVERLAY_ELEMENT__HH
 #define __TITAN_OVERLAY_ELEMENT__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TiRenderable.h"
 
 namespace Titan
@@ -94,13 +94,6 @@ namespace Titan
 		void	getTransformMat(Matrix4* transMat);
 
 		const MaterialPtr&	getMaterial() const { return mMaterial; }
-
-		bool	hasTexture() const { return true; }
-
-		bool	hasShader(){ return false;}
-
-		//should not be used now, overlay only go through the fix pipeline
-		ShaderEffectPtr			getShaderEffect(){ return ShaderEffectPtr();}
 
 		float					getSquaredDistance(Camera* cam);
 

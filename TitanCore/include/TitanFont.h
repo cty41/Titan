@@ -1,11 +1,11 @@
 #ifndef _TITAN_FONT_HH
 #define _TITAN_FONT_HH
 
-#include "TitanPrerequisites.h"
-#include "TitanResource.h"
-#include "TitanSharedPtr.h"
+#include "TiPrerequisites.h"
+#include "TiResource.h"
+#include "TiSharedPtr.h"
 #include "TitanCommon.h"
-#include "TitanTexture.h"
+#include "TiTexture.h"
 
 namespace Titan
 {
@@ -187,6 +187,10 @@ namespace Titan
 		void loadImpl();
 
 		void unloadImpl();
+
+		void prepareImpl();
+
+		void unprepareImpl();
 
 		void createTextureFromFont();
 

@@ -11,7 +11,7 @@
 
 #include "TitanMath.h"
 #include "TitanMatrix3.h"
-#include "TitanVector3.h"
+#include "TiVector3.h"
 
 namespace Titan {
 

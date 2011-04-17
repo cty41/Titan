@@ -2,7 +2,7 @@
 #define _TITAN_D3D9TEXTURE_HH
 
 #include "D3D9Prerequisites.h"
-#include "TitanTexture.h"
+#include "TiTexture.h"
 
 namespace Titan
 {
@@ -23,6 +23,10 @@ namespace Titan
 		void	loadImpl();
 
 		void	unloadImpl();
+
+		void	prepareImpl();
+
+		void	unprepareImpl();
 
 		void	_loadNormalTex();
 

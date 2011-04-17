@@ -2,7 +2,7 @@
 #ifndef __TITAN_BITOPERATION_HH
 #define __TITAN_BITOPERATION_HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 namespace Titan
 {

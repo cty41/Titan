@@ -19,8 +19,6 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::create(const String& title, uint width, uint height, bool isFullScreen, const AnyMap* particularParams )
 	{
-		HRESULT hr;
-
 		mWidth = width;
 		mHeight = height;
 		mWindowCaption = title;

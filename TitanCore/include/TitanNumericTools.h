@@ -1,7 +1,7 @@
 #ifndef __TITAN_NUMERICTOOLS__HH
 #define __TITAN_NUMERICTOOLS__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 namespace Titan
 {

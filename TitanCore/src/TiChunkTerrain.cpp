@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiChunkTerrain.h"
 #include "TiChunkTerrainSection.h"
-#include "HardwareBufferManager.h"
+#include "TiHardwareBufferMgr.h"
 
 namespace Titan
 {
@@ -105,7 +105,7 @@ namespace Titan
 		// now that we have built the data,
 		// create one of our vertex buffer
 		// resource objects with it
-		mHorzVertexData = HardwareBufferManager::getSingletonPtr()->createVertexBuffer(sizeof(LocalVertex), bufferSize, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+		mHorzVertexData = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(sizeof(LocalVertex), bufferSize, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 		mHorzVertexData->writeData(0, bufferSize * sizeof(LocalVertex), (void*)pVerts);
 
 		delete [] pVerts;
@@ -132,7 +132,7 @@ namespace Titan
 
 		while (stepSize && mDetailLevels < CHUNK_MAX_LOD)
 		{
-			mLODIndexArray[0][mDetailLevels] = HardwareBufferManager::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+			mLODIndexArray[0][mDetailLevels] = HardwareBufferMgr::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 			mLODIndexArray[0][mDetailLevels]->createSingleStripGrid(
 				vertCount, vertCount, 
 				stepSize, stepSize, 
@@ -217,7 +217,7 @@ namespace Titan
 				vIndex +=vStep;
 			}
 
-			mLODIndexArray[1][iLevel] = HardwareBufferManager::getSingletonPtr()->createIndexBuffer(indexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+			mLODIndexArray[1][iLevel] = HardwareBufferMgr::getSingletonPtr()->createIndexBuffer(indexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 			mLODIndexArray[1][iLevel]->writeData(0, indexCount, indexList);
 
 			delete [] indexList;

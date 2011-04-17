@@ -3,9 +3,9 @@
 #define __AxisAlignedBox_H_
 
 // Precompiler options
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
-#include "TitanVector3.h"
+#include "TiVector3.h"
 #include "TitanMatrix4.h"
 #include "TitanRect2D.h"
 

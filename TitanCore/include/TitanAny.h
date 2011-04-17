@@ -9,8 +9,8 @@
 #ifndef __TITAN_ANY_H__
 #define __TITAN_ANY_H__
 
-#include "TitanPrerequisites.h"
-#include "Exception.h"
+#include "TiPrerequisites.h"
+#include "TiException.h"
 #include <algorithm>
 #include <typeinfo>
 

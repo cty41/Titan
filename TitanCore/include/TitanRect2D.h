@@ -2,8 +2,8 @@
 #define __TITAN__RECT_2D__HH
 
 
-#include "TitanPrerequisites.h"
-#include "TitanVector2.h"
+#include "TiPrerequisites.h"
+#include "TiVector2.h"
 #include "TitanNumericTools.h"
 
 namespace Titan

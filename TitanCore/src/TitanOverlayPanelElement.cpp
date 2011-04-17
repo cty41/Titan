@@ -1,10 +1,10 @@
 #include "TitanStableHeader.h"
 #include "TitanOverlayPanelElement.h"
-#include "TitanTextureMgr.h"
-#include "VertexBuffer.h"
-#include "HardwareBufferManager.h"
-#include "Root.h"
-#include "TitanRenderQueue.h"
+#include "TiTextureMgr.h"
+#include "TiVertexBuffer.h"
+#include "TiHardwareBufferMgr.h"
+#include "TiRoot.h"
+#include "TiRenderQueue.h"
 #include "TitanOverlayMgr.h"
 
 
@@ -37,7 +37,7 @@ namespace Titan
 			mRenderData.vertexData->vertexStart = 0;
 			mRenderData.vertexData->vertexCount = 4;
 
-			VertexBufferSharedPtr vbuf = HardwareBufferManager::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(0), mRenderData.vertexData->vertexCount,
+			VertexBufferSharedPtr vbuf = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(0), mRenderData.vertexData->vertexCount,
 				HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 			mRenderData.vertexData->vertexBufferBinding->setBinding(0, vbuf);
 
@@ -110,7 +110,7 @@ namespace Titan
 			{
 				decl->addElement(1, 0,VET_FLOAT2, VES_TEXTURE_COORDINATES, 0);
 
-				VertexBufferSharedPtr vbuf = HardwareBufferManager::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(1), mRenderData.vertexData->vertexCount,
+				VertexBufferSharedPtr vbuf = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(1), mRenderData.vertexData->vertexCount,
 					HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 
 				mRenderData.vertexData->vertexBufferBinding->setBinding(1,vbuf);

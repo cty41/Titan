@@ -1,8 +1,8 @@
 #include "TitanStableHeader.h"
 #include "TitanBaseTerrainSection.h"
 #include "TitanBaseTerrain.h"
-#include "HardwareBufferManager.h"
-#include "TitanRenderQueue.h"
+#include "TiHardwareBufferMgr.h"
+#include "TiRenderQueue.h"
 
 namespace Titan
 {
@@ -38,7 +38,7 @@ namespace Titan
 		mHeightMapX = heightMapX;
 		mHeightMapZ = heightMapZ;
 
-		mPosOffsetIdx = mCreator->getShaderEffect()->getShaderParams().getNameParamIndex("posOffset");
+		//mPosOffsetIdx;
 		Vector2 sectorSize = mCreator->getSectorSize();
 		mPosOffset = Vector4(1.0f, 1.0f, 
 			mCreator->getWorldBound().getMinimum().x + sectorSize.x * mSectorX, 
@@ -77,12 +77,12 @@ namespace Titan
 					maximum(mWorldBound.getMaximum().y, height);
 			}
 		}
-		mSectorVerts = HardwareBufferManager::getSingletonPtr()->createVertexBuffer(sizeof(BaseTerrain::SectorVertex), mXVerts * mZVerts, HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false);
+		mSectorVerts = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(sizeof(BaseTerrain::SectorVertex), mXVerts * mZVerts, HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false);
 		mSectorVerts->writeData(0, mXVerts * mZVerts * sizeof(BaseTerrain::SectorVertex), (void*)pVerts);
 
 		delete  [] pVerts;
 		
-		mVertexBufferBinding = HardwareBufferManager::getSingletonPtr()->createVertexBufferBinding();
+		mVertexBufferBinding = HardwareBufferMgr::getSingletonPtr()->createVertexBufferBinding();
 		mVertexBufferBinding->setBinding(0, mCreator->getHorzVertexData());
 		mVertexBufferBinding->setBinding(1, mSectorVerts);
 
@@ -139,14 +139,10 @@ namespace Titan
 		Vector3 diff = mCreator->getWorldBound().getCenter() - cam->getPosition();
 		return diff.squaredLength();
 	}
-	const TexturePtr& BaseTerrainSection::TerrainSectionRend::getTexture() const 
-	{
-		return sNullTexPtr;
-	}
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::TerrainSectionRend::customUpdate()
 	{
-		mCreator->getCreator()->getShaderEffect()->setNamedParamByIndex(mCreator->getPosOffsetIndex(), (const float*)&mCreator->getPosOffset());
+		//mCreator->getCreator()->getShaderEffect()->setNamedParamByIndex(mCreator->getPosOffsetIndex(), (const float*)&mCreator->getPosOffset());
 	}
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::TerrainSectionRend::_buildRenderData(BaseTerrainSection* creator)

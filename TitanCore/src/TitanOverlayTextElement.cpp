@@ -1,11 +1,11 @@
 #include "TitanStableHeader.h"
 #include "TitanOverlayTextElement.h"
 #include "TitanFontMgr.h"
-#include "VertexBuffer.h"
-#include "HardwareBufferManager.h"
+#include "TiVertexBuffer.h"
+#include "TiHardwareBufferMgr.h"
 #include "TitanOverlayMgr.h"
-#include "TitanRenderQueue.h"
-#include "Root.h"
+#include "TiRenderQueue.h"
+#include "TiRoot.h"
 #include "TiRenderer.h"
 
 namespace Titan
@@ -99,7 +99,7 @@ namespace Titan
 			// Create dynamic since text tends to change alot
 			// positions & texcoords
 			VertexBufferSharedPtr vbuf = 
-				HardwareBufferManager::getSingleton().
+				HardwareBufferMgr::getSingleton().
 				createVertexBuffer(
 				decl->getVertexSize(0), 
 				mRenderData.vertexData->vertexCount,
@@ -107,7 +107,7 @@ namespace Titan
 			bind->setBinding(0, vbuf);
 
 			// colours
-			vbuf = HardwareBufferManager::getSingleton().
+			vbuf = HardwareBufferMgr::getSingleton().
 				createVertexBuffer(
 				decl->getVertexSize(1), 
 				mRenderData.vertexData->vertexCount,

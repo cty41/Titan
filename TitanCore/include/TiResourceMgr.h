@@ -1,8 +1,8 @@
 #ifndef _TITAN_RESOURCEMANAGER_HH
 #define _TITAN_RESOURCEMANAGER_HH
 
-#include "TitanPrerequisites.h"
-#include "TitanResource.h"
+#include "TiPrerequisites.h"
+#include "TiResource.h"
 #include "TitanCommon.h"
 #include "TiResourceGroupMgr.h"
 

@@ -1,4 +1,5 @@
 #include "TerrainHost.h"
+#include "D3D9Shader.h"
 
 TerrainHost::TerrainHost()
 :BaseHost(), mManualObject(NULL),
@@ -46,12 +47,30 @@ void TerrainHost::loadResources()
 
 #endif
 
-#if 0
-	Titan::ShaderEffectPtr pEffect = Titan::ShaderEffectMgr::getSingletonPtr()->loadManually("DefaultMesh.fx", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
+	static char	pHlSl[] = "void vs_basic(float3 Pos : POSITION,\
+										out float4 oPos : POSITION,\
+										uniform float4x4 WorldViewProj\
+										)\
+							{\
+								oPos = mul(float4(Pos, 1), WorldViewProj);\
+							}";
+#if 1
+	Titan::MaterialPtr	pMtrl = Titan::MaterialMgr::getSingleton().create("test").second;
+	Titan::Pass* pass = pMtrl->createPass();
+	pass->setSrcBlendFactor(Titan::SBF_ONE);
+	pass->setSrcBlendFactor(Titan::SBF_ZERO);
+	Titan::D3D9ShaderPtr pShader = Titan::ShaderMgr::getSingleton().createShader(pHlSl, "testShader", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP, "change later", Titan::ST_VERTEX_SHADER);
 
+
+	Titan::ShaderParamsPtr pParams = pShader->getShaderParams();
+	pParams->setNamedAutoConstant("WorldViewProj", Titan::ShaderParams::ACT_WORLDVIEWPROJ_MATRIX);
+	pass->setVertexShader("testShader");
+
+	//pass->createTextureUnit();
 
 	mManualObject = mSceneMgr->createManualObject("test");
 	mManualObject->begin();
+	mManualObject->setMaterial("test", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
 	mManualObject->position(-1.0f,-1.0f,-1.0f);			//0
 	mManualObject->position(-1.0f, 1.0f,-1.0f);			//1
 	mManualObject->position( 1.0f, 1.0f,-1.0f);			//2
@@ -67,7 +86,6 @@ void TerrainHost::loadResources()
 	mManualObject->quad(1, 5, 6, 2);
 	mManualObject->quad(4, 0, 3, 7);
 	mManualObject->end();
-	mManualObject->setShaderEffect(pEffect);
 
 	Titan::SceneNode* node = mSceneMgr->getRootSceneNode()->createChild();
 	node->rotate(Titan::Vector3::UNIT_X, Titan::Radian(3.14f * 0.25f));

@@ -2,8 +2,8 @@
 #define __TITAN_OCTREE_NODE__HH
 
 
-#include "TitanPrerequisites.h"
-#include "SceneNode.h"
+#include "TiPrerequisites.h"
+#include "TiSceneNode.h"
 #include "TitanQuadtreeSceneMgr.h"
 #include "TitanBitFlags.h"
 

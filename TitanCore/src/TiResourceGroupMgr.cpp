@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiResourceGroupMgr.h"
 #include "TiResourceMgr.h"
-#include "FileSystemManager.h"
+#include "TiFileSystemMgr.h"
 
 
 namespace Titan

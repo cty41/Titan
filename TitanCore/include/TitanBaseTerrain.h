@@ -1,12 +1,12 @@
 #ifndef __TITAN_BASE_TERRAIN__HH
 #define __TITAN_BASE_TERRAIN__HH
 
-#include "TitanPrerequisites.h"
-#include "TitanTexture.h"
+#include "TiPrerequisites.h"
+#include "TiTexture.h"
 #include "TitanAABB.h"
-#include "TitanVector3.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
+#include "TiVector3.h"
+#include "TiVertexBuffer.h"
+#include "TiIndexBuffer.h"
 #include "TiMaterial.h"
 
 namespace Titan
@@ -35,10 +35,6 @@ namespace Titan
 		virtual void	create(SceneNode* rootNode, TexturePtr heightMap, const AABB& worldBound, uint8 shift = 3);
 
 		virtual void	destroy();
-
-		void			setEffect(ShaderEffectPtr effect){ mEffect = effect; };
-		
-		ShaderEffectPtr	getShaderEffect() { return mEffect;}
 
 		VertexDeclaration*	getVertexDecl() const { return mVertexDecl; }
 
@@ -99,8 +95,6 @@ namespace Titan
 		VertexBufferSharedPtr	mHorzVertexData;
 		VertexDeclaration*		mVertexDecl;
 		IndexBufferSharedPtr	mIndexData;
-
-		ShaderEffectPtr		mEffect;
 
 		AABB			mWorldBound;
 		

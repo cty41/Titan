@@ -1,10 +1,10 @@
 #ifndef _TITAN_MATERIAL_MGR__HH
 #define _TITAN_MATERIAL_MGR__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TiResourceMgr.h"
 #include "TiMaterial.h"
-#include "Singleton.h"
+#include "TiSingleton.h"
 
 namespace Titan
 {

@@ -1,6 +1,6 @@
 #include "TitanStableHeader.h"
 #include "TitanQuadtreeSceneMgr.h"
-#include "Exception.h"
+#include "TiException.h"
 #include "TitanNumericTools.h"
 #include "TitanQuadtreeNode.h"
 #include "TitanQuadtree.h"

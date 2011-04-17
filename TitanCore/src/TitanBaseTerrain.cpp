@@ -1,11 +1,11 @@
 #include "TitanStableHeader.h"
 #include "TitanBaseTerrain.h"
-#include "HardwareBufferManager.h"
+#include "TiHardwareBufferMgr.h"
 #include "TitanBaseTerrainSection.h"
 #include "TitanRect2D.h"
-#include "HardwareBuffer.h"
+#include "TiHardwareBuffer.h"
 #include "TitanPixelFormat.h"
-#include "ShaderEffectMgr.h"
+
 #include "TiResourceGroupMgr.h"
 
 namespace Titan
@@ -47,8 +47,6 @@ namespace Titan
 
 		mSectorSize = Vector2(mWorldSize.x / mSectorCountX,
 			mWorldSize.z / mSectorCountZ);
-
-		mEffect = Titan::ShaderEffectMgr::getSingletonPtr()->loadManually("single_texture_terrain.fx", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
 		
 		_buildHorzVertexData();
 		_buildVertexDecl();
@@ -140,7 +138,7 @@ namespace Titan
 		// now that we have built the data,
 		// create one of our vertex buffer
 		// resource objects with it
-		mHorzVertexData = HardwareBufferManager::getSingletonPtr()->createVertexBuffer(sizeof(LocalVertex), mSectorVerts * mSectorVerts, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+		mHorzVertexData = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(sizeof(LocalVertex), mSectorVerts * mSectorVerts, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 		mHorzVertexData->writeData(0, mSectorVerts * mSectorVerts * sizeof(LocalVertex), (void*)pVerts);
 	
 		delete [] pVerts;
@@ -148,7 +146,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_buildVertexDecl()
 	{
-		mVertexDecl = HardwareBufferManager::getSingletonPtr()->createVertexDeclaration();
+		mVertexDecl = HardwareBufferMgr::getSingletonPtr()->createVertexDeclaration();
 		mVertexDecl->addElement(0, 0, VET_FLOAT2, VES_POSITION, 0);
 		mVertexDecl->addElement(0, 8, VET_FLOAT2, VES_TEXTURE_COORDINATES, 0);
 		mVertexDecl->addElement(1, 0, VET_FLOAT1, VES_POSITION, 1);
@@ -170,7 +168,7 @@ namespace Titan
 		int total_indexes = 
 			(total_indexes_per_strip * total_strips) 
 			+ (total_strips<<1) - 2;
-		mIndexData = HardwareBufferManager::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+		mIndexData = HardwareBufferMgr::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 		mIndexData->createSingleStripGrid(mSectorVerts, mSectorVerts, 1, 1, mSectorVerts, 0);
 	}
 	//-------------------------------------------------------------------------------//

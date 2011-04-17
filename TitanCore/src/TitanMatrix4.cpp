@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TitanMatrix4.h"
 
-#include "TitanVector3.h"
+#include "TiVector3.h"
 #include "TitanMatrix3.h"
 
 namespace Titan

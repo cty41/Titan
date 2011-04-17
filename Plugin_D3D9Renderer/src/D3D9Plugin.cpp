@@ -1,5 +1,5 @@
 #include "D3D9Plugin.h"
-#include "Root.h"
+#include "TiRoot.h"
 
 namespace Titan
 {

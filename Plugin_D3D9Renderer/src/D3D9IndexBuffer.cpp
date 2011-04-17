@@ -1,12 +1,12 @@
 #include "D3D9IndexBuffer.h"
 #include "D3D9Mappings.h"
-#include "Exception.h"
+#include "TiException.h"
 #include "D3D9Renderer.h"
 
 
 namespace Titan
 {
-	D3D9IndexBuffer::D3D9IndexBuffer(HardwareBufferManager *mgr, size_t numIndexes, HardwareBuffer::Usage usage, bool useSystemMem)
+	D3D9IndexBuffer::D3D9IndexBuffer(HardwareBufferMgr *mgr, size_t numIndexes, HardwareBuffer::Usage usage, bool useSystemMem)
 		: IndexBuffer(mgr, numIndexes, usage, useSystemMem), mBuffer(0)
 	{
 		D3DPOOL eResourcePool;

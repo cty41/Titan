@@ -2,7 +2,7 @@
 #define __PlaneBoundedVolume_H_
 
 // Precompiler options
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanAABB.h"
 #include "TitanSphere.h"
 #include "TitanMath.h"

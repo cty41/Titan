@@ -1,7 +1,7 @@
 #ifndef __TITAN_OVERLAY_TEXTELEMENT__HH
 #define __TITAN_OVERLAY_TEXTELEMENT__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanOverlayElement.h"
 #include "TitanFont.h"
 
@@ -86,7 +86,6 @@ namespace Titan
 
 		void			getRenderData(RenderData& data){ data = mRenderData; }
 
-		const TexturePtr& getTexture() const { return mpFont->getFontTexture(); }
 
 	protected:
 

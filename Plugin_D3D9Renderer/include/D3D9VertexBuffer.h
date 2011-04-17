@@ -2,7 +2,7 @@
 #define _TITAN_D3D9VERTEXBUFFER_HH
 
 #include "D3D9Prerequisites.h"
-#include "VertexBuffer.h"
+#include "TiVertexBuffer.h"
 
 
 namespace Titan
@@ -10,7 +10,7 @@ namespace Titan
 	class _D3D9DllExport D3D9VertexBuffer : public VertexBuffer
 	{
 	public:
-		D3D9VertexBuffer(HardwareBufferManager *mgr, size_t vertexSize, size_t numVertices,
+		D3D9VertexBuffer(HardwareBufferMgr *mgr, size_t vertexSize, size_t numVertices,
 			VertexBuffer::Usage usage, bool useSystemMemory);
 
 		~D3D9VertexBuffer();

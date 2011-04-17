@@ -319,6 +319,7 @@ namespace Titan
 				}
 			}
 		}
+		return 0;
 	}
 	//----------------------------------------------------------------------------//
 	DWORD D3D9Mappings::convertToD3D9(CompareFunction cf)
@@ -527,22 +528,10 @@ namespace Titan
 		switch(type)
 		{
 		case D3DXPT_INT: 
-			return SCT_INT;
+			return SCT_INT1;
 
 		case D3DXPT_FLOAT:
-			return SCT_FLOAT;
-
-		case D3DXPT_TEXTURE1D:
-			return SCT_TEXTURE1D;
-
-		case D3DXPT_TEXTURE2D:
-			return SCT_TEXTURE2D;
-
-		case D3DXPT_TEXTURE3D:
-			return SCT_TEXTURE3D;
-
-		case D3DXPT_TEXTURECUBE:
-			return SCT_TEXTURECUBE;
+			return SCT_FLOAT1;
 
 		case D3DXPT_SAMPLER1D:
 			return SCT_SAMPLER1D;

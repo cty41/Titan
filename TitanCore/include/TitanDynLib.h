@@ -1,7 +1,7 @@
 #ifndef _TITAN_DYNLIB_HH
 #define _TITAN_DYNLIB_HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 #    define DYNLIB_HANDLE hInstance
 #    define DYNLIB_LOAD( a ) LoadLibraryEx( a, NULL, LOAD_WITH_ALTERED_SEARCH_PATH )

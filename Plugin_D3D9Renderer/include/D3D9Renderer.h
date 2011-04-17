@@ -5,7 +5,7 @@
 #include "TiRenderer.h"
 #include "TitanCommon.h"
 #include "TitanColor.h"
-#include "Singleton.h"
+#include "TiSingleton.h"
 #include "TitanMatrix4.h"
 
 namespace Titan
@@ -36,6 +36,8 @@ namespace Titan
 		void					createD3D9Device();
 
 		String					getErrorDiscription(long result) const;
+
+		void					_setViewport(Viewport* vp);
 
 		void					_setCullingMode(CullingMode cm);
 
@@ -89,6 +91,12 @@ namespace Titan
 
 		void					_setSceneBlending( SceneBlendFactor sourceFactor, SceneBlendFactor destFactor, SceneBlendOperation op);
 
+		void					_setShader(Shader* shader);
+
+		void					_clearShader(ShaderType st);
+
+		void					_setShaderParams(ShaderType type,const ShaderParamsPtr& params);
+
 		float					getMinDepthValue() { return 0.0f;}
 
 		// Range [0.0f, 1.0f]
@@ -111,9 +119,9 @@ namespace Titan
 		static D3D9Renderer&	getSingleton();
 
 	protected:
-		D3D9HardwareBufferManager*		mHardwareBufferManager;
+		D3D9HardwareBufferMgr*		mHardwareBufferManager;
 		D3D9TextureMgr*					mTextureMgr;			
-		D3D9ShaderEffectMgr*			mShaderEffectMgr;
+		D3D9ShaderMgr*					mShaderMgr;
 
 
 		D3DPRESENT_PARAMETERS	mD3dpp;

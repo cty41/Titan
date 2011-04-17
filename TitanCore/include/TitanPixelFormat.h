@@ -1,7 +1,7 @@
 #ifndef __TITAN_PIXEL_FORMAT__HH
 #define __TITAN_PIXEL_FORMAT__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanCommon.h"
 
 namespace Titan

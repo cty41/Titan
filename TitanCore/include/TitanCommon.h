@@ -2,9 +2,9 @@
 #ifndef __TITANCOMMON__HH
 #define __TITANCOMMON__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanAny.h"
-#include "TitanSharedPtr.h"
+#include "TiSharedPtr.h"
 
 namespace Titan
 {

@@ -1,12 +1,12 @@
 #ifndef __TITAN__OCTREE__HH
 #define __TITAN__OCTREE__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanBitFlags.h"
 #include "TitanAABB.h"
 #include "TitanMath.h"
 #include "TitanNumericTools.h"
-#include "SceneMgr.h"
+#include "TiSceneMgr.h"
 
 namespace Titan
 {

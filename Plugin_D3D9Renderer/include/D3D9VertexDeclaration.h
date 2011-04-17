@@ -2,7 +2,7 @@
 #define _TITAN_D3D9VERTEXDECLARATION_HH
 
 #include "D3D9Prerequisites.h"
-#include "VertexBuffer.h"
+#include "TiVertexBuffer.h"
 
 namespace Titan
 {

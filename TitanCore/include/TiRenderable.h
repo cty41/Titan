@@ -1,9 +1,9 @@
 #ifndef __TITAN_RENDERABLE_HH
 #define __TITAN_RENDERABLE_HH
 
-#include "TitanPrerequisites.h"
-#include "TitanShaderEffect.h"
-#include "TitanTexture.h"
+#include "TiPrerequisites.h"
+
+#include "TiTexture.h"
 #include "TiMaterial.h"
 
 namespace Titan
@@ -35,14 +35,6 @@ namespace Titan
 
 		virtual const MaterialPtr&	getMaterial() const = 0;
 
-		virtual	bool			hasTexture() const = 0;
-
-		virtual const TexturePtr&	getTexture() const = 0;
-		//temp method, will be deleted till we finished the material class
-		virtual ShaderEffectPtr	getShaderEffect() = 0;
-
-		virtual bool			hasShader() = 0;
-
 		virtual float			getSquaredDistance(Camera* cam) = 0;
 
 		virtual bool			IsUseIdentityView() const = 0;
@@ -52,6 +44,7 @@ namespace Titan
 		void	addListener(RenderableListener* listener){ mRenderableListenerList.push_back(listener); }
 		
 		virtual void customUpdate(){};
+
 		void	updateListeners()
 		{
 			RenderableListenerList::iterator it = mRenderableListenerList.begin(), itend = mRenderableListenerList.end();

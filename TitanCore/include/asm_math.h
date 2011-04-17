@@ -1,7 +1,7 @@
 #ifndef __asm_math_H__
 #define __asm_math_H__
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 #ifdef _MSC_VER
 #  pragma warning (push)

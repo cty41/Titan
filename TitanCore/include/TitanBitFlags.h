@@ -1,7 +1,7 @@
 #ifndef __TITAN_BITFLAG__HH
 #define __TITAN_BITFLAG__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #pragma warning( disable : 4800 )
 
 namespace Titan

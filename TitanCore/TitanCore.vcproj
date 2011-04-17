@@ -188,7 +188,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\Camera.cpp"
+				RelativePath=".\src\TiAutoParamsSetter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiCamera.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -198,102 +202,6 @@
 						UsePrecompiledHeader="2"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\CommonFileSystem.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ConfigFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ConsoleDebugger.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Exception.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\FileSystemManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Frustum.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\HardwareBufferManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\HelperMethods.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\IndexBuffer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ManualObject.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MemoryNedAlloc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\MemoryTracker.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\PerlinNoise.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\RenderTarget.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\RenderWindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Root.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\SceneMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\SceneMgrSelector.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\SceneNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\SceneObject.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ShaderEffectMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\StringConverter.cpp"
-				>
 			</File>
 			<File
 				RelativePath=".\src\TiChunkTerrain.cpp"
@@ -301,6 +209,58 @@
 			</File>
 			<File
 				RelativePath=".\src\TiChunkTerrainSection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TICommonFileSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiConfigFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiConsoleDebugger.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiDataStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiException.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiFileSystemMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TIFrustum.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="2"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\TiHardwareBufferMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiHelperMethods.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiIndexBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiManualObject.cpp"
 				>
 			</File>
 			<File
@@ -312,11 +272,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiMemoryNedAlloc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiMemoryTracker.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiPass.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiPerlinNoise.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiRenderQueue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiRenderQueueGroup.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiRenderTarget.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiRenderWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiResource.cpp"
 				>
 			</File>
 			<File
@@ -325,6 +317,50 @@
 			</File>
 			<File
 				RelativePath=".\src\TiResourceMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiRoot.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiSceneMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiSceneMgrSelector.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiSceneNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiSceneObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiShader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiShaderMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiShaderParams.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiShaderUnit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiStringConverter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiStringFuncs.cpp"
 				>
 			</File>
 			<File
@@ -337,10 +373,6 @@
 			</File>
 			<File
 				RelativePath=".\src\TitanColor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanDataStream.cpp"
 				>
 			</File>
 			<File
@@ -412,30 +444,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\TitanRenderQueue.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanRenderQueueGroup.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanResource.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanShaderEffect.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanShaderParams.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanShaderParamsUpdater.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\TitanStableHeader.cpp"
 				>
 				<FileConfiguration
@@ -457,27 +465,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\TitanStringFuncs.cpp"
+				RelativePath=".\src\TiTexture.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\TitanTexture.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanTextureMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanVector2.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanVector3.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanVector4.cpp"
+				RelativePath=".\src\TiTextureMgr.cpp"
 				>
 			</File>
 			<File
@@ -485,15 +477,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\VertexBuffer.cpp"
+				RelativePath=".\src\TiVector2.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\VertexIndexBufferData.cpp"
+				RelativePath=".\src\TiVector3.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Viewport.cpp"
+				RelativePath=".\src\TiVector4.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiVertexBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiVertexIndexBufferData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiViewport.cpp"
 				>
 			</File>
 			<Filter
@@ -515,82 +519,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\Camera.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\CommonFileSystem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\ConfigFile.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\ConsoleDebugger.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\Exception.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\FileSystem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\FileSystemManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\Frustum.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\HardwareBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\HardwareBufferManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\HelperMethods.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\IndexBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\ManualObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\MemoryAllocatedObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\MemoryAllocatorConfig.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\MemoryNedAlloc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\MemorySTLAllocator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\MemoryTracker.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\PerlinNoise.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\rapidxml-1.13\rapidxml.hpp"
 				>
 			</File>
@@ -607,51 +535,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\RenderData.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\RenderTarget.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\RenderWindow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\Root.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\SceneMgr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\SceneMgrSelector.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\SceneNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\SceneObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\ShaderEffectMgr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\Singleton.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\StlHeader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\StringConverter.h"
+				RelativePath=".\include\TiAutoParamsSetter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiCamera.h"
 				>
 			</File>
 			<File
@@ -663,11 +555,87 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiCommonFileSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiConfigFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiConsoleDebugger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiDataStream.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiException.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiFileSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiFileSystemMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiFrustum.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiHardwareBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiHardwareBufferMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiHelperMethods.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiIndexBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiIteratorWrapper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiManualObject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiMaterial.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\TiMaterialMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMemoryAllocatedObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMemoryAllocatorConfig.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMemoryNedAlloc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMemorySTLAllocator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMemoryTracker.h"
 				>
 			</File>
 			<File
@@ -679,11 +647,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiPerlinNoise.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiPrerequisites.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiRenderable.h"
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiRenderData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRenderQueue.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRenderQueueGroup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRenderTarget.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRenderWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiResource.h"
 				>
 			</File>
 			<File
@@ -695,7 +695,55 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiRoot.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiSceneMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiSceneMgrSelector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiSceneNode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiSceneObject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiShader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiShaderMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiShaderParams.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiShaderUnit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiSharedPtr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiSingleton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiStringConverter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiStringFuncs.h"
 				>
 			</File>
 			<File
@@ -743,10 +791,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanDataStream.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\TitanDataType.h"
 				>
 			</File>
@@ -768,10 +812,6 @@
 			</File>
 			<File
 				RelativePath=".\include\TitanHeaderSuffix.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanIteratorWrapper.h"
 				>
 			</File>
 			<File
@@ -823,10 +863,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanPrerequisites.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\TitanQuadtree.h"
 				>
 			</File>
@@ -851,34 +887,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanRenderQueue.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanRenderQueueGroup.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanResource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanShaderEffect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanShaderParams.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanShaderParamsUpdater.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanSharedPtr.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\TitanSphere.h"
 				>
 			</File>
@@ -887,27 +895,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanStringFuncs.h"
+				RelativePath=".\include\TiTexture.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanTexture.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanTextureMgr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanVector2.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanVector3.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanVector4.h"
+				RelativePath=".\include\TiTextureMgr.h"
 				>
 			</File>
 			<File
@@ -915,15 +907,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\VertexBuffer.h"
+				RelativePath=".\include\TiVector2.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\VertexIndexBufferData.h"
+				RelativePath=".\include\TiVector3.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\Viewport.h"
+				RelativePath=".\include\TiVector4.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiVertexBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiVertexIndexBufferData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiViewport.h"
 				>
 			</File>
 			<Filter

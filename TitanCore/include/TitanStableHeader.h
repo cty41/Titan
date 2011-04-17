@@ -3,9 +3,9 @@
 
 #if _MSC_VER
 #include "TitanCommon.h"
-#include "StringConverter.h"
-#include "Singleton.h"
-#include "Exception.h"
+#include "TiStringConverter.h"
+#include "TiSingleton.h"
+#include "TiException.h"
 #include "TiRenderer.h"
 #include "TitanAABB.h"
 #include "TitanMath.h"
@@ -14,16 +14,16 @@
 #include "TitanPlane.h"
 #include "TitanQuaternion.h"
 #include "TitanSphere.h"
-#include "TitanVector2.h"
-#include "TitanVector3.h"
-#include "TitanVector4.h"
+#include "TiVector2.h"
+#include "TiVector3.h"
+#include "TiVector4.h"
 #include "TitanColor.h"
 #include "StlHeader.h"
-#include "TitanPrerequisites.h"
-#include "Camera.h"
-#include "SceneNode.h"
-#include "SceneObject.h"
-#include "TitanResource.h"
+#include "TiPrerequisites.h"
+#include "TiCamera.h"
+#include "TiSceneNode.h"
+#include "TiSceneObject.h"
+#include "TiResource.h"
 
 
 #endif

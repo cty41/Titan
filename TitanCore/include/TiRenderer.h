@@ -1,12 +1,13 @@
 #ifndef __TITAN_RENDERER__HH
 #define __TITAN_RENDERER__HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanCommon.h"
-#include "RenderData.h"
+#include "TiRenderData.h"
 #include "TitanColor.h"
 #include "TitanBlendMode.h"
 #include "TiTextureUnit.h"
+#include "TiShader.h"
 
 namespace Titan
 {
@@ -57,6 +58,8 @@ namespace Titan
 		virtual void			setVertexDeclaration(VertexDeclaration* decl) = 0;
 
 		virtual void			setVertexBufferBinding(VertexBufferBinding* binding) = 0;
+
+		virtual void			_setViewport(Viewport* vp) = 0;
 
 		virtual void			_render(const RenderData& rd);
 
@@ -114,6 +117,15 @@ namespace Titan
 
 		virtual void			_setSceneBlending( SceneBlendFactor sourceFactor, SceneBlendFactor destFactor, SceneBlendOperation op = SBO_ADD) = 0;
 
+		virtual void			_setShader(Shader* shader);
+
+		virtual void			_clearShader(ShaderType st);
+
+		bool					isShaderSet(ShaderType st) const;
+
+		virtual void			_setShaderParams(ShaderType type,const ShaderParamsPtr& params) = 0;
+
+
 		virtual float			getMaxDepthValue() = 0;
 
 		virtual float			getMinDepthValue() = 0;
@@ -144,6 +156,9 @@ namespace Titan
 		size_t					mBatchCount;
 		size_t					mFaceCount;
 		size_t					mVertexCount;
+
+		bool					mSetVertexShader;
+		bool					mSetPixelShader;
 	};
 }
 #endif

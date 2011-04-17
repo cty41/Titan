@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TitanQuadtreeNode.h"
 #include "TitanQuadtree.h"
-#include "TitanRenderQueue.h"
+#include "TiRenderQueue.h"
 
 namespace Titan
 {

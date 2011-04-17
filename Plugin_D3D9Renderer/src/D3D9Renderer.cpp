@@ -1,16 +1,18 @@
 #include "TitanStableHeader.h"
 #include "D3D9Renderer.h"
-#include "ConsoleDebugger.h"
+#include "TiConsoleDebugger.h"
 #include "D3D9RenderWindow.h"
 #include "D3D9Mappings.h"
 #include "D3D9VertexDeclaration.h"
-#include "D3D9HardwareBufferManager.h"
+#include "D3D9HardwareBufferMgr.h"
 #include "D3D9IndexBuffer.h"
 #include "D3D9VertexBuffer.h"
 #include "D3D9VertexDeclaration.h"
 #include "D3D9TextureMgr.h"
-#include "D3D9ShaderEffectMgr.h"
 #include "D3D9Texture.h"
+#include "D3D9Shader.h"
+#include "D3D9ShaderMgr.h"
+#include "TiViewport.h"
 
 namespace Titan
 {
@@ -51,7 +53,7 @@ namespace Titan
 
 	void D3D9Renderer::destroy()
 	{
-		SAFE_DELETE(mShaderEffectMgr);
+		SAFE_DELETE(mShaderMgr);
 		SAFE_DELETE(mTextureMgr);
 		SAFE_DELETE(mHardwareBufferManager);
 		SAFE_RELEASE(mpD3dDevice);
@@ -64,11 +66,11 @@ namespace Titan
 
 		mpD3D9->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &mD3dCaps);
 
-		mHardwareBufferManager = TITAN_NEW D3D9HardwareBufferManager();
+		mHardwareBufferManager = TITAN_NEW D3D9HardwareBufferMgr();
 
 		mTextureMgr = TITAN_NEW D3D9TextureMgr();
 
-		mShaderEffectMgr = TITAN_NEW D3D9ShaderEffectMgr();
+		mShaderMgr = TITAN_NEW D3D9ShaderMgr();
 
 		ConfigOptionMap::iterator opt = mConfigOptions.find("Full Screen");
 		if(opt == mConfigOptions.end())
@@ -180,6 +182,22 @@ namespace Titan
 		return errMsg;
 	}
 	//-------------------------------------------------------------------------------//
+	void D3D9Renderer::_setViewport(Viewport* vp)
+	{
+		D3DVIEWPORT9 d3dvp;
+		HRESULT hr;
+		// set viewport dimensions
+		d3dvp.X = vp->getActualLeft();
+		d3dvp.Y = vp->getActualTop();
+		d3dvp.Width = vp->getActualWidth();
+		d3dvp.Height = vp->getActualHeight();
+		d3dvp.MinZ = 0.0f;
+		d3dvp.MaxZ = 1.0f;
+
+		if( FAILED( hr = mpD3dDevice->SetViewport( &d3dvp ) ) )
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set viewport.", "D3D9Renderer::_setViewport" );
+	}
+	//------------------------------------------------------------------------------//
 	void D3D9Renderer::_setLightEnable(bool enable)
 	{
 		if(FAILED(__setRenderState(D3DRS_LIGHTING, enable)))
@@ -663,6 +681,183 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set scene blending operation option", "D3D9Renderer::_setSceneBlendingOperation" );
 		if (FAILED(hr = __setRenderState(D3DRS_BLENDOPALPHA, D3D9Mappings::convertToD3D9(op))))
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Failed to set scene blending operation option", "D3D9Renderer::_setSceneBlendingOperation" );
+	}
+	//----------------------------------------------------------------------------//
+	void D3D9Renderer::_setShader(Shader* shader)
+	{
+		HRESULT hr;
+		switch(shader->getShaderType())
+		{
+		case ST_VERTEX_SHADER:
+			{
+				hr = mpD3dDevice->SetVertexShader(static_cast<D3D9VertexShader*>(shader)->getVertexShader());
+				if(FAILED(hr))
+				{
+					String errMsg = DXGetErrorDescription(hr);
+					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+						"set vertex shader failed because of " + errMsg,
+						"D3D9Renderer::_setShader");
+				}
+				break;
+			}
+		case ST_PIXEL_SHADER:
+			{
+				hr = mpD3dDevice->SetPixelShader(static_cast<D3D9PixelShader*>(shader)->getPixelShader());
+				if(FAILED(hr))
+				{
+					String errMsg = DXGetErrorDescription(hr);
+					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+						"set pixel shader failed because of " + errMsg,
+						"D3D9Renderer::_setShader");
+				}
+				break;
+			}
+		}
+
+
+		// Make sure texcoord index is equal to stage value, As SDK Doc suggests:
+		// "When rendering using vertex shaders, each stage's texture coordinate index must be set to its default value."
+		// This solves such an errors when working with the Debug runtime -
+		// "Direct3D9: (ERROR) :Stage 1 - Texture coordinate index in the stage must be equal to the stage index when programmable vertex pipeline is used".
+		for (unsigned int nStage=0; nStage < 8; ++nStage)
+			__SetTexStageState(nStage, D3DTSS_TEXCOORDINDEX, nStage);
+
+		Renderer::_setShader(shader);
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Renderer::_clearShader(ShaderType st)
+	{
+		HRESULT hr;
+		switch(st)
+		{
+		case ST_VERTEX_SHADER:
+			if(hr = mpD3dDevice->SetVertexShader(NULL))
+			{
+				String errMsg = DXGetErrorDescription(hr);
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+					"clear vertex shader failed because of " + errMsg,
+					"D3D9Renderer::_clearShader");
+			}
+			break;
+		case ST_PIXEL_SHADER:
+			if(hr = mpD3dDevice->SetPixelShader(NULL))
+			{
+				String errMsg = DXGetErrorDescription(hr);
+				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+					"clear pixel shader failed because of " + errMsg,
+					"D3D9Renderer::_clearShader");
+			}
+			break;
+		}
+		Renderer::_clearShader(st);
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Renderer::_setShaderParams(ShaderType type,const ShaderParamsPtr& params)
+	{
+		HRESULT hr;
+		if(params->hasFloatConstants())
+		{
+			ShaderRegisterBufferPtr floatRegs = params->getFloatRegisterBuffer();
+			switch(type)
+			{
+			case ST_VERTEX_SHADER:
+				{
+					ShaderRegisterIndexUseMap::const_iterator i = floatRegs->bufferMap.begin();
+					ShaderRegisterIndexUseMap::const_iterator itend = floatRegs->bufferMap.end();
+					for (;i != itend;++i)
+					{
+						size_t regIndex = i->first;
+						const float* pFloat = params->getFloatPtr(i->second.physicalIndex);
+						size_t slotCount = i->second.currentSize / 4;
+						assert (i->second.currentSize % 4 == 0 && "Should not have any "
+							"elements less than 4 wide for D3D9");
+
+						if (FAILED(hr = mpD3dDevice->SetVertexShaderConstantF(
+							(UINT)regIndex, pFloat, (UINT)slotCount)))
+						{
+							TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
+								"Unable to update vertex shader float params", 
+								"D3D9Renderer::_setShaderParams");
+						}
+					}
+					break;
+				}
+			case ST_PIXEL_SHADER:
+				{
+					ShaderRegisterIndexUseMap::const_iterator i = floatRegs->bufferMap.begin();
+					ShaderRegisterIndexUseMap::const_iterator itend = floatRegs->bufferMap.end();
+					for (;i != itend;++i)
+					{
+						size_t regIndex = i->first;
+						const float* pFloat = params->getFloatPtr(i->second.physicalIndex);
+						size_t slotCount = i->second.currentSize / 4;
+						assert (i->second.currentSize % 4 == 0 && "Should not have any "
+							"elements less than 4 wide for D3D9");
+
+						if (FAILED(hr = mpD3dDevice->SetPixelShaderConstantF(
+							(UINT)regIndex, pFloat, (UINT)slotCount)))
+						{
+							TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
+								"Unable to update pixel shader float params", 
+								"D3D9Renderer::_setShaderParams");
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		if(params->hasIntConstants())
+		{
+			ShaderRegisterBufferPtr intRegs = params->getIntRegisterBuffer();
+			switch(type)
+			{
+			case ST_VERTEX_SHADER:
+				{
+					ShaderRegisterIndexUseMap::const_iterator i = intRegs->bufferMap.begin();
+					ShaderRegisterIndexUseMap::const_iterator itend = intRegs->bufferMap.end();
+					for (;i != itend;++i)
+					{
+						size_t regIndex = i->first;
+						const int* pInt = params->getIntPtr(i->second.physicalIndex);
+						size_t slotCount = i->second.currentSize / 4;
+						assert (i->second.currentSize % 4 == 0 && "Should not have any "
+							"elements less than 4 wide for D3D9");
+
+						if (FAILED(hr = mpD3dDevice->SetVertexShaderConstantI(
+							(UINT)regIndex, pInt, (UINT)slotCount)))
+						{
+							TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
+								"Unable to update vetex shader int params", 
+								"D3D9Renderer::_setShaderParams");
+						}
+					}
+					break;
+				}
+			case ST_PIXEL_SHADER:
+				{
+					ShaderRegisterIndexUseMap::const_iterator i = intRegs->bufferMap.begin();
+					ShaderRegisterIndexUseMap::const_iterator itend = intRegs->bufferMap.end();
+					for (;i != itend;++i)
+					{
+						size_t regIndex = i->first;
+						const int* pInt = params->getIntPtr(i->second.physicalIndex);
+						size_t slotCount = i->second.currentSize / 4;
+						assert (i->second.currentSize % 4 == 0 && "Should not have any "
+							"elements less than 4 wide for D3D9");
+
+						if (FAILED(hr = mpD3dDevice->SetPixelShaderConstantI(
+							(UINT)regIndex, pInt, (UINT)slotCount)))
+						{
+							TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
+								"Unable to update pixel shader int params", 
+								"D3D9Renderer::_setShaderParams");
+						}
+					}
+					break;
+				}
+			}
+		}
 	}
 
 

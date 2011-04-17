@@ -1,6 +1,6 @@
 #include "TitanStableHeader.h"
 #include "TitanPixelFormat.h"
-#include "Exception.h"
+#include "TiException.h"
 
 namespace Titan
 {

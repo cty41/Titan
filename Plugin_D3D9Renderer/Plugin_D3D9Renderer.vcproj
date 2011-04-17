@@ -184,7 +184,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\D3D9HardwareBufferManager.cpp"
+				RelativePath=".\src\D3D9HardwareBufferMgr.cpp"
 				>
 			</File>
 			<File
@@ -212,11 +212,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\D3D9ShaderEffect.cpp"
+				RelativePath=".\src\D3D9Shader.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\D3D9ShaderEffectMgr.cpp"
+				RelativePath=".\src\D3D9ShaderMgr.cpp"
 				>
 			</File>
 			<File
@@ -242,7 +242,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\D3D9HardwareBufferManager.h"
+				RelativePath=".\include\D3D9HardwareBufferMgr.h"
 				>
 			</File>
 			<File
@@ -270,11 +270,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\D3D9ShaderEffect.h"
+				RelativePath=".\include\D3D9Shader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\D3D9ShaderEffectMgr.h"
+				RelativePath=".\include\D3D9ShaderMgr.h"
 				>
 			</File>
 			<File

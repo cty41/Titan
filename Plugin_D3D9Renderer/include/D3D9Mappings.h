@@ -3,9 +3,9 @@
 
 #include "D3D9Prerequisites.h"
 #include "TitanCommon.h"
-#include "HardwareBuffer.h"
-#include "TitanTexture.h"
-#include "TitanShaderParams.h"
+#include "TiHardwareBuffer.h"
+#include "TiTexture.h"
+#include "TiShaderParams.h"
 #include "TitanBlendMode.h"
 #include "TiTextureUnit.h"
 

@@ -2,7 +2,7 @@
 #ifndef _D3D9PREQUISITES_HH
 #define _D3D9PREQUISITES_HH
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 
 #define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
 #define SAFE_DELETE_ARRAY(p) { if(p) { delete[] (p);   (p)=NULL; } }
@@ -24,11 +24,11 @@ namespace Titan
 	class D3D9IndexBuffer;
 	class D3D9VertexBuffer;
 	class D3D9VertexDeclaration;
-	class D3D9HardwareBufferManager;
+	class D3D9HardwareBufferMgr;
 	class D3D9Texture;
 	class D3D9TextureMgr;
-	class D3D9ShaderEffect;
-	class D3D9ShaderEffectMgr;
+	class D3D9Shader;
+	class D3D9ShaderMgr;
 }
 
 #ifdef PLUGIN_D3D9RENDERER_EXPORTS

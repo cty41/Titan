@@ -2,7 +2,7 @@
 #define	 __TITAN_BLEND_MODE__HH
 
 
-#include "TitanPrerequisites.h"
+#include "TiPrerequisites.h"
 #include "TitanColor.h"
 
 namespace Titan

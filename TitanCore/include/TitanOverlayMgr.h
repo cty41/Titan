@@ -10,8 +10,8 @@
 #ifndef __TITAN_OVERLAY_MGR__HH
 #define __TITAN_OVERLAY_MGR__HH
 
-#include "TitanPrerequisites.h"
-#include "Singleton.h"
+#include "TiPrerequisites.h"
+#include "TiSingleton.h"
 
 
 namespace Titan

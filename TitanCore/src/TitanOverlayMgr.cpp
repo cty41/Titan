@@ -1,10 +1,10 @@
 #include "TitanStableHeader.h"
 #include "TitanOverlayMgr.h"
 #include "TitanOverlayElement.h"
-#include "TitanRenderQueue.h"
+#include "TiRenderQueue.h"
 #include "TitanOverlayPanelElement.h"
 #include "TitanOverlayTextElement.h"
-#include "Viewport.h"
+#include "TiViewport.h"
 
 namespace Titan
 {

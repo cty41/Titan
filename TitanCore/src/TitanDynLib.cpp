@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TitanDynLib.h"
-#include "Exception.h"
-#include "ConsoleDebugger.h"
+#include "TiException.h"
+#include "TiConsoleDebugger.h"
 
 #if WIN32
 #  define WIN32_LEAN_AND_MEAN
