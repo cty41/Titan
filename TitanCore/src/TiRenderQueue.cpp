@@ -7,8 +7,10 @@ namespace Titan
 	RenderQueue::RenderQueue()
 		:mDefaultGroup(NULL), mCurrentCam(NULL)
 	{
+		addRenderQueueGroup(RGT_Sky_Early);
 		addRenderQueueGroup(RGT_Background);
 		addRenderQueueGroup(RGT_SceneObject);
+		addRenderQueueGroup(RGT_Sky_Late);
 		addRenderQueueGroup(RGT_HUD);
 		mDefaultGroup = getRenderQueueGroup(RGT_SceneObject);
 		mDefaultGroup->setSortStrategy(SS_Shader_Tex_Dist);

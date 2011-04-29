@@ -4,6 +4,7 @@
 #include "TiPrerequisites.h"
 #include "TiVector3.h"
 
+
 namespace Titan
 {
 	/** 4-dimensional homogeneous vector.

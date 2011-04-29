@@ -39,12 +39,11 @@ namespace Titan
 		mHeightMapZ = heightMapZ;
 
 		Vector2 sectorSize = mCreator->getSectorSize();
-
-		_buildVertexBuffer();
 		mSectionPos = Vector3(
 			mCreator->getWorldBound().getMinimum().x + sectorSize.x * mSectorX, 
 			1.0f, 
 			mCreator->getWorldBound().getMinimum().z + sectorSize.y * mSectorZ);
+		_buildVertexBuffer();
 	}
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::_buildVertexBuffer()
@@ -89,6 +88,12 @@ namespace Titan
 		mTerrainSectionRend = TITAN_NEW TerrainSectionRend(this);
 		mTerrainSectionRend->_buildRenderData(this);
 
+		Vector4 uvScaleOffset = Vector4((float)1.0f/(mCreator->getSectorCountX()+1),
+										(float)1.0f/(mCreator->getSectorCountZ()+1),
+										(float)mSectorX,
+										(float)mSectorZ);
+		mTerrainSectionRend->setCustomShaderParam(0, uvScaleOffset);
+
 	}
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::_buildRenderData(RenderData* rend)
@@ -127,7 +132,8 @@ namespace Titan
 	BaseTerrainSection::TerrainSectionRend::TerrainSectionRend(BaseTerrainSection* creator)
 		:mCreator(creator), mWorldPos(Matrix4::IDENTITY)
 	{
-		mWorldPos.setTrans(mCreator->getSectionPos());
+		if(mCreator)
+			mWorldPos.setTrans(mCreator->getSectionPos());
 	}
 	//-------------------------------------------------------------------------------//
 	BaseTerrainSection::TerrainSectionRend::~TerrainSectionRend()

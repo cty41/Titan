@@ -7,8 +7,45 @@
 #include "TiShaderParams.h"
 #include "TiTextureMgr.h"
 
+
 namespace Titan
 {
+	//I do not hanle error input, so be aware of that
+	void extractFloats(const String& val, float* pOut, uint count)
+	{
+		size_t firstIdx = 0, idx = 0;
+		while(count)
+		{
+			idx = val.find(' ', firstIdx) ;
+			if(idx == String::npos)
+				break;
+
+			StringStream stream;
+			String sub = val.substr(firstIdx, idx - firstIdx);
+			stream << sub;
+			stream >> *pOut++;
+			firstIdx = idx + 1;
+			--count;
+		}
+	}
+	//------------------------------------------------------------------------------//
+	void extractInts(const String& val, int* pOut, uint count)
+	{
+		size_t firstIdx = 0, idx = 0;
+		while(count)
+		{
+			idx = val.find(' ', firstIdx) ;
+			if(idx == String::npos)
+				break;
+
+			StringStream stream;
+			String sub = val.substr(firstIdx, idx - firstIdx);
+			stream << sub;
+			stream >> *pOut++;
+			firstIdx = idx + 1;
+			--count;
+		}
+	}
 
 	typedef ScriptCompilerMgr::ScriptNodePtrList ScriptNodePtrList;
 
@@ -51,10 +88,17 @@ namespace Titan
 				"We can not locate the name of the material",
 				"MaterialTranslator::translate");
 		}
-		
-		Material* pMaterial= reinterpret_cast<Material*>(MaterialMgr::getSingleton().create(it->second, group).second.get());
+		ResourceMgr::CreatedResource cr = MaterialMgr::getSingleton().create(it->second, group);
+		if(!cr.first)
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"We have created a same name material: " + it->second,
+				"MaterialTranslator::translate");
+			return ;
+		}
+		MaterialPtr pMaterial= cr.second;
 		pMaterial->removeAllPasses();
-		pScriptNode->createObj = pMaterial;
+		pScriptNode->createObj = pMaterial.get();
 		
 		ScriptTranslator::translate(pScriptNode, group);
 	}
@@ -162,9 +206,17 @@ namespace Titan
 		StringKeyValueMap::iterator it = pScriptNode->keyValueMap.find("texture"), itend = pScriptNode->keyValueMap.end();
 		if(it != itend)
 		{
-			TexturePtr pTex = TextureMgr::getSingleton().create(it->second, group).second;
-			tu->setTexture(pTex);
+			tu->setTexture(it->second);
 			pScriptNode->keyValueMap.erase(it);
+		}
+		else
+		{
+			it = pScriptNode->keyValueMap.find("cube_texture");
+			if(it != itend)
+			{
+				tu->setTexture(it->second, TT_CUBEMAP);
+				pScriptNode->keyValueMap.erase(it);
+			}
 		}
 		
 		tu->setParams(pScriptNode->keyValueMap);
@@ -254,10 +306,97 @@ namespace Titan
 					"we do not have this type of auto_named_param: " + it->second,
 					"ShaderTranslator::translateShaderParam");
 			}
-			params->setNamedAutoConstant(name, def->constantType);
+
+			if(def->edType == ShaderParams::EDT_NONE)
+				params->setNamedAutoConstant(name, def->constantType);
+			else 
+			{
+				it = pScriptNode->keyValueMap.find("extra_data");
+				if (it == pScriptNode->keyValueMap.end())
+				{
+					TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+						"this auto_named_param need extra_data ",
+						"ShaderTranslator::translateShaderParam");
+					return ;
+				}
+				if(def->edType == ShaderParams::EDT_INT)
+				{
+					size_t extraData = StringConverter::parseUint(it->second);
+					params->setNamedAutoConstant(name, def->constantType, extraData);
+				}
+				else
+				{
+					float extraData = StringConverter::parseFloat(it->second);
+					params->setNamedAutoConstant(name, def->constantType, extraData);
+				}
+			}
 		}
 		else if(pScriptNode->name == "named_param")
 		{
+			String name, type;
+			StringKeyValueMap::iterator it = pScriptNode->keyValueMap.find("name");
+			if (it == pScriptNode->keyValueMap.end())
+			{
+				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+					"auto_named_param does not have a name ",
+					"ShaderTranslator::translateShaderParam");
+				return ;
+			}
+			name = it->second;
+			it = pScriptNode->keyValueMap.find("type");
+			if (it == pScriptNode->keyValueMap.end())
+			{
+				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
+					"auto_named_param does not have type ",
+					"ShaderTranslator::translateShaderParam");
+				return ;
+			}
+			type = it->second;
+			uint count = 0;
+			bool isFLoat = false;
+			if(type.find("float") != String::npos)
+			{
+				isFLoat = true;
+
+				if (type.size() >= 6)
+				{
+					count = StringConverter::parseInt(type.substr(5));
+				}
+				else
+					count = 1;
+			}
+			else if(type.find("int") != String::npos)
+			{
+				isFLoat = false;
+				if (type.size() >= 4)
+					count = StringConverter::parseInt(type.substr(3));
+				else
+					count = 1;
+			}
+			int roundedCount = count%4 != 0 ? count + 4 - (count%4) : count;
+
+			bool hasVal = true;
+			it = pScriptNode->keyValueMap.find("val");
+			if (it == pScriptNode->keyValueMap.end())
+			{
+				hasVal = false;
+			}
+			String val = it->second;
+			if(isFLoat)
+			{
+				float*	pFloat = TITAN_ALLOC_T(float, roundedCount, MEMCATEGORY_GENERAL);
+				extractFloats(val, pFloat, roundedCount);
+				params->setNamedConstant(name,pFloat, roundedCount, 1);
+				TITAN_FREE(pFloat, MEMCATEGORY_GENERAL);
+			}
+			else
+			{
+				int* pInt = TITAN_ALLOC_T(int, roundedCount, MEMCATEGORY_GENERAL);
+				extractInts(val, pInt, roundedCount);
+				params->setNamedConstant(name, pInt, roundedCount, 1);
+				TITAN_FREE(pInt, MEMCATEGORY_GENERAL);
+			}
+
 
 		}
 		else
@@ -266,6 +405,7 @@ namespace Titan
 				"we do not have this kind of shader param type: "+ pScriptNode->name,
 				"ShaderTranslator::translateShaderParam");
 		}
+		
 	}
 
 }

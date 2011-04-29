@@ -2,7 +2,7 @@
 #define __TITAN_RENDERTARGET__HH
 
 #include "TiPrerequisites.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 
 namespace Titan
 {

@@ -28,7 +28,7 @@ namespace Titan
 		virtual void parseScript(DataStreamPtr& stream, const String& group);
 
 	protected:
-		Resource*	createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams);
+		Resource*	createImpl(const String& name, ResourceHandle id, const String& group, bool isManual, AnyMap* extraParams);
 
 		void	processXmlNode(rapidxml::xml_node<char>* xmlNode, const String&  group);
 

@@ -2,8 +2,8 @@
 #define __Vector3_H__
 
 #include "TiPrerequisites.h"
-#include "TitanMath.h"
-#include "TitanQuaternion.h"
+#include "TiMath.h"
+#include "TiQuaternion.h"
 
 namespace Titan
 {

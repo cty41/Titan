@@ -19,7 +19,7 @@ namespace Titan
 
 		void	setPosition(const Vector3& pos);
 
-		const Vector3& getPosition() const { return mPosition; }
+		const Vector3& getPosition();
 
 		void move(const Vector3& vec);
 

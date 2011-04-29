@@ -18,7 +18,7 @@ namespace Titan
 	class _DllExport Shader : public Resource
 	{
 	public:
-		Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
+		Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		virtual ~Shader(){}
 
@@ -33,9 +33,9 @@ namespace Titan
 
 		ShaderType getShaderType() const { return mType; }
 
-		void	setProfile(const String& profile){ mProfile = profile ;}
+		void	setLanguage(const String& language){ mLanguage = language ;}
 
-		const String& getProfile() const { return mProfile; }
+		const String& getLanguage() const { return mLanguage; }
 
 		void	setFileName(const String& fileName);
 
@@ -53,9 +53,6 @@ namespace Titan
 	protected:
 		void loadImpl();
 
-		//implement in the render api class
-		//void unloadImpl();
-
 		virtual void loadFromSrc() = 0;
 
 		virtual void buildConstantDefs() = 0;
@@ -71,10 +68,9 @@ namespace Titan
 
 		ShaderParamsPtr	mShaderParams;
 		ShaderNamedConstantsPtr mConstantDefs;
-		String		mFile;
-		String		mSource;
-		//shader profile which determines the shader instruction set
-		String		mProfile;
+		String		mFile;	//load from file
+		String		mSource;	//load from String
+		String		mLanguage;
 		ShaderType	mType;
 
 		bool		mHasCompiledError;
@@ -83,6 +79,39 @@ namespace Titan
 
 		ShaderRegisterBufferPtr	mFloatRegisterToPhysical;
 		ShaderRegisterBufferPtr	mIntRegisterToPhysical;
+	
+	protected:
+		
+		class _DllExport ShaderFileCmd : public ParamsCommand
+		{
+		public:
+			virtual String getter(void* target);
+
+			virtual void setter(void* target, const String& val);
+		};
+
+		class _DllExport ShaderSrcCmd : public ParamsCommand
+		{
+		public:
+			virtual String getter(void* target);
+
+			virtual void setter(void* target, const String& val);
+		};
+
+		class _DllExport ShaderLanguageCmd : public ParamsCommand
+		{
+		public:
+			virtual String getter(void* target);
+
+			virtual void setter(void* target, const String& val);
+		};
+
+		static ShaderFileCmd	msShaderFileCmd;
+		static ShaderSrcCmd		msShaderSrcCmd;
+		static ShaderLanguageCmd msShaderLanguageCmd;
+
+		//implement from Reflector class
+		virtual void setupParamsCmd();
 	};
 
 	class _DllExport ShaderPtr : public SharedPtr<Shader>

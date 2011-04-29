@@ -12,7 +12,7 @@
 #	endif
 #endif
 
-#include "TitanDataType.h"
+#include "TiDataType.h"
 
 #   pragma warning (disable : 4251)
 
@@ -43,6 +43,7 @@ namespace Titan
 	class FileSystemManager;
 	class HardwareBuffer;
 	class HardwareBufferMgr;
+	class Image;
 	class IndexData;
 	class IndexBuffer;
 	class Math;
@@ -82,6 +83,10 @@ namespace Titan
 	class ResourceMgr;
 	class ResourceGroupMgr;
 	class Sphere;
+	class ScriptLoader;
+	class ScriptCompilerMgr;
+	class ScriptTranslator;
+	class ScriptTranslatorMgr;
 	class SceneMgr;
 	class SceneMgrFactory;
 	class SceneMgrSelector;
@@ -91,7 +96,6 @@ namespace Titan
 	class Shader;
 	class ShaderUnit;
 	class ShaderParams;
-	class ShaderParamsUpdater;
 	class Texture;
 	class TextureMgr;
 	class TextureUnit;
@@ -109,7 +113,7 @@ namespace Titan
 /* Include all the standard header *after* all the configuration
 settings have been made.
 */
-#include "StlHeader.h"
+#include "TiStlHeader.h"
 #include "TiMemoryAllocatorConfig.h"
 
 namespace Titan

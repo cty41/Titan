@@ -43,7 +43,7 @@ namespace Titan
 		typedef std::pair<uint32, uint32> FontCodeRange;
 		typedef vector<FontCodeRange>::type FontCodeRangeVec;
 	public:
-		Font(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
+		Font(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		~Font();
 

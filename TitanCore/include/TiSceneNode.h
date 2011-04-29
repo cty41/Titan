@@ -2,8 +2,8 @@
 #define _TITAN_SCENENODE_HH
 
 #include "TiPrerequisites.h"
-#include "TitanCommon.h"
-#include "TitanMatrix4.h"
+#include "TiCommon.h"
+#include "TiMatrix4.h"
 #include "TiIteratorWrapper.h"
 #include "TitanAABB.h"
 #include "TiSceneMgr.h"
@@ -59,13 +59,17 @@ namespace Titan
 
 		void		translate(const Vector3& pos);
 
+		void		setPosition(const Vector3& pos);
+
+		void		setPosition(float x, float y, float z);
+
 		const Vector3&	getPosition() const { return mPosition; }
 
-		const Vector3&	_getDerivedScale() const { return mDerivedScale; }
+		const Vector3&	_getDerivedScale();
 
-		const Quaternion& _getDerivedOrientation() const { return mDerivedQuaternion; }
+		const Quaternion& _getDerivedOrientation();
 
-		const Vector3&	  _getDerivedPosition() const { return mDerivedPosition; }
+		const Vector3&	  _getDerivedPosition();
 
 		const Matrix4&	 _getTransformMatrix();
 
@@ -120,6 +124,7 @@ namespace Titan
 
 		bool			mNeedUpdate;
 		bool			mNeedUpdateMat;
+		bool			mNeedUpdateParent;
 
 	};
 }

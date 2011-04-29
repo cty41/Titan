@@ -2,7 +2,7 @@
 #define __TITAN_CHUNK_TERRAIN_HH
 
 #include "TiPrerequisites.h"
-#include "TitanBaseTerrain.h"
+#include "TiBaseTerrain.h"
 
 namespace Titan
 {
@@ -34,7 +34,6 @@ namespace Titan
 		virtual void _buildIndexData();
 
 	protected:
-		ChunkTerrainSection*	mChunkArray;
 		IndexBufferSharedPtr	mLODIndexArray[CHUNK_INDEX_TYPE][CHUNK_MAX_LOD];
 		uint32		mDetailLevels;
 	};

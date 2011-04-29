@@ -24,6 +24,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	VertexData::~VertexData()
 	{
+		mDeleteDclBinding = false;
 		if (mDeleteDclBinding)
 		{
 			mMgr->destroyVertexBufferBinding(vertexBufferBinding);

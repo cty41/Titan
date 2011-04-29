@@ -1,5 +1,5 @@
 #include "D3D9Mappings.h"
-#include "TitanMatrix4.h"
+#include "TiMatrix4.h"
 
 namespace Titan
 {

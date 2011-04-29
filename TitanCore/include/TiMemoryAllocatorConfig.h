@@ -23,11 +23,19 @@ namespace Titan
 	template <MemoryCategory Cat> class CategorisedAllocPolicy : public NedAllocPolicy{};
 	template <MemoryCategory Cat, size_t align = 0> class CategorisedAlignAllocPolicy : public NedAlignedAllocPolicy<align>{};
 }
+#elif TITAN_MEMORY_ALLOCATOR == TITAN_MEMORY_ALLOCATOR_STD
+
+#  include "TiMemoryStdAlloc.h"
+namespace Titan
+{
+	template <MemoryCategory Cat> class CategorisedAllocPolicy : public StdAllocPolicy{};
+	template <MemoryCategory Cat, size_t align = 0> class CategorisedAlignAllocPolicy : public StdAlignedAllocPolicy<align>{};
+}
 #endif
 
 namespace Titan
 {
-	typedef CategorisedAllocPolicy<Titan::MEMCATEGORY_GENERAL> GeneralAllocPolicy;
+	typedef CategorisedAllocPolicy<MEMCATEGORY_GENERAL> GeneralAllocPolicy;
 
 
 	typedef AllocatedObject<GeneralAllocPolicy> GeneralAllocatedObject;

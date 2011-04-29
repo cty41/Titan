@@ -14,6 +14,12 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	Renderer::~Renderer()
 	{
+		RenderTargetMap::iterator it = mTargetMap.begin(), itend = mTargetMap.end();
+		while (it != itend)
+		{
+			TITAN_DELETE (it->second);
+			++it;
+		}
 	}
 	//-------------------------------------------------------------------------------//
 	void Renderer::setConfigOption(const String& first, const String& second)
@@ -186,7 +192,9 @@ namespace Titan
 
 		_setTexCoordSet(stage, tu->getTexCoordSet());
 		
-		_setSamplerFilter(stage, tu->getMinFilter(), tu->getMaxFilter(), tu->getMipFilter());
+		_setSamplerFilter(stage, tu->getMinFilter(), tu->getMagFilter(), tu->getMipFilter());
+
+		_setTextureMatrix(stage, tu->getTextureTransform());
 
 	}
 	//----------------------------------------------------------------------------//

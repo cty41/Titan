@@ -36,19 +36,30 @@ namespace Titan
 	//------------------------------------------------------------------------------//
 	void ScriptCompilerMgr::parseScript(DataStreamPtr& stream, const String& group)
 	{
-		MemoryDataStreamPtr memPtr = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(stream->getName(), stream));
+		String scriptContent;
+		while (!stream->eof())
+		{
+			scriptContent.append(stream->getLine());
+		}
+		char* xmlString = TITAN_ALLOC_T(char, scriptContent.size(), MEMCATEGORY_GENERAL);
+		memcpy((void*)xmlString, scriptContent.c_str(), scriptContent.size());
 		xml_document<> doc;
+#if 1
 		try
 		{
-			doc.parse<0>(reinterpret_cast<char*>(memPtr->getPtr()));
+#endif
+			doc.parse<0>(xmlString);
+#if 1
 		}catch(parse_error pe)
 		{
 			String errMsg = pe.what();
-				errMsg += pe.where<char>();
+			errMsg += "happened in: ";
+			errMsg.append(pe.where<char>());
 			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
 				errMsg  ,
 				"ScriptCompilerMgr::parseScript");
 		}
+#endif
 		processXmlNode(doc.first_node(), NULL);
 
 		ScriptRootNodePtrVec::iterator it = mScriptRootNodePtrVec.begin(), itend = mScriptRootNodePtrVec.end();
@@ -60,6 +71,8 @@ namespace Titan
 
 		//free all ScriptNode;
 		mScriptRootNodePtrVec.clear();
+		doc.clear();
+		TITAN_FREE(xmlString, MEMCATEGORY_GENERAL);
 	}
 	//------------------------------------------------------------------------------//
 	void ScriptCompilerMgr::processXmlNode(xml_node<char>* xmlNode, ScriptNode* parent)

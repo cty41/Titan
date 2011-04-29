@@ -1,5 +1,4 @@
 #include "TerrainHost.h"
-#include "D3D9Shader.h"
 
 TerrainHost::TerrainHost()
 :BaseHost(), mManualObject(NULL),
@@ -38,39 +37,78 @@ void TerrainHost::loadResources()
 
 #if 0
 	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
-		Titan::TT_2D, 128, 128, 0,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
+		Titan::TT_2D, 128, 128, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
 
 	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
 
-	mTerrain = TITAN_NEW Titan::ChunkTerrain();
+	mTerrain = TITAN_NEW Titan::BaseTerrain();
 	mTerrain->create(mSceneMgr->getRootSceneNode(), pHeightmap, Titan::AABB(-500.0f, 0, -500.0f, 500.0f, 500.0f, 500.0f));
+	Titan::BaseTerrain::elevationDataVec elevationDatas;
+	Titan::BaseTerrain::elevationData elevation[3];
 
 #endif
 
-	static char	pHlSl[] = "void vs_basic(float3 Pos : POSITION,\
-										out float4 oPos : POSITION,\
-										uniform float4x4 WorldViewProj\
-										)\
-							{\
-								oPos = mul(float4(Pos, 1), WorldViewProj);\
-							}";
+#if 0
+	// grass (all elevations and slopes)
+	elevation[0].minElevation = 0;
+	elevation[0].maxElevation = 500;
+	elevation[0].minNormalZ = -1.0f;
+	elevation[0].maxNormalZ = 1.0f;
+	elevation[0].strength = 1.0f;
+
+	// rock (all elevations, steep slopes)
+	elevation[1].minElevation = 0;
+	elevation[1].maxElevation = 500;
+	elevation[1].minNormalZ = 0.0f;
+	elevation[1].maxNormalZ = 0.85f;
+	elevation[1].strength = 10.0f;
+
+	// dirt (high elevation, flat slope)
+	elevation[2].minElevation = 300;
+	elevation[2].maxElevation = 500;
+	elevation[2].minNormalZ = 0.75f;
+	elevation[2].maxNormalZ = 1.0f;
+	elevation[2].strength = 20.0f;
+
+	elevationDatas.push_back(elevation[0]);
+	elevationDatas.push_back(elevation[1]);
+	elevationDatas.push_back(elevation[2]);
+
+	Titan::Image blendImage;
+	blendImage.setWidth(256);
+	blendImage.setHeight(256);
+	blendImage.setFormat(Titan::PF_A8R8G8B8);
+	blendImage.setBytesPerPixel(4);
+
+	mTerrain->genBlendImage(blendImage, elevationDatas);
+	blendImage.randomChannelNoise(3, 200, 255);
+
+#if 0
+	Titan::TexturePtr pBlendMap = Titan::TextureMgr::getSingleton().createManually(
+		"blendMap", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
+		Titan::TT_2D, 256, 256, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
+
+	pBlendMap->loadImage(blendImage);
+
+
+	Titan::MaterialPtr pBlendMtrl = Titan::MaterialMgr::getSingleton().create("terrainBlend").second;
+	pBlendMtrl->getPass(0)->getTextureUnit(0)->setTexture("blendMap");
+	
+
+#endif
+	mTerrain->setMaterial("terrainBlend");
+#endif
+
 #if 1
-	Titan::MaterialPtr	pMtrl = Titan::MaterialMgr::getSingleton().create("test").second;
-	Titan::Pass* pass = pMtrl->createPass();
-	pass->setSrcBlendFactor(Titan::SBF_ONE);
-	pass->setSrcBlendFactor(Titan::SBF_ZERO);
-	Titan::D3D9ShaderPtr pShader = Titan::ShaderMgr::getSingleton().createShader(pHlSl, "testShader", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP, "change later", Titan::ST_VERTEX_SHADER);
+	mSceneMgr->setSkybox("skybox1");
+#endif
 
+#if 0
 
-	Titan::ShaderParamsPtr pParams = pShader->getShaderParams();
-	pParams->setNamedAutoConstant("WorldViewProj", Titan::ShaderParams::ACT_WORLDVIEWPROJ_MATRIX);
-	pass->setVertexShader("testShader");
-
-	//pass->createTextureUnit();
 
 	mManualObject = mSceneMgr->createManualObject("test");
 	mManualObject->begin();
-	mManualObject->setMaterial("test", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
+	mManualObject->setMaterial("basic", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
 	mManualObject->position(-1.0f,-1.0f,-1.0f);			//0
 	mManualObject->position(-1.0f, 1.0f,-1.0f);			//1
 	mManualObject->position( 1.0f, 1.0f,-1.0f);			//2
@@ -91,8 +129,9 @@ void TerrainHost::loadResources()
 	node->rotate(Titan::Vector3::UNIT_X, Titan::Radian(3.14f * 0.25f));
 	node->attachObject(mManualObject);
 #endif
-
-	mCamera->setPosition(0.0f, 0.0f, 10.0f);
+	float initHeight = 0.0f;
+	//initHeight = mTerrain->calcMapHeight(0.0f, 0.0f);
+	mCamera->setPosition(0.0f, initHeight, 0.0f);
 }
 //-------------------------------------------------------------------------------//
 void TerrainHost::render(float frameTime)

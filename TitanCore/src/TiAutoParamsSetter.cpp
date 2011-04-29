@@ -11,7 +11,8 @@ namespace Titan
 	AutoParamsSetter::AutoParamsSetter()
 		:mCurrentCam(NULL), mCurrentPass(NULL), mCurrentRenderable(NULL),
 		mWorldMatrixDirty(true), mViewMatrixDirty(true), mProjMatrixDirty(true),
-		mViewProjMatrixDirty(true), mWorldViewMatrixDirty(true), mWorldViewProjMatrixDirty(true)
+		mViewProjMatrixDirty(true), mWorldViewMatrixDirty(true), mWorldViewProjMatrixDirty(true),
+		mCamPositionDirty(true)
 	{
 
 	}
@@ -35,6 +36,7 @@ namespace Titan
 		mViewMatrixDirty = true;
 		mViewProjMatrixDirty = true;
 		mProjMatrixDirty = true;
+		mCamPositionDirty = true;
 	}
 	//------------------------------------------------------------------------------//
 	void AutoParamsSetter::setWorldMatrix(const Matrix4& mat)
@@ -115,5 +117,15 @@ namespace Titan
 			mWorldViewProjMatrixDirty = false;
 		}
 		return mWorldViewProjMatrix;
+	}
+	//------------------------------------------------------------------------------//
+	const Vector4& AutoParamsSetter::getCameraPosition()
+	{
+		if(mCamPositionDirty)
+		{
+			mCameraPos = Vector4(mCurrentCam->getPosition());
+			mCamPositionDirty = false;
+		}
+		return mCameraPos;
 	}
 }

@@ -26,6 +26,17 @@ namespace Titan
 		//	Vector3	normal;
 		};
 
+		struct elevationData
+		{
+			float	minElevation;
+			float	maxElevation;
+			float	minNormalZ;
+			float	maxNormalZ;
+			float	strength;
+		};
+
+		typedef vector<elevationData>::type elevationDataVec;
+
 
 	public:
 		BaseTerrain();
@@ -47,6 +58,10 @@ namespace Titan
 		float readWorldHeight(uint16 mapIndex) const;
 
 		const Vector3& readWorldNormal(uint16 mapX, uint16 mapZ) const;
+
+		float calcMapHeight(float mapX, float mapY)const;
+
+		void calcMapNormal(Vector3& normal, float mapX, float mapZ)const;
 
 		const Vector2& getSectorSize() const { return mSectorSize;}
 
@@ -71,6 +86,14 @@ namespace Titan
 		uint8	getSectorVertex() const { return mSectorVerts; }
 
 		const MaterialPtr&	getMaterial() const;
+
+		void	setMaterial(const String&  name);
+
+		void	genBlendImage(Image& img, const elevationDataVec& elevDataVec);
+
+		uint16	getSectorCountX() const { return mSectorCountX;}
+
+		uint16	getSectorCountZ() const { return mSectorCountZ; }
 
 		
 	protected:

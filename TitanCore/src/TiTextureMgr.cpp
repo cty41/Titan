@@ -27,7 +27,7 @@ namespace Titan
 	TexturePtr TextureMgr::createManually(const String& name, const String& group, TexType type, 
 		uint width, uint height, uint mipmapLevel,TexUsage usage, PixelFormat format, TexPool pool)
 	{
-		CreatedResource res  = create(name, group);
+		CreatedResource res  = create(name, group, true);
 		TexturePtr tex = res.second;
 		if(res.first)
 		{
@@ -46,6 +46,18 @@ namespace Titan
 				"There has a same named " + name +" texture existed, we just return old one in case of security",
 				"TextureMgr::createManually");
 		}
+		return tex;
+	}
+	//------------------------------------------------------------------------------//
+	TexturePtr TextureMgr::load(const String& name, const String& group, TexType texType, int numMipmaps, PixelFormat desiredFormat)
+	{
+		CreatedResource res  = create(name, group);
+		TexturePtr tex = res.second;
+		tex->setTexType(texType);
+		tex->setMipmapLevel(numMipmaps);
+		tex->setPixelFormat(desiredFormat);
+		tex->load();
+
 		return tex;
 	}
 

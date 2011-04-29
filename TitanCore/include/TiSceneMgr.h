@@ -2,8 +2,8 @@
 #define _TITAN_SCENEMANAGER_HH
 
 #include "TiPrerequisites.h"
-
-#include "TitanMatrix4.h"
+#include "TiResourceGroupMgr.h"
+#include "TiMatrix4.h"
 
 namespace Titan
 {
@@ -41,6 +41,12 @@ namespace Titan
 
 		void resetViewProjMode();
 
+		void	setSkybox(const String& materialName, float distance = 3000, bool drawFirst = true, const String&  group = ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
+
+		void	disableSkybox();
+
+
+
 
 	protected:
 		SceneMgrType			mType;
@@ -65,6 +71,20 @@ namespace Titan
 		AutoParamsSetter*	mAutoParamsSetter;
 		bool			mShaderParamsOld;
 
+		ManualObject*	mSkybox;
+		SceneNode*		mSkyboxNode;
+		bool			mSkyBoxEnable;
+
+		enum BoxPlane
+		{
+			BP_FRONT = 0,
+			BP_BACK = 1,
+			BP_LEFT = 2,
+			BP_RIGHT = 3,
+			BP_UP = 4,
+			BP_DOWN = 5
+		};
+
 	protected:
 		virtual void	_updateSceneGraph();
 
@@ -77,6 +97,8 @@ namespace Titan
 		void			_setPassSettings(Pass* pass);
 
 		void			_updateShaderParams(const Pass* pass);
+
+		void			_updateSkybox(Camera* cam);
 	};
 
 	class _DllExport SceneMgrFactory : public GeneralAlloc

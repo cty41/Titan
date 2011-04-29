@@ -1,10 +1,10 @@
 #ifndef __TITANROOT_HH
 #define __TITANROOT_HH
 
-#include "StlHeader.h"
+#include "TiStlHeader.h"
 #include "TiPrerequisites.h"
 #include "TiSingleton.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiSceneMgr.h"
 
 
@@ -83,6 +83,7 @@ namespace Titan
 
 		FileSystemManager*		mFileSystemMgr;
 		ResourceGroupMgr*		mResourceGroupMgr;
+		ScriptCompilerMgr*		mScriptCompilerMgr;
 		MaterialMgr*			mMaterialMgr;
 		OverlayMgr*				mOverlayMgr;
 

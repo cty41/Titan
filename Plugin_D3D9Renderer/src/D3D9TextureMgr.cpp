@@ -14,9 +14,9 @@ namespace Titan
 
 	}
 	//-------------------------------------------------------------//
-	Resource* D3D9TextureMgr::createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams)
+	Resource* D3D9TextureMgr::createImpl(const String& name, ResourceHandle id, const String& group, bool isManual, AnyMap* extraParams)
 	{
-		D3D9Texture* pTex = TITAN_NEW D3D9Texture(this, name, id, group);
+		D3D9Texture* pTex = TITAN_NEW D3D9Texture(this, name, id, group, isManual);
 		return pTex;
 	}
 	//-------------------------------------------------------------//

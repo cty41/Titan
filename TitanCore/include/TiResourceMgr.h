@@ -3,7 +3,7 @@
 
 #include "TiPrerequisites.h"
 #include "TiResource.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiResourceGroupMgr.h"
 
 namespace Titan
@@ -24,7 +24,7 @@ namespace Titan
 
 		virtual ~ResourceMgr() = 0;
 
-		CreatedResource create(const String& name, const String& group = ResourceGroupMgr::GENERAL_RESOURCE_GROUP, AnyMap* extraParams = 0);
+		CreatedResource create(const String& name, const String& group = ResourceGroupMgr::GENERAL_RESOURCE_GROUP, bool isManual = false, AnyMap* extraParams = 0);
 
 		void			remove(const String& name);
 
@@ -34,7 +34,7 @@ namespace Titan
 
 		void			removeUnreferencedResources();
 
-		ResourcePtr		load(const String& name, const String& group = ResourceGroupMgr::GENERAL_RESOURCE_GROUP, AnyMap* extraParams = 0);
+		virtual ResourcePtr		load(const String& name, const String& group = ResourceGroupMgr::GENERAL_RESOURCE_GROUP, bool isManual = false, AnyMap* extraParams = 0);
 
 		void			unload(const String& name);
 
@@ -54,7 +54,7 @@ namespace Titan
 		virtual ResourcePtr getByName(const String& name, const String& groupName = ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
 	protected:
 
-		virtual Resource*	createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams) = 0;
+		virtual Resource*	createImpl(const String& name, ResourceHandle id, const String& group, bool isManual, AnyMap* extraParams) = 0;
 		
 		virtual	void		addImpl(ResourcePtr& res);
 

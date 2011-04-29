@@ -2,16 +2,19 @@
 #include "TiShaderParams.h"
 #include "TiStringFuncs.h"
 #include "TiAutoParamsSetter.h"
+#include "TiRenderable.h"
 
 namespace Titan
 {
 	ShaderParams::AutoConstantDef ShaderParams::gAutoConstantDefs[] = {
-		AutoConstantDef("World", ACT_WORLD_MATRIX, ET_FLOAT, 16),
-		AutoConstantDef("View", ACT_VIEW_MATRIX, ET_FLOAT, 16),
-		AutoConstantDef("Projection", ACT_PROJECTION_MATRIX, ET_FLOAT, 16),
-		AutoConstantDef("ViewProj", ACT_VIEWPROJ_MATRIX, ET_FLOAT, 16),
-		AutoConstantDef("WorldView", ACT_WORLDVIEW_MATRIX, ET_FLOAT, 16),
-		AutoConstantDef("WorldViewProj", ACT_WORLDVIEWPROJ_MATRIX, ET_FLOAT, 16),
+		AutoConstantDef("world", ACT_WORLD_MATRIX, ET_FLOAT, 16, EDT_NONE),
+		AutoConstantDef("view", ACT_VIEW_MATRIX, ET_FLOAT, 16, EDT_NONE),
+		AutoConstantDef("projection", ACT_PROJECTION_MATRIX, ET_FLOAT, 16, EDT_NONE),
+		AutoConstantDef("view_proj", ACT_VIEWPROJ_MATRIX, ET_FLOAT, 16, EDT_NONE),
+		AutoConstantDef("world_wiew", ACT_WORLDVIEW_MATRIX, ET_FLOAT, 16, EDT_NONE),
+		AutoConstantDef("world_view_proj", ACT_WORLDVIEWPROJ_MATRIX, ET_FLOAT, 16, EDT_NONE),
+		AutoConstantDef("camera_position", ACT_CAMERA_POSITION, ET_FLOAT, 3, EDT_NONE),
+		AutoConstantDef("custom", ACT_CUSTOM, ET_FLOAT, 4, EDT_INT),
 	};
 
 	void ShaderNamedConstants::genConstantDefArrayEntries(const String& paramName, const ShaderConstantDef& baseDef)
@@ -191,11 +194,30 @@ namespace Titan
 
 			}
 #endif
-			_setRawAutoConstant(indexUse->physicalIndex, acType, def->elementSize);
+			_setRawAutoConstant(indexUse->physicalIndex, acType, extraInfo, def->elementSize);
 		}
 	}
 	//------------------------------------------------------------------------------//
-	void ShaderParams::_setRawAutoConstant(size_t physicalIndex, AutoConstantType acType,size_t elementSize)
+	void ShaderParams::setNamedAutoConstant(const String& name, AutoConstantType acType, float extraInfo)
+	{
+		const ShaderConstantDef* def = _findNamedConstantDefinition(name, !mIgnoreMissingParams);
+		if(def != NULL)
+		{
+			//add sth later
+
+			ShaderRegisterIndexUse*	indexUse = _getFloatConstantRegisterIndexUse(def->registerIndex,  def->elementSize * def->arraySize);
+#if 0
+			//for variability
+			if (indexUse)
+			{
+
+			}
+#endif
+			_setRawAutoConstant(indexUse->physicalIndex, acType, extraInfo, def->elementSize);
+		}
+	}
+	//------------------------------------------------------------------------------//
+	void ShaderParams::_setRawAutoConstant(size_t physicalIndex, AutoConstantType acType, size_t extraInfo, size_t elementSize)
 	{
 		// update existing index if it exists
 		bool found = false;
@@ -206,13 +228,35 @@ namespace Titan
 			{
 				i->paramType = acType;
 				i->elementCount = elementSize;
+				i->data = extraInfo;
 
 				found = true;
 				break;
 			}
 		}
 		if (!found)
-			mAutoConstants.push_back(AutoConstantEntry(acType, physicalIndex, elementSize));
+			mAutoConstants.push_back(AutoConstantEntry(acType, physicalIndex, extraInfo, elementSize));
+	}
+	//------------------------------------------------------------------------------//
+	void ShaderParams::_setRawAutoConstant(size_t physicalIndex, AutoConstantType acType, float extraInfo, size_t elementSize)
+	{
+		// update existing index if it exists
+		bool found = false;
+		for (AutoConstantVec::iterator i = mAutoConstants.begin(); 
+			i != mAutoConstants.end(); ++i)
+		{
+			if (i->physicalIndex == physicalIndex)
+			{
+				i->paramType = acType;
+				i->elementCount = elementSize;
+				i->fData = extraInfo;
+
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+			mAutoConstants.push_back(AutoConstantEntry(acType, physicalIndex, extraInfo, elementSize));
 	}
 	//------------------------------------------------------------------------------//
 	const ShaderConstantDef* ShaderParams::_findNamedConstantDefinition(const String& name, bool throwExceptionIfMissing) const
@@ -465,6 +509,12 @@ namespace Titan
 				break;
 			case ACT_WORLDVIEWPROJ_MATRIX:
 				_writeRawConstant(it->physicalIndex, setter->getWorldViewProjMatrix(), it->elementCount);
+				break;
+			case ACT_CAMERA_POSITION:
+				_writeRawConstant(it->physicalIndex, setter->getCameraPosition(), it->elementCount);
+				break;
+			case ACT_CUSTOM:
+				setter->getRenderable()->updateCustomShaderParams(*it, this);
 				break;
 			default: break;
 			}

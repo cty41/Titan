@@ -23,5 +23,13 @@ namespace Titan
 			mShader->load();
 		}
 	}
+	//------------------------------------------------------------------------------//
+	void ShaderUnit::_unload()
+	{
+		if (mShader->isLoaded())
+		{
+			mShader->unload();
+		}
+	}
 
 }

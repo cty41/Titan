@@ -3,7 +3,7 @@
 
 
 #include "TiPrerequisites.h"
-#include "TitanColor.h"
+#include "TiColor.h"
 
 namespace Titan
 {
@@ -18,8 +18,8 @@ namespace Titan
 		SBF_DEST_ALPHA,
 		SBF_SOURCE_ALPHA,
 		SBF_ONE_MINUS_DEST_ALPHA,
-		SBF_ONE_MINUS_SOURCE_ALPHA
-
+		SBF_ONE_MINUS_SOURCE_ALPHA,
+		SBF_INVALID = 0x7fffffff
 	};
 
 
@@ -29,7 +29,8 @@ namespace Titan
 		SBO_SUBTRACT,
 		SBO_REVERSE_SUBTRACT,
 		SBO_MIN,
-		SBO_MAX
+		SBO_MAX,
+		SBO_INVALID = 0x7fffffff
 	};
 }
 #endif

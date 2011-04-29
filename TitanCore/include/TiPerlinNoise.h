@@ -2,7 +2,7 @@
 #define _TITAN_PERLIN_H
 
 #include "TiPrerequisites.h"
-#include "TitanMath.h"
+#include "TiMath.h"
 #include "TiVector2.h"
 #include "TiVector4.h"
 

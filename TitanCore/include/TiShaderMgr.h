@@ -16,13 +16,13 @@ namespace Titan
 
 		~ShaderMgr();
 
-		ShaderPtr	createShader(const String& source, const String& name, const String& group, const String& profile, ShaderType type);
+		ShaderPtr	createShader(const String& source, const String& name, const String& group, const String& language, ShaderType type);
 
-		ShaderPtr	createShaderFromFile(const String& file, const String& name, const String& group, const String& profile, ShaderType type);
+		ShaderPtr	createShaderFromFile(const String& file, const String& name, const String& group, const String& language, ShaderType type);
 
 		ShaderParamsPtr	createShaderParams();
 
-		virtual ResourcePtr create(const String& name, const String& group, const String& profile, ShaderType type);
+		virtual ResourcePtr create(const String& name, const String& group, ShaderType type);
 
 		
 

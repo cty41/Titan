@@ -7,15 +7,18 @@
 namespace Titan
 {
 	//warning!!now I do not consider the multi pass rendering ,so if you use that there will get error!
+	enum RenderGroupType
+	{
+		RGT_Background	= 0,
+		RGT_Sky_Early = 4,
+		RGT_SceneObject	= 16,
+		RGT_Sky_Late = 64,
+		RGT_HUD			= 128,
+	};
+
 	class _DllExport RenderQueue : public GeneralAlloc
 	{
 	public:
-		enum RenderGroupType
-		{
-			RGT_Background	= 0,
-			RGT_SceneObject	= 16,
-			RGT_HUD			= 128,
-		};
 
 		enum SortStrategy
 		{

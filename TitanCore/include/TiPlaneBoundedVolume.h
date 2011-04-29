@@ -5,7 +5,7 @@
 #include "TiPrerequisites.h"
 #include "TitanAABB.h"
 #include "TitanSphere.h"
-#include "TitanMath.h"
+#include "TiMath.h"
 #include "TiPlane.h"
 
 namespace Titan 

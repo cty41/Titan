@@ -15,7 +15,7 @@ namespace Titan
 		removeAll();
 	}
 	//-------------------------------------------------------------------------------//
-	ResourceMgr::CreatedResource ResourceMgr::create(const String& name, const String& group, AnyMap* extraParams /* = 0 */)
+	ResourceMgr::CreatedResource ResourceMgr::create(const String& name, const String& group, bool isManual, AnyMap* extraParams)
 	{
 		//if this resource has been created
 		ResourceMap::iterator it = mResourceMap.find(name);
@@ -26,7 +26,7 @@ namespace Titan
 		else
 		{
 			ResourceHandle id = getNextHandle();
-			Resource* res= createImpl(name, id, group, extraParams);
+			Resource* res= createImpl(name, id, group, isManual, extraParams);
 			ResourcePtr pRes(res);
 			//add to 
 			addImpl(pRes);
@@ -71,13 +71,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void ResourceMgr::removeAll()
 	{
-		ResourceHandleMap::iterator it = mResourceHandleMap.begin(), itend = mResourceHandleMap.end();
-		while (it != itend)
-		{
-			it->second.setNull();
-			mResourceHandleMap.erase(it++);
-		}
-
+		mResourceHandleMap.clear();
 		mResourceMap.clear();
 	}
 	//-------------------------------------------------------------------------------//
@@ -102,9 +96,9 @@ namespace Titan
 		}
 	}
 	//-------------------------------------------------------------------------------//
-	ResourcePtr ResourceMgr::load(const String& name, const String& group, AnyMap* extraParams)
+	ResourcePtr ResourceMgr::load(const String& name, const String& group, bool isManual, AnyMap* extraParams)
 	{
-		CreatedResource created = create(name, group, extraParams);
+		CreatedResource created = create(name, group, isManual, extraParams);
 
 		created.second->load();
 

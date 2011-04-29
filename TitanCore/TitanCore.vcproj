@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./include/;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS"
+				AdditionalIncludeDirectories="./include/;&quot;./include/rapidxml-1.13/&quot;;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;TITAN_EXPORT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -124,7 +124,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="./include/;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS"
+				AdditionalIncludeDirectories="./include/;&quot;./include/rapidxml-1.13/&quot;;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;TITAN_EXPORT"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -192,6 +192,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiBaseTerrain.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiBaseTerrainSection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiCamera.cpp"
 				>
 				<FileConfiguration
@@ -212,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiColor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TICommonFileSystem.cpp"
 				>
 			</File>
@@ -228,6 +240,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiDataType.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiDynLib.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiException.cpp"
 				>
 			</File>
@@ -236,7 +256,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\TIFrustum.cpp"
+				RelativePath=".\src\TiFont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiFontMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiFrustum.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -256,6 +284,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiImage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiIndexBuffer.cpp"
 				>
 			</File>
@@ -272,11 +304,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiMath.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiMatrix3.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiMatrix4.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiMemoryNedAlloc.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiMemoryStdAlloc.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiMemoryTracker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiOverlayElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiOverlayMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiOverlayPanelElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiOverlayTextElement.cpp"
 				>
 			</File>
 			<File
@@ -285,6 +349,34 @@
 			</File>
 			<File
 				RelativePath=".\src\TiPerlinNoise.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiPixelFormat.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiPlane.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiQuadtree.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiQuadtreeNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiQuadtreeSceneMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiQuaternion.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiReflector.cpp"
 				>
 			</File>
 			<File
@@ -340,6 +432,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiScriptCompiler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiScriptCompilerMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiScriptTranslator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TiScriptTranslatorMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiShader.cpp"
 				>
 			</File>
@@ -361,86 +469,6 @@
 			</File>
 			<File
 				RelativePath=".\src\TiStringFuncs.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanBaseTerrain.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanBaseTerrainSection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanColor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanDataType.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanDynLib.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanFont.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanFontMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanMath.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanMatrix3.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanMatrix4.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanOverlayElement.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanOverlayMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanOverlayPanelElement.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanOverlayTextElement.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanPixelFormat.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanPlane.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanQuadtree.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanQuadtreeNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanQuadtreeSceneMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TitanQuaternion.cpp"
 				>
 			</File>
 			<File
@@ -519,27 +547,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\rapidxml-1.13\rapidxml.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\rapidxml-1.13\rapidxml_iterators.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\rapidxml-1.13\rapidxml_print.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\rapidxml-1.13\rapidxml_utils.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\StlHeader.h"
+				RelativePath=".\include\TiAny.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\TiAutoParamsSetter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiBaseTerrain.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiBaseTerrainSection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiBitOperation.h"
 				>
 			</File>
 			<File
@@ -552,6 +576,14 @@
 			</File>
 			<File
 				RelativePath=".\include\TiChunkTerrainSection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiColor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiCommon.h"
 				>
 			</File>
 			<File
@@ -571,6 +603,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiDataType.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiDynLib.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiException.h"
 				>
 			</File>
@@ -580,6 +620,14 @@
 			</File>
 			<File
 				RelativePath=".\include\TiFileSystemMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiFont.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiFontMgr.h"
 				>
 			</File>
 			<File
@@ -596,6 +644,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TiHelperMethods.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiImage.h"
 				>
 			</File>
 			<File
@@ -619,6 +671,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiMath.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMatrix3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMatrix4.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiMemoryAllocatedObject.h"
 				>
 			</File>
@@ -628,6 +692,10 @@
 			</File>
 			<File
 				RelativePath=".\include\TiMemoryNedAlloc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMemoryStdAlloc.h"
 				>
 			</File>
 			<File
@@ -643,6 +711,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiOverlayElement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiOverlayMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiOverlayPanelElement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiOverlayTextElement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiPass.h"
 				>
 			</File>
@@ -651,7 +735,51 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiPixelFormat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiPlane.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiPlaneBoundedVolume.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiPlugin.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiPrerequisites.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiQuadtree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiQuadtreeNode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiQuadtreeSceneMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiQuaternion.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRay.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiRect2D.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiReflector.h"
 				>
 			</File>
 			<File
@@ -715,6 +843,26 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiScriptCompiler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiScriptCompilerMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiScriptLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiScriptTranslator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiScriptTranslatorMgr.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiShader.h"
 				>
 			</File>
@@ -739,6 +887,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiStlHeader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiStringConverter.h"
 				>
 			</File>
@@ -755,23 +907,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanAny.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanBaseTerrain.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanBaseTerrainSection.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\TitanBitFlags.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanBitOperation.h"
 				>
 			</File>
 			<File
@@ -779,31 +915,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanColor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanCommon.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\TitanConfig.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanDataType.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanDynLib.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanFont.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanFontMgr.h"
 				>
 			</File>
 			<File
@@ -815,75 +927,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\TitanMath.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanMatrix3.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanMatrix4.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\TitanNumericTools.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanOverlayElement.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanOverlayMgr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanOverlayPanelElement.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanOverlayTextElement.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanPixelFormat.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanPlane.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanPlaneBoundedVolume.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanPlugin.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanQuadtree.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanQuadtreeNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanQuadtreeSceneMgr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanQuaternion.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanRay.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\TitanRect2D.h"
 				>
 			</File>
 			<File
@@ -935,6 +979,26 @@
 				>
 				<File
 					RelativePath=".\include\Win32\Win32TimerImp.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="rapidxml"
+				>
+				<File
+					RelativePath=".\include\rapidxml-1.13\rapidxml.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\include\rapidxml-1.13\rapidxml_iterators.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\include\rapidxml-1.13\rapidxml_print.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\include\rapidxml-1.13\rapidxml_utils.hpp"
 					>
 				</File>
 			</Filter>

@@ -14,7 +14,7 @@ namespace Titan
 		~D3D9TextureMgr();
 
 	protected:
-		Resource* createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams);
+		Resource* createImpl(const String& name, ResourceHandle id, const String& group, bool isManual, AnyMap* extraParams);
 
 
 	};

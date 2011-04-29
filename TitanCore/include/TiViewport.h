@@ -2,7 +2,7 @@
 #define _TITAN_VIEWPORT_HH
 
 #include "TiPrerequisites.h"
-#include "TitanColor.h"
+#include "TiColor.h"
 
 namespace Titan
 {

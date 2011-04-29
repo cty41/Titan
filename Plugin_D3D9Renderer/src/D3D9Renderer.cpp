@@ -210,7 +210,7 @@ namespace Titan
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 set Shading mode failed ", "void D3D9Renderer::_setShadeMode(ShadeOptions so)");
 	}
 	//-------------------------------------------------------------------------------//
-	void D3D9Renderer::_setFillMode(PolygonMode pm)
+	void D3D9Renderer::_setPolygonMode(PolygonMode pm)
 	{
 		if(FAILED(__setRenderState(D3DRS_FILLMODE, D3D9Mappings::convertToD3D9(pm))))
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3D9 set Polygon mode failed ", "void D3D9Renderer::_setFillMode(PolygonMode pm)");
@@ -587,7 +587,7 @@ namespace Titan
 		if(!pTex.isNull())
 		{
 			D3D9Texture* dTex = static_cast<D3D9Texture*>(pTex.getPointer());
-			IDirect3DBaseTexture9*  iTex = dTex->getBaseTexture();
+			IDirect3DBaseTexture9*  iTex = dTex->getD3dTexture();
 			hr = mpD3dDevice->SetTexture(stage, iTex);
 			if(FAILED(hr))
 			{
@@ -649,12 +649,6 @@ namespace Titan
 				"Got error:" + errMsg + " when set TexCoordSet",
 				"D3D9Renderer::_setTexCoordSet");
 		}
-	}
-	//-------------------------------------------------------------------------------//
-	void D3D9Renderer::resumeFixFunction()
-	{
-		mpD3dDevice->SetVertexShader(NULL);
-		mpD3dDevice->SetPixelShader(NULL);
 	}
 	//-------------------------------------------------------------------------------//
 	void D3D9Renderer::_setSceneBlending(SceneBlendFactor sourceFactor, SceneBlendFactor destFactor, SceneBlendOperation op)
@@ -859,6 +853,10 @@ namespace Titan
 			}
 		}
 	}
-
+	//------------------------------------------------------------------------------//
+	void D3D9Renderer::_setTextureMatrix(size_t unit, const Matrix4& xform)
+	{
+		//add later
+	}
 
 }

@@ -3,15 +3,16 @@
 
 #include "TiPrerequisites.h"
 #include "TiTextureUnit.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TitanBlendMode.h"
 #include "TiIteratorWrapper.h"
 #include "TiShaderUnit.h"
+#include "TiReflector.h"
 
 namespace Titan
 {
 
-	class _DllExport Pass : public GeneralAlloc
+	class _DllExport Pass : public Reflector,  public GeneralAlloc
 	{
 	public:
 		typedef vector<TextureUnit*>::type TextureUnitVec;
@@ -32,6 +33,8 @@ namespace Titan
 		TextureUnitVecIterator	getTextureUnitVecIterator() { return TextureUnitVecIterator(mTextureUnitVec.begin(), mTextureUnitVec.end());}
 
 		ConstTextureUnitVecIterator	getTextureUnitVecIterator() const{ return ConstTextureUnitVecIterator(mTextureUnitVec.begin(), mTextureUnitVec.end());}
+
+		TextureUnit*	getTextureUnit(uint idx);
 
 		size_t		getPassIndex() const { return mIndex; }
 
@@ -93,6 +96,10 @@ namespace Titan
 
 		void		setSceneBlendOperation(SceneBlendOperation sbo){ mBlendOperation = sbo; }
 
+		SceneBlendOperation getAlphaSceneBlendOperation() const { return mAlphaBlendOperation; }
+
+		void		setAlphaSceneBlendOperation(SceneBlendOperation sbo){ mAlphaBlendOperation = sbo; }
+
 		bool		isProgrammable() const {  return (mVertexShaderUnit || mPixelShaderUnit);}
 
 		bool		hasVertexShader() const { return (mVertexShaderUnit? true : false);}
@@ -119,7 +126,11 @@ namespace Titan
 
 		void		_load();
 
+		bool		isLoaded()const;
+
 		void		_unload();
+
+		const String&  getGroup() const;
 
 	protected:
 		Material*		mParent;
@@ -151,6 +162,150 @@ namespace Titan
 
 		ShaderUnit*		mVertexShaderUnit;
 		ShaderUnit*		mPixelShaderUnit;
+
+	protected:
+
+		virtual void setupParamsCmd();
+
+		class _DllExport CullModeCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport PolygonModeCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport ShadeModeCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport SrcBlendCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport DstBlendCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		static SceneBlendFactor mapToBlendFactor(const String& val);
+
+		static String blendFactorToString(SceneBlendFactor sbf);
+
+		static SceneBlendOperation mapToBlendOp(const String&  val);
+
+		static String blendOpToString(SceneBlendOperation sbo);
+
+		static CompareFunction mapToCompareFunc(const String&  val);
+
+		static String compareFuncToString(CompareFunction cf);
+
+
+		class _DllExport SrcBlendAlphaCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport DstBlendAlphaCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport BlendOperationCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport AlphaBlendOperationCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport DepthCheckCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport DepthFuncCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport DepthWriteCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport SortTransparentCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport LightEnableCmd: public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		static CullModeCmd			msCullModeCmd;
+		static PolygonModeCmd		msPolygonModeCmd;
+		static ShadeModeCmd			msShadeModeCmd;
+		static SrcBlendCmd			msSrcBlendCmd;
+		static DstBlendCmd			msDstBlendCmd;
+		static SrcBlendAlphaCmd		msSrcBlendAlphaCmd;
+		static DstBlendAlphaCmd		msDstBlendAlphaCmd;
+		static BlendOperationCmd	msBlendOperationCmd;
+		static AlphaBlendOperationCmd	msAlphaBlendOperationCmd;
+		static DepthCheckCmd		msDepthCheckCmd;
+		static DepthWriteCmd		msDepthWriteCmd;
+		static DepthFuncCmd			msDepthFuncCmd;
+		static SortTransparentCmd	msSortTransparentCmd;
+		static LightEnableCmd		msLightEnableCmd;
 	};
 }
 

@@ -41,7 +41,7 @@ namespace Titan
 		{
 			if(!mpFont->getMaterial().isNull())
 			{
-				queue->addRenderable(this, RenderQueue::RGT_HUD, mZOrder);
+				queue->addRenderable(this, RGT_HUD, mZOrder);
 			}
 		}
 	}

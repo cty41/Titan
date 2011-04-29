@@ -9,7 +9,7 @@ namespace Titan
 	class _D3D9DllExport D3D9Texture : public Texture
 	{
 	public:
-		D3D9Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group);
+		D3D9Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		~D3D9Texture();
 
@@ -17,7 +17,7 @@ namespace Titan
 
 		void unlockRect(uint level);
 
-		IDirect3DBaseTexture9* getBaseTexture(){ return m2DTexture; }	
+		IDirect3DBaseTexture9* getD3dTexture() const;
 
 	protected:
 		void	loadImpl();
@@ -34,13 +34,28 @@ namespace Titan
 
 		void	_perlinNoiseImpl(float scale, int octaves, float falloff);
 
-		void	_createCoreObject();
+		virtual void	_createCoreObject();
 
 		void	_create2DTex();
 
+		void	_create3DTex();
+
+		void	_createCubeTex();
+
+		virtual void _loadImgsImpl(const ConstImagePtrList& images);
+
+		void	freeD3d9Tex();
+
 
 	protected:
-		IDirect3DTexture9*		m2DTexture;
+		union	TexUnion
+		{
+			IDirect3DTexture9*	pTex;
+			IDirect3DCubeTexture9*	pCubeTex;
+			IDirect3DVolumeTexture9*	pVolTex;
+		};
+
+		TexUnion	mTexUnion;
 
 	};
 

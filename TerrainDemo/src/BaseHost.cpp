@@ -52,9 +52,9 @@ void BaseHost::initResources()
 		}
 		sit.next();
 	}
-
+#if 1
 	Titan::ResourceGroupMgr::getSingltonPtr()->initResourceGroup(Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP);
-
+#endif
 }
 //-------------------------------------------------------------------------------//
 void BaseHost::loadResources()
@@ -95,12 +95,12 @@ void BaseHost::setup()
 
 	Titan::Renderer* renderer = mRoot->getActiveRenderer();
 
-	renderer->_setFillMode(Titan::PM_WIREFRAME);
+	//renderer->_setPolygonMode(Titan::PM_WIREFRAME);
 	renderer->_setCullingMode(Titan::CULL_NONE);
-	renderer->_setLightEnable(false);
+
 
 	mFPSLabel = dynamic_cast<Titan::OverlayTextElement*>(Titan::OverlayMgr::getSingletonPtr()->createElement("OverlayTextElement", "testText"));
-	mFPSLabel->initialise("cuckoo.ttf", 0, 520, 16, Titan::OverlayTextElement::TA_Left);
+	mFPSLabel->initialise("text", 0, 520, 14, Titan::OverlayTextElement::TA_Left);
 }
 //-------------------------------------------------------------------------------//
 void BaseHost::Run()

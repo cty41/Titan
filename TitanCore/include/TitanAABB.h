@@ -6,8 +6,8 @@
 #include "TiPrerequisites.h"
 
 #include "TiVector3.h"
-#include "TitanMatrix4.h"
-#include "TitanRect2D.h"
+#include "TiMatrix4.h"
+#include "TiRect2D.h"
 
 namespace Titan 
 {

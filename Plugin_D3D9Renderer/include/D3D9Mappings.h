@@ -2,7 +2,7 @@
 #define _TITAN_D3D9MAPPINGS_H
 
 #include "D3D9Prerequisites.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiHardwareBuffer.h"
 #include "TiTexture.h"
 #include "TiShaderParams.h"

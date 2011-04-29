@@ -8,7 +8,7 @@ namespace Titan
 	const float Frustum::INFINITE_FAR_PLANE_ADJUST = 0.00001f;
 	Frustum::Frustum()
 		:mProjType(PT_PERSPECTIVE),  mOrientation(Quaternion::IDENTITY),
-		mPosition(Vector3::ZERO), mUpdateView(true), mFarDist(3000.0f),
+		mPosition(Vector3::ZERO), mUpdateView(true), mFarDist(6000.0f),
 		mNearDist(1.0f), mAspect(4.0f/3.0f), mUpdateProj(true), mUpdateFrustumPlanes(true),
 		mUpdateWorldSpaceCorners(true)
 	{

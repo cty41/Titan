@@ -7,8 +7,12 @@
 
 namespace Titan
 {
-	Shader::Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group)
-		:Resource(mgr, name, id, group), mHasCompiledError(false), mConstantDefsBuilt(false),
+	Shader::ShaderFileCmd	Shader::msShaderFileCmd;
+	Shader::ShaderSrcCmd	Shader::msShaderSrcCmd;
+	Shader::ShaderLanguageCmd Shader::msShaderLanguageCmd;
+
+	Shader::Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual)
+		:Resource(mgr, name, id, group, isManual), mHasCompiledError(false), mConstantDefsBuilt(false),
 		mLoadFromFile(false)
 	{
 
@@ -109,5 +113,48 @@ namespace Titan
 	{
 		if (recreateIfExists || mConstantDefs.isNull())
 			mConstantDefs = ShaderNamedConstantsPtr(TITAN_NEW ShaderNamedConstants());
+	}
+	//------------------------------------------------------------------------------//
+	void Shader::setupParamsCmd()
+	{
+		mClassParamsDict->addParamsCommand("src", &msShaderSrcCmd);
+		mClassParamsDict->addParamsCommand("file", &msShaderFileCmd);
+		mClassParamsDict->addParamsCommand("language", &msShaderLanguageCmd);
+	}
+
+	void Shader::ShaderFileCmd::setter(void* target, const String& val)
+	{
+		Shader* shader = static_cast<Shader*>(target);
+		shader->setFileName(val);
+	}
+	//------------------------------------------------------------------------------//
+	String Shader::ShaderFileCmd::getter(void* target)
+	{
+		Shader* shader = static_cast<Shader*>(target);
+		return shader->getFileName();
+	}
+	//------------------------------------------------------------------------------//
+	void Shader::ShaderSrcCmd::setter(void* target, const String& val)
+	{
+		Shader* shader = static_cast<Shader*>(target);
+		shader->setSource(val);
+	}
+	//------------------------------------------------------------------------------//
+	String Shader::ShaderSrcCmd::getter(void* target)
+	{
+		Shader* shader = static_cast<Shader*>(target);
+		return shader->getSource();
+	}
+	//------------------------------------------------------------------------------//
+	void Shader::ShaderLanguageCmd::setter(void* target, const String& val)
+	{
+		Shader* shader = static_cast<Shader*>(target);
+		shader->setLanguage(val);
+	}
+	//------------------------------------------------------------------------------//
+	String Shader::ShaderLanguageCmd::getter(void* target)
+	{
+		Shader* shader = static_cast<Shader*>(target);
+		return shader->getLanguage();
 	}
 }

@@ -2,9 +2,9 @@
 #define __TITAN_RENDERER__HH
 
 #include "TiPrerequisites.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiRenderData.h"
-#include "TitanColor.h"
+#include "TiColor.h"
 #include "TitanBlendMode.h"
 #include "TiTextureUnit.h"
 #include "TiShader.h"
@@ -95,7 +95,7 @@ namespace Titan
 
 		virtual void			_setLightEnable(bool enable) = 0;
 
-		virtual void			_setFillMode(PolygonMode pm) = 0;
+		virtual void			_setPolygonMode(PolygonMode pm) = 0;
 
 		virtual void			_setDepthCheck(bool state) = 0;
 
@@ -130,15 +130,11 @@ namespace Titan
 
 		virtual float			getMinDepthValue() = 0;
 
-		virtual void			resumeFixFunction() = 0;
-
 		virtual float			getVerticalTexelOffset() = 0;
 
 		virtual float			getHorizontalTexelOffset() = 0;
 
-
-
-
+		virtual void			_setTextureMatrix(size_t unit, const Matrix4& xform) = 0;
 
 	protected:
 		int						mHeight;

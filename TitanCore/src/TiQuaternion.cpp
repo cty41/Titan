@@ -9,8 +9,8 @@
 
 #include "TiQuaternion.h"
 
-#include "TitanMath.h"
-#include "TitanMatrix3.h"
+#include "TiMath.h"
+#include "TiMatrix3.h"
 #include "TiVector3.h"
 
 namespace Titan {

@@ -8,17 +8,29 @@
 
 namespace Titan
 {
-	D3D9Texture::D3D9Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group)
-		: Texture(mgr, name, id, group), m2DTexture(0)
+	D3D9Texture::D3D9Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group, bool isManual)
+		: Texture(mgr, name, id, group, isManual)
 	{
-
 	}
 	//-------------------------------------------------------------//
 	D3D9Texture::~D3D9Texture()
 	{
-		if(mType == TT_2D)
+		freeD3d9Tex();
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Texture::freeD3d9Tex()
+	{
+		if(mType == TT_2D || mType == TT_1D)
 		{
-			SAFE_RELEASE(m2DTexture);
+			SAFE_RELEASE(mTexUnion.pTex);
+		}
+		else if(mType == TT_3D)
+		{
+			SAFE_RELEASE(mTexUnion.pVolTex);
+		}
+		else
+		{
+			SAFE_RELEASE(mTexUnion.pCubeTex);
 		}
 	}
 	void fromD3DLock(PixelBox &rval, const D3DLOCKED_RECT &lrect)
@@ -132,10 +144,10 @@ namespace Titan
 			if(rect != NULL)
 			{
 				RECT _rect = toD3DRECT(*rect);
-				hr = m2DTexture->LockRect(level, &lockedRect, &_rect, flags);
+				hr = mTexUnion.pTex->LockRect(level, &lockedRect, &_rect, flags);
 			}
 			else
-				hr = m2DTexture->LockRect(level, &lockedRect, NULL, flags);
+				hr = mTexUnion.pTex->LockRect(level, &lockedRect, NULL, flags);
 			if(FAILED(hr))
 			{
 				String errMsg = DXGetErrorDescription(hr);
@@ -153,7 +165,7 @@ namespace Titan
 		HRESULT hr;
 		if(mType == TT_2D)
 		{
-			if(FAILED(hr = m2DTexture->UnlockRect(level)))
+			if(FAILED(hr = mTexUnion.pTex->UnlockRect(level)))
 			{
 				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Texture unlock rect failed",
 					"D3D9Texture::unlockRect");
@@ -172,14 +184,14 @@ namespace Titan
 	//-------------------------------------------------------------//
 	void D3D9Texture::unloadImpl()
 	{
-		if(mType == TT_2D)
-		{
-			SAFE_RELEASE(m2DTexture);
-		}
+		freeD3d9Tex();
 	}
 	//------------------------------------------------------------------------------//
 	void D3D9Texture::prepareImpl()
 	{
+		if (isManualLoaded())
+			return;
+
 		DataStreamPtr dataStream = ResourceGroupMgr::getSingltonPtr()->openResource(mName, mGroup);
 		mPreparedData = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(dataStream));
 	}
@@ -210,7 +222,7 @@ namespace Titan
 			d3dPool,
 			D3DX_DEFAULT, D3DX_DEFAULT, 
 			0, NULL, NULL, 
-			&m2DTexture)))
+			&mTexUnion.pTex)))
 		{
 			String errMsg = DXGetErrorDescription(hr);
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
@@ -219,7 +231,7 @@ namespace Titan
 		}
 
 		D3DSURFACE_DESC texDesc;
-		m2DTexture->GetLevelDesc(0, & texDesc);
+		mTexUnion.pTex->GetLevelDesc(0, & texDesc);
 		mWidth = texDesc.Width;
 		mHeight = texDesc.Height;
 		mPixelFormat = D3D9Mappings::convertToTitan(texDesc.Format);
@@ -227,13 +239,51 @@ namespace Titan
 	//-------------------------------------------------------------//
 	void D3D9Texture::_loadCubeTex()
 	{
+		DWORD usage = 0;
+		if(mUsage == TU_DYNAMIC)
+			usage |= D3DUSAGE_DYNAMIC;
+		else if(mUsage == TU_RENDERTARGET)
+			usage |= D3DUSAGE_RENDERTARGET;
+		LPDIRECT3DDEVICE9 pD3D9Device = D3D9Renderer::getSingleton().__getD3D9Device();
+		D3DXIMAGE_INFO imageInfo;
+		HRESULT hr;
+		hr = D3DXCreateCubeTextureFromFileInMemoryEx(
+			pD3D9Device,
+			mPreparedData->getPtr(), mPreparedData->size(),
+			D3DX_DEFAULT, mMipmapsLevel,
+			usage,D3DFMT_FROM_FILE,
+			D3D9Mappings::convertD3D9Pool(mPool),
+			D3DX_DEFAULT,
+			D3DX_DEFAULT,
+			0, &imageInfo, NULL,
+			&mTexUnion.pCubeTex);
+
+		if(FAILED(hr))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"create cube texture failed : " + errMsg,
+				"D3D9Texture::_loadCubeTex");
+			return ;
+		}
+
+		mWidth = imageInfo.Width;
+		mHeight = imageInfo.Height;
+		mMipmapsLevel = imageInfo.MipLevels;
+		mPixelFormat = D3D9Mappings::convertToTitan(imageInfo.Format);
+		mDepth = imageInfo.Depth;
+
 
 	}
 	//-------------------------------------------------------------//
 	void D3D9Texture::_createCoreObject()
 	{
-		if(mType == TT_2D)
+		if(mType == TT_2D || mType == TT_1D)
 			_create2DTex();
+		else if(mType == TT_3D)
+			_create3DTex();
+		else
+			_createCubeTex();
 
 	}
 	//-------------------------------------------------------------//
@@ -252,10 +302,84 @@ namespace Titan
 			mMipmapsLevel,
 			usage, D3D9Mappings::convertD3D9Format(mPixelFormat),
 			D3D9Mappings::convertD3D9Pool(mPool),
-			&m2DTexture)))
+			&mTexUnion.pTex)))
 		{
 			String errMsg = DXGetErrorDescription(hr);
 			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3DXCreateTexture failed: " + errMsg, "D3D9Texture::_create2DTex()");
+		}
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Texture::_create3DTex()
+	{
+
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Texture::_createCubeTex()
+	{
+#if 0
+		DWORD usage = 0;
+		if(mUsage == TU_DYNAMIC)
+			usage |= D3DUSAGE_DYNAMIC;
+		else if(mUsage == TU_RENDERTARGET)
+			usage |= D3DUSAGE_RENDERTARGET;
+
+		LPDIRECT3DDEVICE9 pD3D9Device = D3D9Renderer::getSingleton().__getD3D9Device();
+		HRESULT hr ;
+		if(FAILED( hr = D3DXCreateCubeTexture(pD3D9Device, 
+			mWidth, mHeight,
+			mMipmapsLevel,
+			usage, D3D9Mappings::convertD3D9Format(mPixelFormat),
+			D3D9Mappings::convertD3D9Pool(mPool),
+			&mTexUnion.pTex)))
+		{
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3DXCreateTexture failed: " + errMsg, "D3D9Texture::_create2DTex()");
+		}
+#endif
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Texture::_loadImgsImpl(const ConstImagePtrList& images)
+	{
+		IDirect3DSurface9* pDstSurface;
+		HRESULT hr;
+		if(mType == TT_2D)
+		{
+			//change later, about mipmap
+			for(uint i = 0;i < 1; ++ i)
+			{
+				if(FAILED(hr = mTexUnion.pTex->GetSurfaceLevel(i, & pDstSurface)))
+				{
+					String errMsg = DXGetErrorDescription(hr);
+					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+						"get textures surface failed : " + errMsg,
+						"D3D9Texture::_loadImgsImpl");
+					SAFE_RELEASE(pDstSurface);
+					return;
+				}
+				RECT srcRect;
+				srcRect.left = 0;
+				srcRect.right = mWidth;
+				srcRect.top = 0;
+				srcRect.bottom = mHeight;
+
+				if(FAILED(hr = D3DXLoadSurfaceFromMemory(pDstSurface,
+					NULL, NULL, 
+					images[i]->getData(), 
+					D3D9Mappings::convertD3D9Format(PF_A8R8G8B8),
+					images[i]->getWidth() * images[i]->getBytesPerPixel(),
+					NULL,
+					&srcRect,
+					D3DX_DEFAULT, 0)))
+				{
+					String errMsg = DXGetErrorDescription(hr);
+					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+						"create textures surface failed" + errMsg,
+						"D3D9Texture::_loadImgsImpl");
+					return;
+				}
+				
+				SAFE_RELEASE(pDstSurface);
+			}
 		}
 	}
 	//-------------------------------------------------------------//
@@ -268,20 +392,29 @@ namespace Titan
 		packet.sizeX = (uint16)mWidth;
 		packet.sizeY = (uint16)mHeight;
 
-		if (m2DTexture)
+		HRESULT hr;
+		if(FAILED(hr = D3DXFillTexture(          
+			mTexUnion.pTex,
+			perlinCallback,
+			(LPVOID) &packet)))
 		{
-			HRESULT hr;
-			if(FAILED(hr = D3DXFillTexture(          
-				m2DTexture,
-				perlinCallback,
-				(LPVOID) &packet)))
-			{
-				String errMsg = DXGetErrorDescription(hr);
-				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-					"generate Perlin Noise Texture failed :" + errMsg,
-						"D3D9Texture::_perlinNoiseImpl")
-			}
+			String errMsg = DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"generate Perlin Noise Texture failed :" + errMsg,
+				"D3D9Texture::_perlinNoiseImpl")
 		}
+	}
+	//------------------------------------------------------------------------------//
+	inline IDirect3DBaseTexture9*	D3D9Texture::getD3dTexture() const
+	{
+		if (mType == TT_2D || TT_1D)
+		{
+			return mTexUnion.pTex;
+		}
+		else if(mType == TT_3D)
+			return mTexUnion.pVolTex;
+		else
+			return mTexUnion.pCubeTex;
 	}
 
 	void  WINAPI perlinCallback(D3DXVECTOR4* pOut, const D3DXVECTOR2* pTexCoord, const D3DXVECTOR2* pTexelSize, void* pData)

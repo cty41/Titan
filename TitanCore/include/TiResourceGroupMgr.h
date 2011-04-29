@@ -24,7 +24,10 @@ namespace Titan
 				pFileSystem = fileSystem;
 			}
 		};
-		typedef map<String, LocationInfo>::type	FileLocationMap;
+		typedef map<String, LocationInfo*>::type	FileLocationMap;
+		//use to collect found scripts
+		typedef SharedPtr<FileLocationMap> FileLocationMapPtr;
+		typedef map<ScriptLoader*, FileLocationMapPtr>::type ScriptLoaderToFileLocationMap;
 
 		struct ResourceGroup : public GeneralAlloc
 		{
@@ -48,6 +51,8 @@ namespace Titan
 		};
 
 		typedef map<String, ResourceGroup*>::type ResourceGroupMap;
+
+		typedef map<int, ScriptLoader*>::type ScriptLoaderMap;
 
 		static String	GENERAL_RESOURCE_GROUP;
 		static String	INTERNAL_RESOURCE_GROUP;
@@ -82,6 +87,10 @@ namespace Titan
 
 		DataStreamPtr	openResource(const String& name, const String& group = GENERAL_RESOURCE_GROUP);
 
+		void _registerScriptLoader(ScriptLoader* su);
+
+        void _unregisterScriptLoader(ScriptLoader* su);
+
 
 		static ResourceGroupMgr*	getSingltonPtr();
 
@@ -91,6 +100,8 @@ namespace Titan
 		//to boost the speed
 		ResourceGroup*			mCurrentGroup;
 		ResourceGroupMap		mResourceGroupMap;
+
+		ScriptLoaderMap			mScriptLoaderMap;
 	};
 }
 #endif

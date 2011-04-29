@@ -13,7 +13,16 @@ namespace Titan
 			unsigned short width = 0, char fill = ' ', 
 			std::ios::fmtflags flags = std::ios::fmtflags(0) );
 
+		static String toString(float val, unsigned short precision = 6, 
+			unsigned short width = 0, char fill = ' ', 
+			std::ios::fmtflags flags = std::ios::fmtflags(0) );
+
 		static int parseInt(const String& val);
+
+		static uint parseUint(const String& val);
+
+		static float parseFloat(const String&  val);
+
 
 	};
 }

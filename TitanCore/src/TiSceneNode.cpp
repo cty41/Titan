@@ -9,7 +9,7 @@ namespace Titan
 
 	SceneNode::SceneNode(const String& name)
 		:mParent(NULL), mName(name),mNeedUpdate(true),
-		mScale(Vector3::UNIT_SCALE), mNeedUpdateMat(true),
+		mScale(Vector3::UNIT_SCALE), mNeedUpdateMat(true), mNeedUpdateParent(false),
 		mPosition(Vector3::ZERO), mQuaternion(Quaternion::IDENTITY)
 	{
 
@@ -139,6 +139,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void SceneNode::notifyUpdate()
 	{
+		mNeedUpdateParent = true;
 		mNeedUpdate = true;
 		mNeedUpdateMat = true;
 	}
@@ -217,12 +218,36 @@ namespace Titan
 
 	}
 	//-------------------------------------------------------------------------------//
+	const Quaternion& SceneNode::_getDerivedOrientation()
+	{
+		if(mNeedUpdateParent)
+			_updateFromParent();
+
+		return mDerivedQuaternion;
+	}
+	//------------------------------------------------------------------------------//
+	const Vector3& SceneNode::_getDerivedPosition()
+	{
+		if(mNeedUpdateParent)
+			_updateFromParent();
+
+		return mDerivedPosition;
+	}
+	//------------------------------------------------------------------------------//
+	const Vector3& SceneNode::_getDerivedScale()
+	{
+		if (mNeedUpdateParent)
+			_updateFromParent();
+
+		return mDerivedScale;
+	}
+	//------------------------------------------------------------------------------//
 	const Matrix4& SceneNode::_getTransformMatrix()
 	{
 		if(mNeedUpdateMat)
 		{
 			mTransformMat.makeTransform(
-				mDerivedPosition, mDerivedScale, mDerivedQuaternion);
+				_getDerivedPosition(), _getDerivedScale(), _getDerivedOrientation());
 			mNeedUpdateMat = false;
 		}
 
@@ -265,6 +290,17 @@ namespace Titan
 	{
 		mPosition += pos;
 		notifyUpdate();
+	}
+	//------------------------------------------------------------------------------//
+	void SceneNode::setPosition(const Vector3& pos)
+	{
+		mPosition = pos;
+		notifyUpdate();
+	}
+	//------------------------------------------------------------------------------//
+	void SceneNode::setPosition(float x, float y, float z)
+	{
+		setPosition(Vector3(x, y, z));
 	}
 	//-------------------------------------------------------------------------------//
 	float SceneNode::getSquaredDistance(Camera* cam)

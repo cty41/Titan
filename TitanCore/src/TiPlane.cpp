@@ -1,6 +1,6 @@
 #include "TitanStableHeader.h"
 #include "TiPlane.h"
-#include "TitanMatrix3.h"
+#include "TiMatrix3.h"
 #include "TitanAABB.h" 
 
 namespace Titan {

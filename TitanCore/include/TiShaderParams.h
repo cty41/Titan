@@ -231,6 +231,10 @@ namespace Titan
 			ACT_WORLDVIEW_MATRIX,
 			/// The current world, view & projection matrices concatenated
 			ACT_WORLDVIEWPROJ_MATRIX,
+			///camera position
+			ACT_CAMERA_POSITION,
+			///custom parameter
+			ACT_CUSTOM,
 		};
 
 
@@ -239,6 +243,12 @@ namespace Titan
 		ET_INT,
 		ET_FLOAT,
 	};
+	enum ExtraDataType
+	{
+		EDT_NONE,
+		EDT_INT,
+		EDT_FLOAT
+	};
 
 	struct AutoConstantDef
 	{
@@ -246,42 +256,13 @@ namespace Titan
 		String				name;
 		ElementType			elementType;
 		uint				count;
+		ExtraDataType		edType;
 
-		AutoConstantDef(const String& name, AutoConstantType act, ElementType et, uint count)
-			: name(name), constantType(act), elementType(et), count(count)
+		AutoConstantDef(const String& name, AutoConstantType act, ElementType et, uint count,ExtraDataType edt)
+			: name(name), constantType(act), elementType(et), count(count), edType(edt)
 		{}
 
 	};
-
-	struct AutoConstantParam
-	{
-		AutoConstantType	constantType;
-		uint				handle;
-
-		AutoConstantParam(AutoConstantType type, uint handle)
-			: constantType(type), handle(handle)
-		{
-		}
-	};
-
-	typedef vector<AutoConstantParam>::type		AutoConstantParamVec;
-	typedef VectorIterator<AutoConstantParamVec>	AutoConstantParamVecIterator;
-
-	struct NamedConstantParam
-	{
-		uint				handle;
-		String				name;
-		ShaderConstantType	constantType;
-		ElementType			elementType;
-		uint				count;
-		NamedConstantParam(const String& name, uint handle, ShaderConstantType ct, uint count)
-			: name(name), handle(handle), constantType(ct), count(count)
-		{
-		};
-	};
-	
-	typedef vector<NamedConstantParam>::type  NamedConstantParamVec;
-	typedef VectorIterator<NamedConstantParamVec>	NamedConstantParamVecIterator;
 
 
 	/** Structure recording the use of an automatic parameter. */
@@ -296,9 +277,18 @@ namespace Titan
 			Used in case people used packed elements smaller than 4 (e.g. GLSL)
 			and bind an auto which is 4-element packed to it */
 			size_t elementCount;
+			/// Additional information to go with the parameter
+			union{
+				size_t data;
+				float fData;
+			};
 
-			AutoConstantEntry(AutoConstantType theType, size_t theIndex, size_t theElemCount = 4)
-				: paramType(theType), physicalIndex(theIndex), elementCount(theElemCount){}
+
+			AutoConstantEntry(AutoConstantType theType, size_t theIndex,size_t theData, size_t theElemCount = 4)
+				: paramType(theType), physicalIndex(theIndex), data(theData), elementCount(theElemCount){}
+
+			AutoConstantEntry(AutoConstantType theType, size_t theIndex,float theData, size_t theElemCount = 4)
+				: paramType(theType), physicalIndex(theIndex), fData(theData), elementCount(theElemCount){}
 
 		};
 		typedef vector<AutoConstantEntry>::type AutoConstantVec;
@@ -374,7 +364,11 @@ namespace Titan
 
 		void setNamedAutoConstant(const String& name, AutoConstantType acType,size_t extraInfo = 0);
 
-		void _setRawAutoConstant(size_t physicalIndex, AutoConstantType acType,size_t elementSize = 4);
+		void setNamedAutoConstant(const String& name, AutoConstantType acType, float extraInfo);
+
+		void _setRawAutoConstant(size_t physicalIndex, AutoConstantType acType, size_t extraInfo, size_t elementSize = 4);
+
+		void _setRawAutoConstant(size_t physicalIndex, AutoConstantType acType, float extraInfo, size_t elementSize = 4);
 
 		void _setNamedConstants(const ShaderNamedConstantsPtr& constants);
 

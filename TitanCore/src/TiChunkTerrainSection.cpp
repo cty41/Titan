@@ -12,7 +12,7 @@ namespace Titan
 #define SKIRT_HEIGHT	50.0f
 
 	ChunkTerrainSection::ChunkTerrainSection()
-		:BaseTerrainSection(), mRendBaseVertex(0), mRendLevel(0)
+		:BaseTerrainSection()
 	{
 
 	}
@@ -44,22 +44,21 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_updateRenderQueue(RenderQueue* queue, Camera* cam)
 	{
+
 		if(cam->isVisible(mWorldBound))
 		{
 			TerrainSectionRendVec::iterator it = mTerrainSectionRendVec.begin(), itend = mTerrainSectionRendVec.end();
-			for(; it != itend; ++it)
+			while (it != itend)
 			{
-				TITAN_DELETE(*it);
+				TITAN_DELETE (*it++);
 			}
+			
 			mTerrainSectionRendVec.clear();
 			_calcLod(cam);
 			//if(mTerrainSectionRend)
 			TerrainSectionRendVec::iterator it2 = mTerrainSectionRendVec.begin(), itend2 = mTerrainSectionRendVec.end();
 			for(; it2 != itend2; ++it2)
-			{
-
-				queue->addRenderable(*it2);
-			}
+				queue->addRenderable((*it2));
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -273,9 +272,10 @@ namespace Titan
 			uint8 offsetZ = levelZ << lodShift;
 			uint16 vertexStride = (1 << mCreator->getSectorShift()) + 1;
 			uint16 rendBaseVertex = (offsetZ * vertexStride) + offsetX;
-
+#if 1
 			ChunkTerrain* cTerrain = static_cast<ChunkTerrain*>(mCreator);
-			TerrainSectionRend *chunkRend = TITAN_NEW TerrainSectionRend(this);
+			TerrainSectionRend* chunkRend = TITAN_NEW TerrainSectionRend(this);
+			chunkRend->setSectionPos(getSectionPos());
 			int vertexCount = mCreator->getSectorVertex() * mCreator->getSectorVertex();
 			RenderData* rend;
 			rend = chunkRend->getRenderData();
@@ -291,18 +291,21 @@ namespace Titan
 			mTerrainSectionRendVec.push_back(chunkRend);
 
 
-			TerrainSectionRend *skirtRend = TITAN_NEW TerrainSectionRend(this);
-			rend = skirtRend->getRenderData();
-			rend->operationType = RenderData::OT_TRIANGLE_STRIP;
-			rend->vertexData = TITAN_NEW VertexData(mCreator->getVertexDecl(),mVertexBufferBinding);
-			rend->vertexData->vertexStart = rendBaseVertex;
-			rend->vertexData->vertexCount = vertexCount;
-			rend->useIndex = true;
-			rend->indexData = TITAN_NEW IndexData();
-			rend->indexData->indexBuffer = cTerrain->getLodIndexBuffer(1, level);
-			rend->indexData->indexStart = 0;
-			rend->indexData->indexCount = rend->indexData->indexBuffer->getNumIndexes();
+			RenderData* rend2;
+			TerrainSectionRend* skirtRend = TITAN_NEW TerrainSectionRend(this);
+			skirtRend->setSectionPos(getSectionPos());
+			rend2 = skirtRend->getRenderData();
+			rend2->operationType = RenderData::OT_TRIANGLE_STRIP;
+			rend2->vertexData = TITAN_NEW VertexData(mCreator->getVertexDecl(),mVertexBufferBinding);
+			rend2->vertexData->vertexStart = rendBaseVertex;
+			rend2->vertexData->vertexCount = vertexCount;
+			rend2->useIndex = true;
+			rend2->indexData = TITAN_NEW IndexData();
+			rend2->indexData->indexBuffer = cTerrain->getLodIndexBuffer(1, level);
+			rend2->indexData->indexStart = 0;
+			rend2->indexData->indexCount = rend2->indexData->indexBuffer->getNumIndexes();
 			mTerrainSectionRendVec.push_back(skirtRend);
+#endif
 		}
 
 	}

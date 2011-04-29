@@ -13,7 +13,7 @@ namespace Titan
 
 		~D3D9ShaderMgr();
 
-		Resource*	createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams);
+		Resource*	createImpl(const String& name, ResourceHandle id, const String& group, bool isManual, AnyMap* extraParams);
 
 	protected:
 

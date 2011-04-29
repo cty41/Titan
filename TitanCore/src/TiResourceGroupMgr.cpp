@@ -2,7 +2,8 @@
 #include "TiResourceGroupMgr.h"
 #include "TiResourceMgr.h"
 #include "TiFileSystemMgr.h"
-
+#include "TiConsoleDebugger.h"
+#include "TiScriptLoader.h"
 
 namespace Titan
 {
@@ -13,7 +14,7 @@ namespace Titan
 		FileLocationMap::iterator it = fileLocationMap.find(name);
 		if(it == fileLocationMap.end())
 		{
-			fileLocationMap.insert(FileLocationMap::value_type(name, LocationInfo(relativePath, fileSystem)));
+			fileLocationMap.insert(FileLocationMap::value_type(name, TITAN_NEW LocationInfo(relativePath, fileSystem)));
 		}
 		else
 		{
@@ -121,17 +122,56 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void ResourceGroupMgr::parseResourceGroup(ResourceGroup* rg)
 	{
-		//now here is useless, 'cause we do not have the script -cty
-#if 0
-		ResourceOrderListMap::iterator it = rg->resourceOrderListMap.begin(),
-			itend = rg->resourceOrderListMap.end();
-		while(it != itend)
-		{
+		ConsoleDebugger::getSingleton().stream()<<"Begin Parsing resource group named: " + rg->groupName;
 
-			while()
-			++it;
+		ScriptLoaderToFileLocationMap scriptLoaderToFileLocationMap;
+
+		//first search all the file, and bind the scripts to its ScriptLoader
+		ScriptLoaderMap::iterator sit = mScriptLoaderMap.begin(), sitEnd = mScriptLoaderMap.end();
+		while (sit != sitEnd)
+		{
+			FileLocationMapPtr fileLocationMapPtr = FileLocationMapPtr(TITAN_NEW_T(FileLocationMap, MEMCATEGORY_GENERAL), SPFM_DELETE_T);
+			FileLocationMap::iterator fit = rg->fileLocationMap.begin(), fitEnd = rg->fileLocationMap.end();
+			while(fit != fitEnd)
+			{
+				StringVector exts = sit->second->getScriptExts();
+				StringVector::iterator eit = exts.begin(), eitEnd = exts.end();
+				while(eit != eitEnd)
+				{
+					size_t lastDotIdx = fit->first.find_last_of('.');
+					//if the file has no ext, continue
+					if(lastDotIdx == String::npos)
+						continue;
+					int cmpResult = fit->first.compare(lastDotIdx, (*eit).length(), *eit);
+					if(!cmpResult)
+					{
+						fileLocationMapPtr->insert(FileLocationMap::value_type(fit->first,fit->second));
+						break;
+					}
+					++eit;
+				}
+				++fit;
+			}
+			scriptLoaderToFileLocationMap.insert(ScriptLoaderToFileLocationMap::value_type(sit->second, fileLocationMapPtr));
+			++sit;
 		}
-#endif
+
+		//parse all the script
+		ScriptLoaderToFileLocationMap::iterator  slit = scriptLoaderToFileLocationMap.begin(), slitEnd = scriptLoaderToFileLocationMap.end();
+		while(slit != slitEnd)
+		{
+			ScriptLoader* sl = slit->first;
+			FileLocationMap::iterator fit = slit->second->begin(), fitEnd = slit->second->end();
+			while(fit != fitEnd)
+			{
+				DataStreamPtr dataStream = fit->second->pFileSystem->open(fit->second->relativePath+fit->first);
+				sl->parseScript(dataStream, rg->groupName);
+				++fit;
+			}
+			++slit;
+		}
+
+		ConsoleDebugger::getSingleton().stream()<<"Finished Parsing resource group named: " + rg->groupName;
 	}
 	//-------------------------------------------------------------------------------//
 	void ResourceGroupMgr::initResourceGroup(const String& group)
@@ -141,8 +181,7 @@ namespace Titan
 			it->second->state == ResourceGroup::RGS_UNINITIALISED)
 		{
 			it->second->state = ResourceGroup::RGS_INITIALISING;
-			//if we need to implement script
-			//add content here
+			//parse the scripts if has any
 			parseResourceGroup(it->second);
 			it->second->state = ResourceGroup::RGS_INITIALISED;
 			mCurrentGroup = it->second;
@@ -162,8 +201,8 @@ namespace Titan
 			it->second->state == ResourceGroup::RGS_UNINITIALISED)
 		{
 			it->second->state = ResourceGroup::RGS_INITIALISING;
-			//if we need to implement script
-			//add content here
+			//parse the scripts if has any
+			parseResourceGroup(it->second);
 			it->second->state = ResourceGroup::RGS_INITIALISED;
 			++it;
 		}
@@ -200,6 +239,13 @@ namespace Titan
 		while(it != itend)
 		{
 			ResourceGroup *rg = it->second;
+			FileLocationMap::iterator fit = rg->fileLocationMap.begin(), fitEnd = rg->fileLocationMap.end();
+			while(fit != fitEnd)
+			{
+				TITAN_DELETE fit->second;
+				++fit;
+			}
+
 			ResourceOrderListMap::iterator lit = rg->resourceOrderListMap.begin(), litend = rg->resourceOrderListMap.end();
 			while(lit != litend)
 			{
@@ -302,7 +348,7 @@ namespace Titan
 			FileLocationMap::iterator fit = it->second->fileLocationMap.find(name);
 			if(fit != it->second->fileLocationMap.end())
 			{
-				DataStreamPtr dataPtr = fit->second.pFileSystem->open(fit->second.relativePath + name);
+				DataStreamPtr dataPtr = fit->second->pFileSystem->open(fit->second->relativePath + name);
 				return dataPtr;
 			}
 			
@@ -313,5 +359,34 @@ namespace Titan
 			"ResourceGroupMgr::openResource");
 	
 	}
-
+	//------------------------------------------------------------------------------//
+	void ResourceGroupMgr::_registerScriptLoader(ScriptLoader* su)
+	{
+		ScriptLoaderMap::iterator it = mScriptLoaderMap.find(su->getScriptLoaderPriority());
+		if(it != mScriptLoaderMap.end())
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"the script loader with same priority has existed!",
+				"ResourceGroupMgr::_registerScriptLoader");
+		}
+		else
+		{
+			mScriptLoaderMap.insert(ScriptLoaderMap::value_type(su->getScriptLoaderPriority(), su));
+		}
+	}
+	//------------------------------------------------------------------------------//
+	void ResourceGroupMgr::_unregisterScriptLoader(ScriptLoader* su)
+	{
+		ScriptLoaderMap::iterator it = mScriptLoaderMap.find(su->getScriptLoaderPriority());
+		if(it == mScriptLoaderMap.end())
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"the script loader has not add to resource group mgr!",
+				"ResourceGroupMgr::_unregisterScriptLoader");
+		}
+		else
+		{
+			mScriptLoaderMap.erase(su->getScriptLoaderPriority());
+		}
+	}
 }

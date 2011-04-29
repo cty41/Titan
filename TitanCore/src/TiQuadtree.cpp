@@ -2,7 +2,7 @@
 #include "TiQuadtree.h"
 #include "TitanAABB.h"
 #include "TiQuadtreeNode.h"
-#include "TitanMath.h"
+#include "TiMath.h"
 
 namespace Titan
 {

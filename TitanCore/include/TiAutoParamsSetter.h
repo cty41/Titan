@@ -20,12 +20,16 @@ namespace Titan
 
 		void	setCurrentPass(Pass* pass);
 
+		Renderable* getRenderable(){ return mCurrentRenderable; }
+
 		const Matrix4&	getWorldMatrix();
 		const Matrix4&	getViewMatrix();
 		const Matrix4&	getProjMatrix();
 		const Matrix4&	getViewProjMatrix();
 		const Matrix4&	getWorldViewMatrix();
 		const Matrix4&	getWorldViewProjMatrix();
+
+		const Vector4&	getCameraPosition();
 
 	protected:
 		Matrix4	mWorldMatrix;
@@ -35,6 +39,7 @@ namespace Titan
 		Matrix4 mViewProjMatrix;
 		Matrix4 mWorldViewProjMatrix;
 
+		Vector4	mCameraPos;
 
 		bool mWorldMatrixDirty;
 		bool mViewMatrixDirty;
@@ -42,6 +47,7 @@ namespace Titan
 		bool mWorldViewMatrixDirty;
 		bool mViewProjMatrixDirty;
 		bool mWorldViewProjMatrixDirty;
+		bool mCamPositionDirty;
 
 		Renderable*	mCurrentRenderable;
 		Camera*		mCurrentCam;

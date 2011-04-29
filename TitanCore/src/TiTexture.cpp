@@ -3,14 +3,26 @@
 
 namespace Titan
 {
-	Texture::Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group)
-		: Resource(mgr, name, id, group), mType(TT_2D), mMipmapsLevel(0), mPixelFormat(PF_UNKNOWN)
+	Texture::Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group, bool isManual)
+		: Resource(mgr, name, id, group, isManual), mType(TT_2D), mMipmapsLevel(1), mPixelFormat(PF_UNKNOWN), mWidth(0),
+		mHeight(0), mDepth(0)
 	{
 	}
 	//-------------------------------------------------------------------------------//
 	Texture::~Texture()
 	{
+	}
+	//------------------------------------------------------------------------------//
+	void Texture::loadImage(const Image& img)
+	{
+		if(mLoadState != LS_UNPREPARED)
+			return ;
 
+		vector<const Image*>::type imagePtrs;
+		imagePtrs.push_back(&img);
+		_loadImages( imagePtrs );
+
+		mLoadState = LS_LOADED;
 	}
 	//-------------------------------------------------------------------------------//
 	void Texture::generatePerlinNoise(float scale, int octaves, float falloff)
@@ -32,5 +44,22 @@ namespace Titan
 	{
 		return PixelFuncs::hasAlpha(mPixelFormat);
 	}
+	//------------------------------------------------------------------------------//
+	void Texture::_loadImages(const ConstImagePtrList& images)
+	{
+		if(images.size() < 1)
+			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
+			"image list is empty",
+			"Texture::_loadImages");
+
+		mWidth = images[0]->getWidth();
+		mHeight = images[0]->getHeight();
+
+		mPixelFormat = images[0]->getFormat();
+
+		_loadImgsImpl(images);
+	}
+	//------------------------------------------------------------------------------//
+
 
 }

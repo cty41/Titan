@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./include/;../TitanCore/include;../Dependencies\include\OIS\;../Plugin_D3D9Renderer/include/"
+				AdditionalIncludeDirectories="./include/;&quot;../TitanCore/include/rapidxml-1.13/&quot;;../TitanCore/include;../Dependencies\include\OIS\;../Plugin_D3D9Renderer/include/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -101,7 +101,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -224,18 +224,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</Filter>
-		<Filter
-			Name="Shaders"
-			>
-			<File
-				RelativePath="..\bin\assets\Shaders\DefaultMesh.fx"
-				>
-			</File>
-			<File
-				RelativePath="..\bin\assets\Shaders\single_texture_terrain.fx"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

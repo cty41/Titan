@@ -24,6 +24,8 @@ namespace Titan
 
 		void	_load();
 
+		void	_unload();
+
 
 	protected:
 		Pass*			mParent;

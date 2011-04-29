@@ -6,9 +6,10 @@
 #include "TiConsoleDebugger.h"
 #include "TiRenderQueue.h"
 #include "TiRenderQueueGroup.h"
-#include "TitanOverlayMgr.h"
+#include "TiOverlayMgr.h"
 #include "TiPass.h"
 #include "TiAutoParamsSetter.h"
+#include "TiMaterialMgr.h"
 
 namespace Titan
 {
@@ -16,7 +17,7 @@ namespace Titan
 		: mType(SMT_GENERAL), mName(name),
 		mRootSceneNode(0), mResetIdentityView(false), mResetIdentityProj(false),
 		mCachedViewMatrix(Matrix4::IDENTITY), mCachedProjMatrix(Matrix4::IDENTITY),
-		mCurrentCam(NULL), mShaderParamsOld(true)
+		mCurrentCam(NULL), mShaderParamsOld(true), mSkybox(NULL), mSkyboxNode(NULL), mSkyBoxEnable(false)
 	{
 		mRelatedRenderer = Root::getSingletonPtr()->getActiveRenderer();
 
@@ -30,6 +31,15 @@ namespace Titan
 		if(mRootSceneNode)
 			TITAN_DELETE mRootSceneNode;
 		removeAllSceneObjects();
+
+		if (mSkyboxNode)
+			TITAN_DELETE mSkyboxNode;
+		if(mSkybox)
+			TITAN_DELETE mSkybox;
+
+		//remove later
+		if(mCurrentCam)
+			TITAN_DELETE mCurrentCam;
 
 		TITAN_DELETE(mRenderQueue);
 	}	
@@ -116,12 +126,24 @@ namespace Titan
 		}
 	}
 	//-------------------------------------------------------------------------------//
+	//------------------------------------------------------------------------------//
+	void SceneMgr::_updateSkybox(Camera* cam)
+	{
+		if (mSkyBoxEnable)
+		{
+			mSkyboxNode->setPosition(cam->getPosition());
+		}
+		if(mSkyBoxEnable)
+			mSkybox->_updateRenderQueue(mRenderQueue, cam);
+	}
 	void SceneMgr::_renderScene(Camera* cam, Viewport* vp)
 	{
 		mCurrentCam = cam;
 		mRenderQueue->setCurrentCam(cam);
 
 		_updateSceneGraph();
+
+		_updateSkybox(cam);
 
 		_processVisibleObjects(cam);
 
@@ -188,14 +210,6 @@ namespace Titan
 		//alpha blend settings
 		mRelatedRenderer->_setSceneBlending(pass->getSrcBlendFactor(), pass->getDstBlendFactor(), pass->getSceneBlendOperation());
 
-		//depth settings
-		mRelatedRenderer->_setDepthWrite(pass->isDepthWritable());
-		if(pass->isDepthCheck())
-		{
-			mRelatedRenderer->_setDepthCheck(pass->isDepthCheck());
-			mRelatedRenderer->_setDepthFuntion(pass->getDepthFunc());
-		}
-
 		size_t texIdx = 0;
 		Pass::TextureUnitVecIterator tit = pass->getTextureUnitVecIterator();
 		while (tit.hasMoreElements())
@@ -204,6 +218,17 @@ namespace Titan
 			tit.next();
 			++texIdx;
 		}
+
+		//depth settings
+		mRelatedRenderer->_setDepthWrite(pass->isDepthWritable());
+		if(pass->isDepthCheck())
+		{
+			mRelatedRenderer->_setDepthCheck(pass->isDepthCheck());
+			mRelatedRenderer->_setDepthFuntion(pass->getDepthFunc());
+		}
+
+		mRelatedRenderer->_setPolygonMode(pass->getPolygonMode());
+		mRelatedRenderer->_setCullingMode(pass->getCullMode());
 
 		mShaderParamsOld = true;
 	}
@@ -360,7 +385,105 @@ namespace Titan
 			mResetIdentityProj = false;
 		}
 	}
+	//------------------------------------------------------------------------------//
+	void SceneMgr::setSkybox(const String& materialName, float distance, bool drawFirst , const String& group)
+	{
+		MaterialPtr mp = MaterialMgr::getSingleton().load(materialName, group);
+		mp->setDepthWrite(false);
+		uint skyboxQueueId = drawFirst? RGT_Sky_Early : RGT_Sky_Late;
+	
+		if(!mSkybox)
+		{
+			mSkybox = TITAN_NEW ManualObject("Skybox");
+			mSkyboxNode = TITAN_NEW SceneNode("SkyboxNode");
+			mSkyboxNode->attachObject(mSkybox);
+		}
+		else
+		{
+			mSkybox->clear();
+		}
 
+		
+		mSkybox->setRenderQueueID(skyboxQueueId);
+
+		mSkybox->begin();
+		mSkybox->setMaterial(materialName, group);
+
+		for (uint16 i = 0; i < 6; ++i)
+		{
+			Plane plane;
+			String meshName;
+			Vector3 middle;
+			Vector3 up, right;
+
+			switch(i)
+			{
+			case BP_FRONT:
+				middle = Vector3(0, 0, -distance);
+				up = Vector3::UNIT_Y * distance;
+				right = Vector3::UNIT_X * distance;
+				break;
+			case BP_BACK:
+				middle = Vector3(0, 0, distance);
+				up = Vector3::UNIT_Y * distance;
+				right = Vector3::NEGATIVE_UNIT_X * distance;
+				break;
+			case BP_LEFT:
+				middle = Vector3(-distance, 0, 0);
+				up = Vector3::UNIT_Y * distance;
+				right = Vector3::NEGATIVE_UNIT_Z * distance;
+				break;
+			case BP_RIGHT:
+				middle = Vector3(distance, 0, 0);
+				up = Vector3::UNIT_Y * distance;
+				right = Vector3::UNIT_Z * distance;
+				break;
+			case BP_UP:
+				middle = Vector3(0, distance, 0);
+				up = Vector3::UNIT_Z * distance;
+				right = Vector3::UNIT_X * distance;
+				break;
+			case BP_DOWN:
+				middle = Vector3(0, -distance, 0);
+				up = Vector3::NEGATIVE_UNIT_Z * distance;
+				right = Vector3::UNIT_X * distance;
+				break;
+			}
+
+			// 3D cubic texture 
+			// Note UVs mirrored front/back
+			// I could save a few vertices here by sharing the corners
+			// since 3D coords will function correctly but it's really not worth
+			// making the code more complicated for the sake of 16 verts
+			// top left
+			Vector3 pos;
+			pos = middle + up - right;
+			mSkybox->position(pos);
+			mSkybox->texCoord(pos.normalisedCopy() * Vector3(1,1,-1));
+			// bottom left
+			pos = middle - up - right;
+			mSkybox->position(pos);
+			mSkybox->texCoord(pos.normalisedCopy() * Vector3(1,1,-1));
+			// bottom right
+			pos = middle - up + right;
+			mSkybox->position(pos);
+			mSkybox->texCoord(pos.normalisedCopy() * Vector3(1,1,-1));
+			// top right
+			pos = middle + up + right;
+			mSkybox->position(pos);
+			mSkybox->texCoord(pos.normalisedCopy() * Vector3(1,1,-1));
+
+			uint16 base = i * 4;
+			mSkybox->quad(base, base+1, base+2, base+3);
+		}
+		mSkybox->end();
+		mSkyBoxEnable = true;
+	}
+	//------------------------------------------------------------------------------//
+	void SceneMgr::disableSkybox()
+	{
+		mSkyBoxEnable = false;
+	}
 
 
 

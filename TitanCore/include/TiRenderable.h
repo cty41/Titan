@@ -2,7 +2,7 @@
 #define __TITAN_RENDERABLE_HH
 
 #include "TiPrerequisites.h"
-
+#include "TiVector4.h"
 #include "TiTexture.h"
 #include "TiMaterial.h"
 
@@ -11,21 +11,11 @@ namespace Titan
 	class _DllExport Renderable : public GeneralAlloc
 	{
 	public:
-		class _DllExport RenderableListener
-		{
-		public:
-			RenderableListener(){};
-
-			~RenderableListener(){};
-
-			virtual void customUpdate() = 0;
-		};
-
-		typedef list<RenderableListener*>::type RenderableListenerList;
+		typedef map<size_t, Vector4>::type CustomShaderParams;
 	public:
 		Renderable(){};
 
-		virtual ~Renderable(){ mRenderableListenerList.clear(); };
+		virtual ~Renderable(){};
 
 		virtual void			getRenderData(RenderData& rd) = 0;
 
@@ -41,22 +31,22 @@ namespace Titan
 
 		virtual bool			IsUseIdentityProj() const = 0;
 
-		void	addListener(RenderableListener* listener){ mRenderableListenerList.push_back(listener); }
-		
-		virtual void customUpdate(){};
-
-		void	updateListeners()
+		void setCustomShaderParam(size_t idx, const Vector4& value)
 		{
-			RenderableListenerList::iterator it = mRenderableListenerList.begin(), itend = mRenderableListenerList.end();
-			while (it != itend)
-			{			
-				(*it)->customUpdate();
-				++it;
+			mCustomShaderParams[idx] = value;
+		}
+
+		void updateCustomShaderParams(const ShaderParams::AutoConstantEntry& entry, ShaderParams* params)
+		{
+			CustomShaderParams::const_iterator cit = mCustomShaderParams.find(entry.data);
+			if(cit != mCustomShaderParams.end())
+			{
+				params->_writeRawConstant(entry.physicalIndex, cit->second);
 			}
 		}
-	protected:
 
-		RenderableListenerList	mRenderableListenerList;
+	protected:
+		CustomShaderParams	mCustomShaderParams;
 	};
 }
 #endif

@@ -26,8 +26,16 @@ namespace Titan
 
 	}
 	//----------------------------------------------------------------------------//
-	ResourcePtr ShaderMgr::create(const String& name, const String& group, const String& profile, ShaderType type)
+	ResourcePtr ShaderMgr::create(const String& name, const String& group, ShaderType type)
 	{
+		ResourceMap::iterator it = mResourceMap.find(name);
+		if(it != mResourceMap.end())
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"The shader resource with this name has existed: " + name,
+				"ShaderMgr::create");
+			return ResourcePtr();
+		}
 		ResourcePtr res = ResourcePtr(createImpl(name, getNextHandle(), group, type));
 		addImpl(res);
 
@@ -35,22 +43,22 @@ namespace Titan
 		return res;
 	}
 	//------------------------------------------------------------------------------//
-	ShaderPtr ShaderMgr::createShader(const String& source, const String& name, const String& group, const String& profile, ShaderType type)
+	ShaderPtr ShaderMgr::createShader(const String& source, const String& name, const String& group, const String& language, ShaderType type)
 	{
 
-		ShaderPtr shader = create(name, group, profile, type);
-		shader->setProfile(profile);
+		ShaderPtr shader = create(name, group, type);
+		shader->setLanguage(language);
 		shader->setSource(source);
 		shader->setShaderType(type);
 
 		return shader;
 	}
 	//----------------------------------------------------------------------------//
-	ShaderPtr ShaderMgr::createShaderFromFile(const String& file, const String& name, const String& group, const String& profile, ShaderType type)
+	ShaderPtr ShaderMgr::createShaderFromFile(const String& file, const String& name, const String& group, const String& language, ShaderType type)
 	{
-		ShaderPtr shader = create(name, group, profile, type);
+		ShaderPtr shader = create(name, group, type);
 		shader->setFileName(file);
-		shader->setProfile(profile);
+		shader->setLanguage(language);
 		shader->setShaderType(type);
 	
 		return shader;

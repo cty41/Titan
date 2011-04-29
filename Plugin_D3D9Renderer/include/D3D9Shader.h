@@ -9,11 +9,11 @@ namespace Titan
 	class _D3D9DllExport D3D9Shader : public Shader
 	{
 	public:
-		D3D9Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
+		D3D9Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		~D3D9Shader();
 
-		void	setShaderEntry(const String& entry);
+		void	setShaderEntry(const String& entry){ mEntryName = entry;}
 
 		const String& getShaderEntry() const { return mEntryName; }
 
@@ -39,7 +39,28 @@ namespace Titan
 		String	mTarget;
 		LPD3DXCONSTANTTABLE mpConstTable;
 		LPD3DXBUFFER	mShaderBuffer;
-		
+
+	protected:
+		class _D3D9DllExport D3D9TargetCmd : public ParamsCommand
+		{
+		public:
+			virtual String getter(void* target);
+
+			virtual void setter(void* target, const String& val);
+		};
+
+		class _D3D9DllExport D3D9EntryCmd : public ParamsCommand
+		{
+		public:
+			virtual String getter(void* target);
+
+			virtual void setter(void* target, const String& val);
+		};
+
+		static D3D9TargetCmd	msD3D9TargetCmd;
+		static D3D9EntryCmd		msD3D9EntryCmd;
+
+		virtual void setupParamsCmd();		
 	};
 
 	class _D3D9DllExport D3D9ShaderPtr : public SharedPtr<D3D9Shader>
@@ -110,7 +131,7 @@ namespace Titan
 	class _D3D9DllExport D3D9VertexShader : public D3D9Shader
 	{
 	public:
-		D3D9VertexShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
+		D3D9VertexShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		~D3D9VertexShader();
 
@@ -125,7 +146,7 @@ namespace Titan
 	class _D3D9DllExport D3D9PixelShader : public D3D9Shader
 	{
 	public:
-		D3D9PixelShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
+		D3D9PixelShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		~D3D9PixelShader();
 

@@ -15,13 +15,15 @@ namespace Titan
 		typedef vector<Pass*>::type		PassVec;
 		typedef VectorIterator<PassVec>	PassVecIterator;
 	public:
-		Material(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group);
+		Material(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		virtual ~Material();
 
 		bool	isTransparent() const { return mPassVec.at(0)->isTransparent();}
 
 		bool	isTransparentSorted() const { return mPassVec.at(0)->isTransparentSort();}
+
+		void	setDepthWrite(bool enable);
 
 		Pass*	createPass();
 
@@ -33,9 +35,6 @@ namespace Titan
 
 
 	protected:
-		virtual void prepareImpl();
-
-		virtual void unprepareImpl();
 
 		virtual void loadImpl();
 

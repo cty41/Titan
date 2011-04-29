@@ -2,17 +2,18 @@
 #include "TiRoot.h"
 #include "TiFileSystemMgr.h"
 #include "TiConsoleDebugger.h"
-#include "TitanPlugin.h"
-#include "TitanDynLib.h"
+#include "TiPlugin.h"
+#include "TiDynLib.h"
 #include "TiSceneMgrSelector.h"
 #include "TiManualObject.h"
 #include "TiCommonFileSystem.h"
 #include "TiResourceGroupMgr.h"
-#include "TitanQuadtreeSceneMgr.h"
-#include "TitanOverlayMgr.h"
-#include "TitanFontMgr.h"
+#include "TiQuadtreeSceneMgr.h"
+#include "TiOverlayMgr.h"
+#include "TiFontMgr.h"
 #include "Timer.h"
 #include "TiMaterialMgr.h"
+#include "TiScriptCompilerMgr.h"
 
 namespace Titan
 {
@@ -56,6 +57,8 @@ namespace Titan
 		mFileSystemMgr->addFileSystemFactory(TITAN_NEW CommonFileSystemFactory());
 
 		mResourceGroupMgr = TITAN_NEW ResourceGroupMgr();
+
+		mScriptCompilerMgr = TITAN_NEW ScriptCompilerMgr();
 
 		mMaterialMgr = TITAN_NEW MaterialMgr();
 

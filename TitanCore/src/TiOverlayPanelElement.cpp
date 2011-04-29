@@ -23,7 +23,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void OverlayPanelElement::initialise(const String& texName, float width, float height, float left, float top)
 	{
-		mTexture = TextureMgr::getSingletonPtr()->load(texName);
+		mTexture = TextureMgr::getSingletonPtr()->getByName(texName);
 		setSize(width, height);
 		setPosition(left, top);
 		mIsVisible = true;
@@ -150,7 +150,7 @@ namespace Titan
 		{
 			if(!mTexture.isNull())
 			{
-				queue->addRenderable(this, RenderQueue::RGT_HUD, mZOrder);
+				queue->addRenderable(this, RGT_HUD, mZOrder);
 			}
 		}
 	}

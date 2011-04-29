@@ -1,13 +1,15 @@
 #include "TitanStableHeader.h"
 #include "TiSceneObject.h"
 #include "TiSceneNode.h"
+#include "TiRenderQueue.h"
 
 namespace Titan
 {
 	AutoNamer SceneObject::mAutoNamer("SceneObject_");
 	
 	SceneObject::SceneObject()
-		: mAttachedNode(0)
+		: mAttachedNode(0), mRenderQueueID(RGT_SceneObject),
+		mRenderQueuePriority(0)
 	{
 		mName = mAutoNamer.getAutoName();
 	}
@@ -59,5 +61,15 @@ namespace Titan
 		// fallback
 		return Matrix4::IDENTITY;
 	}
-
+	//------------------------------------------------------------------------------//
+	void SceneObject::setRenderQueueID(uint queueId)
+	{
+		assert(queueId <= RGT_HUD && "queue id is invalid!");
+		mRenderQueueID = queueId;
+	}
+	//------------------------------------------------------------------------------//
+	void SceneObject::setRenderQueuePriority(uint8 priority)
+	{
+		mRenderQueuePriority = priority;
+	}
 }

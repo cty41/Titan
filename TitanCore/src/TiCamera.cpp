@@ -30,6 +30,13 @@ namespace Titan
 
 		notifyViewUpdate();
 	}
+	//------------------------------------------------------------------------------//
+	const Vector3& Camera::getPosition()
+	{
+		updateView();
+
+		return mPosition;
+	}
 	//-------------------------------------------------------------------------------//
 	void Camera::move(const Vector3& vec)
 	{

@@ -4,7 +4,7 @@
 #include "TiPrerequisites.h"
 #include "TitanBitFlags.h"
 #include "TitanAABB.h"
-#include "TitanMath.h"
+#include "TiMath.h"
 #include "TitanNumericTools.h"
 #include "TiSceneMgr.h"
 

@@ -2,7 +2,7 @@
 #define __TITAN_CHUNKTERRAIN_SECTION__HH
 
 #include "TiPrerequisites.h"
-#include "TitanBaseTerrainSection.h"
+#include "TiBaseTerrainSection.h"
 
 namespace Titan
 {
@@ -40,12 +40,6 @@ namespace Titan
 		float*		mErrorMerticTree[CHUNK_MAX_LOD];
 		uint16		mTotalLevels;
 
-		//use for adding renderable 
-		uint16		mRendBaseVertex;
-		uint8		mRendLevel;
-		VertexData*	mVertxData;
-		IndexData*	mChunkIndexData;
-		IndexData*	mSkirtIndexData;
 	};
 }
 

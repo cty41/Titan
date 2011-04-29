@@ -6,8 +6,8 @@
 
 namespace Titan
 {
-	Resource::Resource(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group)
-	: mMgr(mgr), mName(name), mID(id), mGroup(group), mLoadState(LS_UNPREPARED)
+	Resource::Resource(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group, bool isManual)
+	: mMgr(mgr), mName(name), mID(id), mGroup(group), mLoadState(LS_UNPREPARED), mIsManualLoaded(isManual)
 	{
 		
 	}
@@ -38,9 +38,10 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void Resource::load()
 	{
-		prepare();
+		if(mLoadState == LS_UNPREPARED)
+			prepare();
 
-		if(!isLoaded())
+		if(!isManualLoaded() && !isLoaded())
 		{
 			mLoadState = LS_LOADING;
 			loadImpl();

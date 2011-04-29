@@ -4,6 +4,7 @@
 #include "TiPrerequisites.h"
 #include "TiSharedPtr.h"
 #include "TiDataStream.h"
+#include "TiReflector.h"
 
 
 namespace Titan
@@ -20,10 +21,10 @@ namespace Titan
 		LS_LOADED		= 4
 	};
 
-	class _DllExport Resource: public GeneralAlloc
+	class _DllExport Resource: public Reflector, public GeneralAlloc
 	{
 	public:
-		Resource(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group);
+		Resource(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		virtual ~Resource();
 
@@ -34,6 +35,8 @@ namespace Titan
 		virtual void	prepare();
 
 		virtual void	unprapare();
+
+		bool	isManualLoaded()const { return mIsManualLoaded; }
 
 		bool	isPrepared() const { return (mLoadState >= LS_PREPARED);}
 
@@ -67,6 +70,7 @@ namespace Titan
 		ResourceHandle			mID;
 		LoadState				mLoadState;
 		MemoryDataStreamPtr		mPreparedData;
+		bool					mIsManualLoaded;
 
 	};
 

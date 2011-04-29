@@ -2,7 +2,7 @@
 #define  _TITAN_FILESYSTEM__HH
 
 #include "TiPrerequisites.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiDataStream.h"
 
 namespace Titan

@@ -2,10 +2,10 @@
 #define _TITAN_VERTEXBUFFER_H
 
 #include "TiPrerequisites.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiHardwareBuffer.h"
 #include "TiSharedPtr.h"
-#include "TitanColor.h"
+#include "TiColor.h"
 
 namespace Titan
 {
@@ -67,6 +67,8 @@ namespace Titan
 		size_t getSize(void) const;
 
 		static size_t getTypeSize(VertexElementType etype);
+
+		static unsigned short getTypeCount(VertexElementType etype);
 
 		static uint32 convertColor(const Color& src,
 			VertexElementType dst);

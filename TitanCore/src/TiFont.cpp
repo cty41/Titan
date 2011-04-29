@@ -21,8 +21,8 @@ namespace Titan
 	Font::FontResolutionCmd	Font::msFontResolutionCmd;
 
 
-	Font::Font(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group)
-		:Resource(mgr, name, id, group), mTtfSize(15.0f), mTtfResolution(96), mTtfMaxBearingY(0),
+	Font::Font(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual)
+		:Resource(mgr, name, id, group, isManual), mTtfSize(15.0f), mTtfResolution(96), mTtfMaxBearingY(0),
 		mType(FT_TRUETYPE), mAntialiasColor(false)
 	{
 		if(createClassParamsDict("font"))
@@ -43,17 +43,13 @@ namespace Titan
 		{
 			createTextureFromFont();
 		}
-		else
-		{
-			mFontTexture = TextureMgr::getSingleton().load("Font/"+ mSource);
-			blendByAlpha = mFontTexture->hasAlpha();
-		}
+
 		if(blendByAlpha)
 		{
 			pass->setSrcBlendFactor(SBF_SOURCE_ALPHA);
 			pass->setDstBlendFactor(SBF_ONE_MINUS_SOURCE_ALPHA);
 			TextureUnit* tu = pass->createTextureUnit();
-			tu->setTexture(mFontTexture);
+			tu->setTexture("Font/"+ mSource);
 		}
 	}
 	//-------------------------------------------------------------------------------//

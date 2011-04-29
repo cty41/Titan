@@ -1,7 +1,7 @@
 //completely copied from ogre
 #include "TitanStableHeader.h"
 #include "TiStringFuncs.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 
 namespace Titan {
 

@@ -3,7 +3,7 @@
 
 
 #include "TiPrerequisites.h"
-#include "TitanMath.h"
+#include "TiMath.h"
 
 namespace Titan
 {

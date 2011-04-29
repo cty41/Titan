@@ -5,8 +5,8 @@
 
 namespace Titan
 {
-	Material::Material(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group)
-		:Resource(mgr, name, id, group)
+	Material::Material(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual)
+		:Resource(mgr, name, id, group, isManual)
 	{
 		setDefault();
 	}
@@ -33,21 +33,22 @@ namespace Titan
 		mPassVec.clear();
 	}
 	//-------------------------------------------------------------------------------//
-
+	Pass*	Material::getPass(size_t index)
+	{
+		assert(index < mPassVec.size() && "invalid pass index");
+		return mPassVec[index];
+	}
 	//-------------------------------------------------------------------------------//
+	void Material::setDepthWrite(bool enable)
+	{
+		PassVec::iterator it = mPassVec.begin(), itend = mPassVec.end();
+		for(;it != itend; ++it)
+			(*it)->setDepthWrite(enable);
+	}
+	//------------------------------------------------------------------------------//
 	void Material::setDefault()
 	{
 		//to do
-	}
-	//-------------------------------------------------------------------------------//
-	void Material::prepareImpl()
-	{
-		
-	}
-	//-------------------------------------------------------------------------------//
-	void Material::unprepareImpl()
-	{
-
 	}
 	//-------------------------------------------------------------------------------//
 	void Material::loadImpl()

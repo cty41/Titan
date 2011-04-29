@@ -21,7 +21,7 @@ namespace Titan
 		mTempVertexPending(false), mCurrentSection(0),
 		mTempVertexBuffer(0),mTempVertexSize(TEMP_INITIAL_VERTEX_SIZE),
 		mTempIndexBuffer(0), mTempIndexSize(TEMP_INITIAL_INDEX_SIZE),
-		mDeclSize(0)
+		mDeclSize(0), mTexCoordIndex(0)
 	{
 		mType = "ManualObject";
 		//If you got an error here, recompiled it..
@@ -38,7 +38,7 @@ namespace Titan
 			itend = mSectionVector.end();
 		while(it != itend)
 		{
-			queue->addRenderable(*it);
+			queue->addRenderable(*it, mRenderQueueID, mRenderQueuePriority);
 			++it;
 		}
 	}
@@ -51,8 +51,7 @@ namespace Titan
 				"you forgot to call begin() before you set material",
 				"ManualObject::setMaterial");
 		}
-		MaterialPtr mtrl = MaterialMgr::getSingleton().create(name, group).second;
-		mCurrentSection->setMaterial(mtrl);
+		mCurrentSection->setMaterial(name, group);
 	}
 	//-------------------------------------------------------------------------------//
 	void ManualObject::begin(RenderData::OperationType ot)
@@ -68,6 +67,7 @@ namespace Titan
 
 		mFirstVertex = true;
 		mDeclSize = 0;
+		mTexCoordIndex = 0;
 	}
 	//-------------------------------------------------------------------------------//
 	ManualObject::ManualObjectSection* ManualObject::end()
@@ -78,14 +78,15 @@ namespace Titan
 				"You must call begin() before end()",
 				"ManualObject::end()");
 		}
-		ManualObjectSection* pSection = mCurrentSection;
-		RenderData* rd = mCurrentSection->getRenderData();
+
 		if (mTempVertexPending)
 		{
 			// bake current vertex
 			copyTempVertexToBuffer();
 		}
 
+		ManualObjectSection* pSection = mCurrentSection;
+		RenderData* rd = mCurrentSection->getRenderData();
 		if(rd->vertexData->vertexCount == 0)
 		{
 			mSectionVector.pop_back();
@@ -146,6 +147,13 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void ManualObject::position(float x, float y, float z)
 	{
+		if(mCurrentSection == NULL)
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"Must call begin first",
+				"ManualObject::position");
+		}
+
 		if (mTempVertexPending)
 		{
 			// bake current vertex
@@ -168,12 +176,69 @@ namespace Titan
 
 		mAABB.merge(mTempVertex.position);
 
+		mTexCoordIndex = 0;
+
 		mTempVertexPending = true;
 	}
 	//-------------------------------------------------------------------------------//
 	void ManualObject::position(const Vector3& pos)
 	{
 		position(pos.x, pos.y, pos.z);
+	}
+	//------------------------------------------------------------------------------//
+	void ManualObject::texCoord(float u, float v)
+	{
+		if(mCurrentSection == NULL)
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"Must call begin first",
+				"ManualObject::texCoord");
+		}
+		if (mFirstVertex)
+		{
+			RenderData* rd = mCurrentSection->getRenderData();
+			rd->vertexData->vertexDecl->addElement(0, mDeclSize, VET_FLOAT2,
+				VES_TEXTURE_COORDINATES, mTexCoordIndex);
+			mDeclSize += VertexElement::getTypeSize(VET_FLOAT2);
+		}
+
+		mTempVertex.texCoordDims[mTexCoordIndex] = 2;
+		mTempVertex.texCoords[mTexCoordIndex].x = u;
+		mTempVertex.texCoords[mTexCoordIndex].y = v;
+		++mTexCoordIndex;
+	}
+	//------------------------------------------------------------------------------//
+	void ManualObject::texCoord(const Vector2& uv)
+	{
+		texCoord(uv.x, uv.y);
+	}
+	//------------------------------------------------------------------------------//
+	void ManualObject::texCoord(float u, float v, float w)
+	{
+		if(mCurrentSection == NULL)
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
+				"Must call begin first",
+				"ManualObject::texCoord");
+		}
+		if (mFirstVertex)
+		{
+			RenderData* rd = mCurrentSection->getRenderData();
+			rd->vertexData->vertexDecl->addElement(0, mDeclSize, VET_FLOAT3,
+				VES_TEXTURE_COORDINATES, mTexCoordIndex);
+			mDeclSize += VertexElement::getTypeSize(VET_FLOAT3);
+		}
+
+		mTempVertex.texCoordDims[mTexCoordIndex] = 3;
+		mTempVertex.texCoords[mTexCoordIndex].x = u;
+		mTempVertex.texCoords[mTexCoordIndex].y = v;
+		mTempVertex.texCoords[mTexCoordIndex].z = w;
+		++mTexCoordIndex;
+	}
+	//------------------------------------------------------------------------------//
+	void ManualObject::texCoord(const Vector3& uvw)
+	{
+		texCoord(uvw.x, uvw.y, uvw.z);
 	}
 	//-------------------------------------------------------------------------------//
 	void ManualObject::index(uint idx)
@@ -216,13 +281,11 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void ManualObject::copyTempVertexToBuffer()
 	{
-		RenderData* rd = mCurrentSection->getRenderData();
+
 		mTempVertexPending = false;
 
-		if(rd->vertexData->vertexCount == 0)
-		{
+		RenderData* rd = mCurrentSection->getRenderData();
 
-		}
 		resizeTempVertexBufferIfNeeded(++rd->vertexData->vertexCount);
 
 		// get base pointer
@@ -253,10 +316,9 @@ namespace Titan
 				break;
 			};
 
-#if 0
-			RenderSystem* rs;
+
 			unsigned short dims;
-#endif
+
 			switch(elem.getSemantic())
 			{
 			case VES_POSITION:
@@ -264,30 +326,13 @@ namespace Titan
 				*pFloat++ = mTempVertex.position.y;
 				*pFloat++ = mTempVertex.position.z;
 				break;
-#if 0
-			case VES_NORMAL:
-				*pFloat++ = mTempVertex.normal.x;
-				*pFloat++ = mTempVertex.normal.y;
-				*pFloat++ = mTempVertex.normal.z;
-				break;
-			case VES_TANGENT:
-				*pFloat++ = mTempVertex.tangent.x;
-				*pFloat++ = mTempVertex.tangent.y;
-				*pFloat++ = mTempVertex.tangent.z;
-				break;
+
 			case VES_TEXTURE_COORDINATES:
 				dims = VertexElement::getTypeCount(elem.getType());
 				for (ushort t = 0; t < dims; ++t)
-					*pFloat++ = mTempVertex.texCoord[elem.getIndex()][t];
+					*pFloat++ = mTempVertex.texCoords[elem.getIndex()][t];
 				break;
-			case VES_DIFFUSE:
-				rs = Root::getSingleton().getRenderSystem();
-				if (rs)
-					rs->convertColourValue(mTempVertex.colour, pRGBA++);
-				else
-					*pRGBA++ = mTempVertex.colour.getAsRGBA(); // pick one!
-				break;
-#endif
+
 			default:
 				// nop ?
 				break;
@@ -376,9 +421,15 @@ namespace Titan
 	{
 	}	
 	//-------------------------------------------------------------------------------//
-	void ManualObjectSection::setMaterial(MaterialPtr mtrl)
+	void ManualObjectSection::setMaterial(const String& name, const String&  group)
 	{
-		mMaterial = mtrl;
+		if(mMaterialName != name || mMaterialGroup != group)
+		{
+			mMaterialName = name;
+			mMaterialGroup = group;
+			mMaterial.setNull();
+			mMaterial = MaterialMgr::getSingleton().load(mMaterialName, mMaterialGroup);
+		}
 	}
 	//------------------------------------------------------------------------------//
 	void ManualObjectSection::getRenderData(RenderData& rd)
@@ -391,7 +442,7 @@ namespace Titan
 		*transMat = mParent->_getAttachedNodeFullTransform();
 	}
 	//----------------------------------------------------------------------------//
-	const MaterialPtr& ManualObjectSection::getMaterial() const
+	inline const MaterialPtr& ManualObjectSection::getMaterial() const
 	{
 		return mMaterial;
 	}

@@ -3,7 +3,9 @@
 
 #include "TiPrerequisites.h"
 #include "TiTexture.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
+#include "TiMatrix4.h"
+#include "TiReflector.h"
 
 namespace Titan
 {
@@ -30,16 +32,16 @@ namespace Titan
 		TexAddressMode	UTexAddrMode, VTexAddrMode, WTexAddrMode;
 	};
 
-	class _DllExport TextureUnit : public GeneralAlloc
+	class _DllExport TextureUnit : public Reflector, public GeneralAlloc
 	{
 	public:
-		TextureUnit();
+		TextureUnit(Pass* parent);
 
 		~TextureUnit();
 
-		void			setTexture(TexturePtr tex){ mTexture = tex; }
+		void			setTexture(const String&  name, TexType type = TT_2D);
 
-		const TexturePtr&	getTexture() const { return mTexture; }
+		const TexturePtr&	getTexture();
 
 		void			_load();
 
@@ -49,9 +51,9 @@ namespace Titan
 
 		FilterOptions	getMinFilter() const { return mMinFilter ;}
 
-		void			setMaxFilter(FilterOptions fo){ mMaxFilter = fo;}
+		void			setMagFilter(FilterOptions fo){ mMagFilter = fo;}
 
-		FilterOptions	getMaxFilter() const { return mMaxFilter; }
+		FilterOptions	getMagFilter() const { return mMagFilter; }
 
 		void			setMipFilter(FilterOptions fo){ mMipFilter = fo; }
 
@@ -67,14 +69,79 @@ namespace Titan
 
 		size_t			getTexCoordSet() const { return mTexCoordSet; }
 
+		const Matrix4&	getTextureTransform();
+
+		void			setTextureTransform(const Matrix4& transform);
+
+		void			recalcTextureMatrix();
+
 
 	protected:
+		Pass*				mParent;
+		String				mTexName;
+		TexType				mType;
 		TexturePtr			mTexture;
 		FilterOptions		mMinFilter;
-		FilterOptions		mMaxFilter;
+		FilterOptions		mMagFilter;
 		FilterOptions		mMipFilter;
 		TexAddressModeSets	mTexAddressModeSets;
 		size_t				mTexCoordSet;
+
+		bool mRecalcTexMatrix;
+		Matrix4 mTexMatrix;
+
+	protected:
+		virtual void setupParamsCmd();
+
+		class _DllExport MinFilterCmd : public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport MagFilterCmd : public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport MipFilterCmd : public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport TexAddressModeCmd : public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		class _DllExport TexCoordSetCmd : public ParamsCommand
+		{
+		public:
+			virtual void setter(void* target, const String& val);
+
+			virtual String getter(void* target);
+		};
+
+		static FilterOptions	mapToFilterOptions(const String&  val);
+
+		static String	FilterOptionsToString(FilterOptions fo);
+		
+		static MinFilterCmd	msMinFilterCmd;
+		static MagFilterCmd	msMagFilterCmd;
+		static MipFilterCmd	msMipFilterCmd;
+		static TexAddressModeCmd msTexAddressModeCmd;
+		static TexCoordSetCmd	msTexCoordSetCmd;
 	};
 }
 #endif

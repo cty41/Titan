@@ -6,9 +6,14 @@
 
 namespace Titan
 {
-	D3D9Shader::D3D9Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group)
-		:Shader(mgr, name, id, group), mpConstTable(NULL), mEntryName("vs_basic"), mTarget("vs_1_1")
+	D3D9Shader::D3D9TargetCmd	D3D9Shader::msD3D9TargetCmd;
+	D3D9Shader::D3D9EntryCmd	D3D9Shader::msD3D9EntryCmd;
+
+	D3D9Shader::D3D9Shader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual)
+		:Shader(mgr, name, id, group, isManual), mpConstTable(NULL)
 	{
+		if(createClassParamsDict("shader"))
+			D3D9Shader::setupParamsCmd();
 	}
 	//----------------------------------------------------------------------------//
 	D3D9Shader::~D3D9Shader()
@@ -270,13 +275,44 @@ namespace Titan
 		// D3D9 pads to 4 elements
 		def.elementSize = ShaderConstantDef::getElementSize(def.type, true);
 	}
-
+	//------------------------------------------------------------------------------//
+	void D3D9Shader::setupParamsCmd()
+	{
+		Shader::setupParamsCmd();
+		mClassParamsDict->addParamsCommand("target", &msD3D9TargetCmd);
+		mClassParamsDict->addParamsCommand("entry", & msD3D9EntryCmd);
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Shader::D3D9TargetCmd::setter(void* target, const String& val)
+	{
+		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+		shader->setTarget(val);
+	}
+	//------------------------------------------------------------------------------//
+	String D3D9Shader::D3D9TargetCmd::getter(void* target)
+	{
+		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+		return shader->getTarget();
+	}
+	//------------------------------------------------------------------------------//
+	void D3D9Shader::D3D9EntryCmd::setter(void* target, const String& val)
+	{
+		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+		shader->setShaderEntry(val);
+	}
+	//------------------------------------------------------------------------------//
+	String D3D9Shader::D3D9EntryCmd::getter(void* target)
+	{
+		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+		return shader->getShaderEntry();
+	}
 
 
 	//----------------------------------------------------------------------------//
-	D3D9VertexShader::D3D9VertexShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group)
-		:D3D9Shader(mgr, name, id, group), mpVertexShader(NULL)
+	D3D9VertexShader::D3D9VertexShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual)
+		:D3D9Shader(mgr, name, id, group, isManual), mpVertexShader(NULL)
 	{
+		mType = ST_VERTEX_SHADER;
 	}
 	//----------------------------------------------------------------------------//
 	D3D9VertexShader::~D3D9VertexShader()
@@ -300,10 +336,10 @@ namespace Titan
 
 
 	//----------------------------------------------------------------------------//
-	D3D9PixelShader::D3D9PixelShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group)
-		:D3D9Shader(mgr, name, id, group), mpPixelShader(NULL)
+	D3D9PixelShader::D3D9PixelShader(ResourceMgr* mgr, const String& name, ResourceHandle id, const String& group, bool isManual)
+		:D3D9Shader(mgr, name, id, group, isManual), mpPixelShader(NULL)
 	{
-
+		mType = ST_PIXEL_SHADER;
 	}
 	//----------------------------------------------------------------------------//
 	D3D9PixelShader::~D3D9PixelShader()

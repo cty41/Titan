@@ -6,7 +6,7 @@
 #include "TiRenderData.h"
 #include "TiVector3.h"
 #include "TiVertexIndexBufferData.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiSceneObject.h"
 
 #include "TitanAABB.h"
@@ -37,6 +37,14 @@ namespace Titan
 
 		void	position(float x, float y, float z);
 
+		void	texCoord(float u, float v);
+
+		void	texCoord(const Vector2& uv);
+
+		void	texCoord(float u, float v, float w);
+
+		void	texCoord(const Vector3& uvw);
+
 		void	index(uint idx);
 
 		void	triangle(uint32 i1, uint32 i2, uint32 i3);
@@ -51,6 +59,10 @@ namespace Titan
 		struct ManualVertex
 		{
 			Vector3		position;
+			Vector3		normal;
+			Vector4		texCoords[TITAN_MAX_TEXTURE_COORD_SETS];
+			ushort		texCoordDims[TITAN_MAX_TEXTURE_COORD_SETS];
+			Color		color;
 		};
 
 		class _DllExport ManualObjectSection : public Renderable
@@ -58,6 +70,8 @@ namespace Titan
 		protected:		
 			ManualObject*	mParent;
 			MaterialPtr		mMaterial;
+			String			mMaterialName;
+			String			mMaterialGroup;
 			RenderData		mRenderData;
 
 		public:
@@ -73,7 +87,7 @@ namespace Titan
 
 			const MaterialPtr&	getMaterial() const;
 
-			void			setMaterial(MaterialPtr mtrl);
+			void			setMaterial(const String&  name, const String& group);
 
 			float			getSquaredDistance(Camera* cam);
 
@@ -106,6 +120,8 @@ namespace Titan
 		size_t mTempIndexSize;
 		/// Current declaration vertex size
 		size_t mDeclSize;
+
+		ushort mTexCoordIndex;
 
 		void copyTempVertexToBuffer();
 

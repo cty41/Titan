@@ -3,7 +3,7 @@
 
 #include "TiPrerequisites.h"
 #include "TitanAABB.h"
-#include "TitanCommon.h"
+#include "TiCommon.h"
 #include "TiSceneMgr.h"
 
 namespace Titan
@@ -37,10 +37,20 @@ namespace Titan
 
 		SceneNode* getAttachedNode() const { return mAttachedNode; }
 
+		void setRenderQueueID(uint queueId);
+
+		uint getRenderQueueID() const { return mRenderQueueID; }
+
+		void setRenderQueuePriority(uint8 priority);
+
+		uint8 getRenderQueuePriority() const { return mRenderQueuePriority; }
+
 	protected:
 		SceneNode*			mAttachedNode;
 		String				mName;
 		String				mType;
+		uint				mRenderQueueID;
+		uint8				mRenderQueuePriority;
 
 		static AutoNamer	mAutoNamer;
 

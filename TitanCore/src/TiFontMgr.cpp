@@ -31,18 +31,24 @@ namespace Titan
 		ResourceGroupMgr::getSingleton()._unregisterScriptLoader(this);
 	}
 	//-------------------------------------------------------------------------------//
-	Resource* FontMgr::createImpl(const String& name, ResourceHandle id, const String& group, AnyMap* extraParams)
+	Resource* FontMgr::createImpl(const String& name, ResourceHandle id, const String& group, bool isManual, AnyMap* extraParams)
 	{
-		return TITAN_NEW Font(this, name, id, group);
+		return TITAN_NEW Font(this, name, id, group, isManual);
 	}
 	//------------------------------------------------------------------------------//
 	void FontMgr::parseScript(DataStreamPtr& stream, const String& group)
 	{
-		MemoryDataStreamPtr memPtr = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(stream));
+		String scriptContent;
+		while (!stream->eof())
+		{
+			scriptContent.append(stream->getLine());
+		}
+		char* xmlString = TITAN_ALLOC_T(char, scriptContent.size(), MEMCATEGORY_GENERAL);
+		memcpy((void*)xmlString, scriptContent.c_str(), scriptContent.size());
 		xml_document<> doc;
 		try
 		{
-			doc.parse<0>(reinterpret_cast<char*>(memPtr->getPtr()));
+			doc.parse<0>(xmlString);
 		}catch(parse_error pe)
 		{
 			String errMsg = pe.what();
@@ -53,6 +59,7 @@ namespace Titan
 		}
 
 		processXmlNode(doc.first_node(), group);
+		TITAN_FREE(xmlString, MEMCATEGORY_GENERAL);
 	}
 	//------------------------------------------------------------------------------//
 	void FontMgr::processXmlNode(rapidxml::xml_node<char>* xmlNode, const String& group)

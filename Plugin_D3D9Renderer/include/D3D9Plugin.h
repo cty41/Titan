@@ -2,7 +2,7 @@
 #define _TITAN_D3D9PLUGIN_HH
 
 #include "D3D9Prerequisites.h"
-#include "TitanPlugin.h"
+#include "TiPlugin.h"
 #include "D3D9Renderer.h"
 
 namespace Titan

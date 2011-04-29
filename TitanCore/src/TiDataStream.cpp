@@ -186,6 +186,7 @@ namespace Titan {
         // Copy data from incoming stream
         mSize = sourceStream.size();
         mData = TITAN_ALLOC_T(uchar, mSize, MEMCATEGORY_GENERAL);
+		memset((void*)mData, 0, mSize);
         mPos = mData;
         mEnd = mData + sourceStream.read(mData, mSize);
         mFreeOnClose = freeOnClose;
@@ -199,6 +200,7 @@ namespace Titan {
         // Copy data from incoming stream
         mSize = sourceStream->size();
         mData = TITAN_ALLOC_T(uchar, mSize, MEMCATEGORY_GENERAL);
+		memset((void*)mData, 0, mSize);
         mPos = mData;
         mEnd = mData + sourceStream->read(mData, mSize);
         mFreeOnClose = freeOnClose;
@@ -212,6 +214,7 @@ namespace Titan {
         // Copy data from incoming stream
         mSize = sourceStream.size();
         mData = TITAN_ALLOC_T(uchar, mSize, MEMCATEGORY_GENERAL);
+		memset((void*)mData, 0, mSize);
         mPos = mData;
         mEnd = mData + sourceStream.read(mData, mSize);
         mFreeOnClose = freeOnClose;
@@ -225,6 +228,7 @@ namespace Titan {
         // Copy data from incoming stream
         mSize = sourceStream->size();
         mData = TITAN_ALLOC_T(uchar, mSize, MEMCATEGORY_GENERAL);
+		memset((void*)mData, 0, mSize);
         mPos = mData;
         mEnd = mData + sourceStream->read(mData, mSize);
         mFreeOnClose = freeOnClose;
@@ -237,6 +241,7 @@ namespace Titan {
         mSize = size;
         mFreeOnClose = freeOnClose;
         mData = TITAN_ALLOC_T(uchar, mSize, MEMCATEGORY_GENERAL);
+		memset((void*)mData, 0, mSize);
         mPos = mData;
         mEnd = mData + mSize;
         assert(mEnd >= mPos);
@@ -249,6 +254,7 @@ namespace Titan {
         mSize = size;
         mFreeOnClose = freeOnClose;
         mData = TITAN_ALLOC_T(uchar, mSize, MEMCATEGORY_GENERAL);
+		memset((void*)mData, 0, mSize);
         mPos = mData;
         mEnd = mData + mSize;
         assert(mEnd >= mPos);

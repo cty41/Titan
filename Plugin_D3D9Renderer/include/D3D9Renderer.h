@@ -3,10 +3,10 @@
 
 #include "D3D9Prerequisites.h"
 #include "TiRenderer.h"
-#include "TitanCommon.h"
-#include "TitanColor.h"
+#include "TiCommon.h"
+#include "TiColor.h"
 #include "TiSingleton.h"
-#include "TitanMatrix4.h"
+#include "TiMatrix4.h"
 
 namespace Titan
 {
@@ -45,7 +45,7 @@ namespace Titan
 
 		void					_setLightEnable(bool enable);
 
-		void					_setFillMode(PolygonMode pm);
+		void					_setPolygonMode(PolygonMode pm);
 
 		HRESULT					__setRenderState(D3DRENDERSTATETYPE state, DWORD value);
 
@@ -110,7 +110,7 @@ namespace Titan
 
 		VertexElementType		getColorVertexElementType(void) const{ return VET_COLOR_ARGB; }
 
-		void					resumeFixFunction();
+		void					_setTextureMatrix(size_t unit, const Matrix4& xform);
 
 		LPDIRECT3DDEVICE9		__getD3D9Device() const { return mpD3dDevice; }
 

@@ -67,6 +67,38 @@ namespace Titan
 		}
 		return 0;
 	}
+	//------------------------------------------------------------------------------//
+	unsigned short VertexElement::getTypeCount(VertexElementType etype)
+	{
+		switch (etype)
+		{
+		case VET_COLOR:
+		case VET_COLOR_ABGR:
+		case VET_COLOR_ARGB:
+			return 1;
+		case VET_FLOAT1:
+			return 1;
+		case VET_FLOAT2:
+			return 2;
+		case VET_FLOAT3:
+			return 3;
+		case VET_FLOAT4:
+			return 4;
+		case VET_SHORT1:
+			return 1;
+		case VET_SHORT2:
+			return 2;
+		case VET_SHORT3:
+			return 3;
+		case VET_SHORT4:
+			return 4;
+		case VET_UBYTE4:
+			return 4;
+		}
+		return 0;
+	}
+
+
 	//-------------------------------------------------------------------------------//
 	uint32 VertexElement::convertColor(const Color& src, VertexElementType dst)
 	{

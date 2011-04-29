@@ -3,10 +3,11 @@
 
 #include "TiPrerequisites.h"
 #include "TiResource.h"
-#include "TitanCommon.h"
-#include "TitanPixelFormat.h"
+#include "TiCommon.h"
+#include "TiPixelFormat.h"
 #include "TiSharedPtr.h"
 #include "TiHardwareBuffer.h"
+#include "TiImage.h"
 
 namespace Titan
 {
@@ -35,9 +36,11 @@ namespace Titan
 	class _DllExport Texture: public Resource
 	{
 	public:
-		Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group);
+		Texture(ResourceMgr* mgr,const String& name, ResourceHandle id, const String& group, bool isManual);
 
 		~Texture();
+
+		void		loadImage(const Image& img);
 
 		void		setWidth(uint width){ mWidth = width; }
 
@@ -46,6 +49,11 @@ namespace Titan
 		void		setHeight(uint height){ mHeight = height;}
 
 		uint		getHeight() const { return mHeight; }
+
+		//only for 3d texture
+		void		setDepth(uint depth){ mDepth = depth; }
+
+		uint		getDepth() const { return mDepth;}
 		//will we need a upper limit?
 		void		setMipmapLevel(uint level){ mMipmapsLevel = level;}
 
@@ -76,20 +84,29 @@ namespace Titan
 		virtual void		unlockRect(uint level) = 0;
 
 
-		void		generatePerlinNoise(float scale, int octaves, float falloff);
+		void			generatePerlinNoise(float scale, int octaves, float falloff);
 
 		virtual	void	_createCoreObject() = 0;
+
 	protected:
 		uint			mWidth;
 		uint			mHeight;
+		uint			mDepth;
 		uint			mMipmapsLevel;
 		PixelFormat		mPixelFormat;
 		TexType			mType;
 		TexUsage		mUsage;
 		TexPool			mPool;
 
+		
+
 	protected:
 		virtual void		_perlinNoiseImpl(float scale, int octaves, float falloff) = 0;
+
+		virtual void		_loadImages( const ConstImagePtrList& images);
+
+		virtual void		_loadImgsImpl(const ConstImagePtrList& images) = 0;
+
 	};
 
 	class _DllExport TexturePtr : public SharedPtr<Texture>
