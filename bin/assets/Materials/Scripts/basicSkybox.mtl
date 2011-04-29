@@ -1,0 +1,29 @@
+<?xml version='1.0'?>
+
+<material name="skybox1">
+	<pass name="p2">
+		<render_state name="lighting" val="off"/>
+		<render_state name="depth_write" val="off"/>
+		<render_state name="cull_mode" val="none"/>
+		<texture_unit cube_texture="snow.dds" tex_address_mode="wrap"/>
+		<vertex_shader name="skybox_vs" language="hlsl" target="vs_2_0" entry="skybox_vs" 
+		src="void skybox_vs(float3 inPos: POSITION,
+				uniform float4x4 mvpMat,
+				out float4 oPos: POSITION,
+				out float3 oDir: TEXCOORD0)
+				{
+				oPos = mul(float4(inPos.xyz, 1.0), mvpMat);
+				oDir = inPos;}"
+				>
+		<auto_named_param name="mvpMat" annotation="world_view_proj"/>
+		</vertex_shader>
+		<pixel_shader name="skybox_ps" language="hlsl" target="ps_2_0" entry="skybox_ps" 
+		src="float4 skybox_ps(
+				float3 dir: TEXCOORD0,
+				uniform sampler envSampler: register(s0)) :COLOR
+				{
+				return texCUBE(envSampler, dir);
+				}">
+		</pixel_shader>
+	</pass>
+</material>

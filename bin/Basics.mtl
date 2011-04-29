@@ -1,0 +1,19 @@
+<?xml version='1.0'?>
+
+<material name="basic">
+	<pass name="p0">
+		<render_state name="lighting" val="off"/>
+		<render_state name="depth_check" val="on"/>
+		<render_state name="polygon_mode" val="wireframe"/>
+		<texture_unit texture="DetailMap_Red.dds" tex_address_mode="wrap" texcoord_set ="0"/>
+		<vertex_shader name="hell" language="hlsl" target="vs_2_0" entry="vs_basic"
+		src ="void vs_basic(float3 Pos : POSITION,
+								uniform float4x4 WorldViewProj,
+								out float4 oPos : POSITION)
+				{
+					oPos = mul(float4(Pos, 1), WorldViewProj);
+				}">
+			<auto_named_param name="WorldViewProj" annotation="world_view_proj"/>
+		</vertex_shader>
+	</pass>
+</material>
