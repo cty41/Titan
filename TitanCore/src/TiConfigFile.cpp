@@ -1,6 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiConfigFile.h"
 #include "TiException.h"
+#include "TiStringFuncs.h"
 
 namespace Titan
 {
@@ -21,12 +22,12 @@ namespace Titan
 		mSectionMap.clear();
 	}
 	//-------------------------------------------------------------------------------//
-	void ConfigFile::load(const String& name)
+	void ConfigFile::load(const String& name, const String& separators)
 	{
 		std::ifstream fp;
 
 		fp.open(name.c_str(), std::ios::in | std::ios::binary );
-		
+
 		if(fp == 0)
 		{
 			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
@@ -34,47 +35,44 @@ namespace Titan
 				"ConfigFile::load");
 			return ;
 		}
-		
-		String line, first, second;
+
+		DataStreamPtr stream(TITAN_NEW FileStreamDataStream(name, &fp, false)); 
+
+		String line, optName, optVal;
 		PropertyMap* currentMap = 0;
-		while(!fp.eof())
+		while(!stream->eof())
 		{
-			getline(fp, line);
+			line = stream->getLine();
 			if(line.length() > 0 && line.at(0) != '#')
 			{
-				if(line.length() > 1&&
-					(line.at(line.length() - 1) == '\n' || line.at(line.length() - 1) == '\r'))
-					line.erase(line.length() - 1);
 				if(line.at(0) == '[' && line.at(line.length() - 1) == ']')
 				{
 					String sectionName = line.substr(1, line.length() - 2);
 					SectionMap::iterator it = mSectionMap.find(sectionName);
-					if(it != mSectionMap.end())
+					if(it == mSectionMap.end())
 					{
-						TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR, 
-							"The Section with same name has existed: " + sectionName,
-							"ConfigFile::load");
-						return;
-					}
-					currentMap = TITAN_NEW_T(PropertyMap, MEMCATEGORY_GENERAL)();
-					
-					mSectionMap.insert(SectionMap::value_type(sectionName, currentMap));
-					continue;
-				}
-				
-				if(line.find('=') != String::npos)
-				{
-					first = line.substr(0,line.find('='));
-					second = line.substr(line.find('=') + 1, line.length() - line.find('=') - 1);
-					if(currentMap != 0)
-					{
-						currentMap->insert(PropertyMap::value_type(first, second));
+						currentMap = TITAN_NEW_T(PropertyMap, MEMCATEGORY_GENERAL)();
+						mSectionMap.insert(SectionMap::value_type(sectionName, currentMap));
 					}
 					else
+						currentMap = it->second;
+				}
+				else
+				{
+					String::size_type separator_pos = line.find_first_of(separators, 0);
+					if (separator_pos != String::npos)
 					{
-						TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR, 
-							"Property can not be created before Section ",
-							"ConfigFile::load");
+						optName = line.substr(0, separator_pos);
+						/* Find the first non-seperator character following the name */
+						String::size_type nonseparator_pos = line.find_first_not_of(separators, separator_pos);
+						/* ... and extract the value */
+						/* Make sure we don't crash on an empty setting (it might be a valid value) */
+						optVal = (nonseparator_pos == String::npos) ? "" : line.substr(nonseparator_pos);
+
+						StringUtil::trim(optVal);
+						StringUtil::trim(optName);
+
+						currentMap->insert(PropertyMap::value_type(optName, optVal));
 					}
 				}
 			}

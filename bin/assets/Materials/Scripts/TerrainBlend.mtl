@@ -8,39 +8,11 @@
 		<texture_unit texture="desert_4_diffuse.png" tex_address_mode="wrap" texcoord_set ="1"/>
 		<texture_unit texture="volcano_5_diffuse.png" tex_address_mode="wrap" texcoord_set ="1"/>
 		
-		<vertex_shader name="terrain_vs" language="hlsl" target="vs_2_0" entry="vs_terrain"
-		src="void vs_terrain(float2	   inPos : POSITION0,
-								float2 inUV: TEXCOORD0,
-								float  inHeight: POSITION1,
-								uniform float4x4 WorldViewProj,
-								uniform float4 uvScaleOffset,
-								out float4 oPos : POSITION,
-								out float2 oTex0: TEXCOORD0,
-								out float2 oTex1: TEXCOORD1)
-				{
-					oPos = mul(float4(inPos.x, inHeight, inPos.y, 1.0), WorldViewProj);
-					oTex0 = (inUV + uvScaleOffset.zw) * uvScaleOffset.xy;
-					oTex1 = inUV;
-				}">
+		<vertex_shader name="terrain_vs" language="hlsl" target="vs_2_0" entry="terrain_vs" file="terrain_vs.vsh">
 			<auto_named_param name="WorldViewProj" annotation="world_view_proj"/>
 			<auto_named_param name="uvScaleOffset" annotation="custom" extra_data="0"/>
 		</vertex_shader>
-		<pixel_shader name="terrian_ps" language="hlsl" target="ps_2_0" entry="ps_terrain"
-		src="float4 ps_terrain(float4 pos: POSITION,
-							float2 tex0: TEXCOORD0,
-							float2 tex1: TEXCOORD1,
-							uniform sampler sampler0: register(s0),
-							uniform sampler sampler1: register(s1),
-							uniform sampler sampler2: register(s2),
-							uniform sampler sampler3: register(s3)): COLOR
-			{
-				float4 blender = tex2D(sampler0, tex0);
-			
-				float4 Color0 = tex2D(sampler1, tex1) * blender.r; 
-				float4 Color1 = tex2D(sampler2, tex1) * blender.g; 
-				float4 Color2 = tex2D(sampler3, tex1) * blender.b; 
-				return (Color0 + Color1 + Color2) * blender.a;
-			}">
+		<pixel_shader name="terrain_ps" language="hlsl" target="ps_2_0" entry="terrain_ps" file="terrain_ps.fsh">
 		</pixel_shader>
 	</pass>
 </material>

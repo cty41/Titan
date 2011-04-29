@@ -100,7 +100,7 @@ void TerrainHost::loadResources()
 #endif
 
 #if 1
-	mSceneMgr->setSkybox("skybox1");
+	//mSceneMgr->setSkybox("skybox1");
 #endif
 
 #if 0

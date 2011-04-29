@@ -19,7 +19,7 @@ namespace Titan
 
 		~ConfigFile();
 
-		void	load(const String& name);
+		void	load(const String& name, const String& separators = "\t:=");
 
 		SectionMapIterator	getSectionMapIterator();
 

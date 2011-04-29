@@ -14,6 +14,7 @@
 #include "Timer.h"
 #include "TiMaterialMgr.h"
 #include "TiScriptCompilerMgr.h"
+#include "TiConfigFile.h"
 
 namespace Titan
 {
@@ -114,10 +115,10 @@ namespace Titan
 			return;
 
 		std::ofstream of(mConfigFileName.c_str());
-		
+
 		if(of == 0)
 			TITAN_EXCEPT(Exception::EXCEP_CANNOT_WRITE_TO_FILE, "can not write config text", "Root::saveConfig()");
-	
+
 
 		const ConfigOptionMap& com = mActiveRenderer->getConfigOptionMap();
 		for(ConfigOptionMap::const_iterator it = com.begin();it != com.end(); ++it)
@@ -134,29 +135,22 @@ namespace Titan
 		if(mConfigFileName.empty())
 			return true;
 
-		std::ifstream fp;
+		ConfigFile cfg;
+		cfg.load(mConfigFileName);
 
-		fp.open(mConfigFileName.c_str(), std::ios::in | std::ios::binary );
-
-		if(fp == 0)
+		ConfigFile::SectionMapIterator sit = cfg.getSectionMapIterator();
+		while (sit.hasMoreElements())
 		{
-			ConsoleDebugger::getSingleton().stream() <<"'" <<mConfigFileName<< "' not found, create and use default config.";
-			return false;
-		}
-
-
-		String line, first, second;
-		while(!fp.eof())
-		{
-			getline(fp, line);
-			if(line.length() > 0 && line.find('=') != String::npos && line.at(0) != '#')
+			String group = sit.peekNextKey();
+			ConfigFile::PropertyMapIterator pit = cfg.getPropertyMapIterator(group);
+			while (pit.hasMoreElements())
 			{
-				first = line.substr(0,line.find('='));
-				second = line.substr(line.find('=') + 1, line.length() - line.find('=') - 2);
-				mActiveRenderer->setConfigOption(first, second);
+				String type = pit.peekNextKey(), name = pit.peekNextValue();
+				mActiveRenderer->setConfigOption(type, name);
+				pit.next();
 			}
+			sit.next();
 		}
-		fp.close();
 
 		return true;
 	}
@@ -208,23 +202,23 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void Root::loadPlugin(const String& pluginName)
 	{
-		 DynLib* lib = TITAN_NEW DynLib(pluginName);
-		 lib->load();
+		DynLib* lib = TITAN_NEW DynLib(pluginName);
+		lib->load();
 
-		 if (std::find(mDynLibVector.begin(), mDynLibVector.end(), lib) == mDynLibVector.end())
-		 {
-			 mDynLibVector.push_back(lib);
+		if (std::find(mDynLibVector.begin(), mDynLibVector.end(), lib) == mDynLibVector.end())
+		{
+			mDynLibVector.push_back(lib);
 
-			 // Call startup function
-			 DLL_START_PLUGIN pFunc = (DLL_START_PLUGIN)lib->getSymbol("dllStartPlugin");
+			// Call startup function
+			DLL_START_PLUGIN pFunc = (DLL_START_PLUGIN)lib->getSymbol("dllStartPlugin");
 
-			 if (!pFunc)
-				 TITAN_EXCEPT(Exception::EXCEP_FILE_NOT_FOUND, "Cannot find symbol dllStartPlugin in library " + pluginName,
-				 "Root::loadPlugin");
+			if (!pFunc)
+				TITAN_EXCEPT(Exception::EXCEP_FILE_NOT_FOUND, "Cannot find symbol dllStartPlugin in library " + pluginName,
+				"Root::loadPlugin");
 
-			 // This must call installPlugin
-			 pFunc();
-		 }
+			// This must call installPlugin
+			pFunc();
+		}
 	}
 	//-------------------------------------------------------------------------------//
 	void Root::unloadPlugin(const String& pluginName)
@@ -250,9 +244,9 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void Root::_updateAllTargets()
 	{
-		 mActiveRenderer->updateAllTargets();
+		mActiveRenderer->updateAllTargets();
 
-		 mActiveRenderer->swapAllTargetBuffers();
+		mActiveRenderer->swapAllTargetBuffers();
 	}
 	//-------------------------------------------------------------------------------//
 	void Root::addSceneObjectFactory(SceneObjectFactory* factory)
@@ -263,7 +257,7 @@ namespace Titan
 		{
 			mSceneObjectFactoryMap.insert(
 				SceneObjectFactoryMap::value_type(factory->getType(),
-							factory));
+				factory));
 		}
 		else
 		{
@@ -307,6 +301,6 @@ namespace Titan
 		assert(pDest != NULL);
 		mActiveRenderer->convertColor(col, pDest);
 	}
-	
+
 
 }
