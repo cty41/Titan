@@ -36,20 +36,17 @@ namespace Titan
 	//------------------------------------------------------------------------------//
 	void ScriptCompilerMgr::parseScript(DataStreamPtr& stream, const String& group)
 	{
-		String scriptContent;
+		String scriptContent, line;
 		while (!stream->eof())
 		{
-			scriptContent.append(stream->getLine());
+			line = stream->getLine();
+			if(!line.length() == 0)
+				scriptContent.append(line);
 		}
-		char* xmlString = TITAN_ALLOC_T(char, scriptContent.size(), MEMCATEGORY_GENERAL);
-		memcpy((void*)xmlString, scriptContent.c_str(), scriptContent.size());
 		xml_document<> doc;
-#if 1
 		try
 		{
-#endif
-			doc.parse<0>(xmlString);
-#if 1
+			doc.parse<0>(&scriptContent[0]);
 		}catch(parse_error pe)
 		{
 			String errMsg = pe.what();
@@ -59,7 +56,6 @@ namespace Titan
 				errMsg  ,
 				"ScriptCompilerMgr::parseScript");
 		}
-#endif
 		processXmlNode(doc.first_node(), NULL);
 
 		ScriptRootNodePtrVec::iterator it = mScriptRootNodePtrVec.begin(), itend = mScriptRootNodePtrVec.end();
@@ -71,8 +67,6 @@ namespace Titan
 
 		//free all ScriptNode;
 		mScriptRootNodePtrVec.clear();
-		doc.clear();
-		TITAN_FREE(xmlString, MEMCATEGORY_GENERAL);
 	}
 	//------------------------------------------------------------------------------//
 	void ScriptCompilerMgr::processXmlNode(xml_node<char>* xmlNode, ScriptNode* parent)

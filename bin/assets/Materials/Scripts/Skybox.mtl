@@ -1,11 +1,11 @@
 <?xml version='1.0'?>
 
 <material name="skybox1">
-	<pass name="p2">
+	<pass name="p0">
 		<render_state name="lighting" val="off"/>
 		<render_state name="depth_write" val="off"/>
 		<render_state name="cull_mode" val="none"/>
-		<texture_unit cube_texture="snow.dds" tex_address_mode="wrap"/>
+		<texture_unit cube_texture="snow.dds" tex_address_mode="wrap" texcoord_set ="0"/>
 		<vertex_shader name="skybox_vs" language="hlsl" target="vs_2_0" entry="skybox_vs" file="skybox_vs.vsh">
 			<auto_named_param name="mvpMat" annotation="world_view_proj"/>
 		</vertex_shader>

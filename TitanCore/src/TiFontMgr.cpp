@@ -38,17 +38,18 @@ namespace Titan
 	//------------------------------------------------------------------------------//
 	void FontMgr::parseScript(DataStreamPtr& stream, const String& group)
 	{
-		String scriptContent;
+		String scriptContent, line;
 		while (!stream->eof())
 		{
-			scriptContent.append(stream->getLine());
+			line = stream->getLine();
+			if(!line.length() == 0)
+				scriptContent.append(line);
 		}
-		char* xmlString = TITAN_ALLOC_T(char, scriptContent.size(), MEMCATEGORY_GENERAL);
-		memcpy((void*)xmlString, scriptContent.c_str(), scriptContent.size());
+
 		xml_document<> doc;
 		try
 		{
-			doc.parse<0>(xmlString);
+			doc.parse<0>(&scriptContent[0]);
 		}catch(parse_error pe)
 		{
 			String errMsg = pe.what();
@@ -59,7 +60,6 @@ namespace Titan
 		}
 
 		processXmlNode(doc.first_node(), group);
-		TITAN_FREE(xmlString, MEMCATEGORY_GENERAL);
 	}
 	//------------------------------------------------------------------------------//
 	void FontMgr::processXmlNode(rapidxml::xml_node<char>* xmlNode, const String& group)
