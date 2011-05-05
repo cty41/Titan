@@ -23,7 +23,7 @@ namespace Titan
 		struct SectorVertex
 		{
 			float	height;
-		//	Vector3	normal;
+			Vector3	normal;
 		};
 
 		struct elevationData

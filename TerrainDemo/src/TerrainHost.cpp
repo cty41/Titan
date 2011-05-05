@@ -35,7 +35,7 @@ void TerrainHost::loadResources()
 
 	mCamController = TITAN_NEW CameraController(mCamera);
 
-#if 0
+#if 1
 	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
 		Titan::TT_2D, 128, 128, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
 
@@ -48,7 +48,7 @@ void TerrainHost::loadResources()
 
 #endif
 
-#if 0
+#if 1
 	// grass (all elevations and slopes)
 	elevation[0].minElevation = 0;
 	elevation[0].maxElevation = 500;
@@ -60,7 +60,7 @@ void TerrainHost::loadResources()
 	elevation[1].minElevation = 0;
 	elevation[1].maxElevation = 500;
 	elevation[1].minNormalZ = 0.0f;
-	elevation[1].maxNormalZ = 0.85f;
+	elevation[1].maxNormalZ = 0.7f;
 	elevation[1].strength = 10.0f;
 
 	// dirt (high elevation, flat slope)
@@ -83,7 +83,7 @@ void TerrainHost::loadResources()
 	mTerrain->genBlendImage(blendImage, elevationDatas);
 	blendImage.randomChannelNoise(3, 200, 255);
 
-#if 0
+#if 1
 	Titan::TexturePtr pBlendMap = Titan::TextureMgr::getSingleton().createManually(
 		"blendMap", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
 		Titan::TT_2D, 256, 256, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
@@ -100,7 +100,7 @@ void TerrainHost::loadResources()
 #endif
 
 #if 1
-	//mSceneMgr->setSkybox("skybox1");
+	mSceneMgr->setSkybox("skybox1");
 #endif
 
 #if 0
@@ -130,7 +130,7 @@ void TerrainHost::loadResources()
 	node->attachObject(mManualObject);
 #endif
 	float initHeight = 0.0f;
-	//initHeight = mTerrain->calcMapHeight(0.0f, 0.0f);
+	initHeight = mTerrain->calcMapHeight(0.0f, 0.0f);
 	mCamera->setPosition(0.0f, initHeight, 0.0f);
 }
 //-------------------------------------------------------------------------------//

@@ -303,7 +303,7 @@ namespace Titan
 		static T RangeRandom(T low, T high)
 		{
 			T Range = high - low;
-			T random = Range * (T)(UnitRandom()) + low;
+			T random = (float)Range * UnitRandom() + low;
 			return random;
 		}
 

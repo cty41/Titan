@@ -20,11 +20,6 @@ namespace Titan
 	{
 		if(mTerrainSectionRend)
 			TITAN_DELETE mTerrainSectionRend;
-#if 0
-		TerrainSectionRendVec::iterator it = mTerrainSectionRendVec.begin(), itend = mTerrainSectionRendVec.end();
-		for(;it != itend; ++it)
-			TITAN_DELETE (*it);
-#endif
 	}
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::create(BaseTerrain* creator, uint16 sectorX, uint16 sectorZ, uint16 heightMapX, uint16 heightMapZ, uint16 xVerts, uint16 zVerts, const Rect2D& worldRect)
@@ -64,12 +59,12 @@ namespace Titan
 					mHeightMapZ + z);
 				pVerts[(z * mXVerts) + x].height = 
 					height;
-#if 0
+
 				pVerts[(z * mXVerts) + x].normal = 
 					mCreator->readWorldNormal(
 					mHeightMapX + x, 
 					mHeightMapZ + z);
-#endif
+
 				mWorldBound.getMinimum().y = 
 					minimum(mWorldBound.getMinimum().y, height);
 				mWorldBound.getMaximum().y = 
@@ -115,11 +110,6 @@ namespace Titan
 		{
 			if(mTerrainSectionRend)
 				queue->addRenderable(mTerrainSectionRend);
-#if 0
-			TerrainSectionRendVec::iterator it = mTerrainSectionRendVec.begin(), itend = mTerrainSectionRendVec.end();
-			for(;it != itend; ++it)
-				queue->addRenderable(*it);
-#endif
 		}
 		else
 			return;

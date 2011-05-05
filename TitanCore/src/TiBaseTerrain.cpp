@@ -99,8 +99,7 @@ namespace Titan
 				int iHeight = pHeightMap[(z * lockedRect.rowPitch * 4)+(x * 4)];
 				float fHeight = (iHeight * mMapScale.y) + mWorldBound.getMinimum().y;
 
-				mHeightTable[(z*maxX)+x] = 
-					fHeight;
+				mHeightTable[(z*maxX)+x] = fHeight;
 			}
 		}
 		heightMap->unlockRect(0);
@@ -171,7 +170,7 @@ namespace Titan
 		mVertexDecl->addElement(0, 0, VET_FLOAT2, VES_POSITION, 0);
 		mVertexDecl->addElement(0, 8, VET_FLOAT2, VES_TEXTURE_COORDINATES, 0);
 		mVertexDecl->addElement(1, 0, VET_FLOAT1, VES_POSITION, 1);
-		//mVertexDecl->addElement(1, 4, VET_FLOAT3, VES_NORMAL, 0);
+		mVertexDecl->addElement(1, 4, VET_FLOAT3, VES_NORMAL, 0);
 		//to do?
 	}
 	//-------------------------------------------------------------------------------//
@@ -512,7 +511,7 @@ namespace Titan
 					float elevationScale = computeWeight(map_height, elevDataVec[i].minElevation, elevDataVec[i].maxElevation);
 
 					// compute a weight based on slope
-					float slopeScale = computeWeight(normal.z, elevDataVec[i].minNormalZ, elevDataVec[i].maxNormalZ);
+					float slopeScale = computeWeight(normal.y, elevDataVec[i].minNormalZ, elevDataVec[i].maxNormalZ);
 
 					// combine the two with the relative
 					// strength of this surface type
@@ -540,10 +539,10 @@ namespace Titan
 				uint8 b = (uint8) clamp(blendFactors.z, 0.0f, 255.0f);
 				uint8 a = (uint8) clamp(blendFactors.w, 0.0f, 255.0f);
 				
-				*pData++ = a;
-				*pData++ = r;
-				*pData++ = g;
 				*pData++ = b;
+				*pData++ = g;
+				*pData++ = r;
+				*pData++ = a;
 				// pack and write a 32bit pixel value
 				//uint32 color = (a<<24)+(r<<16)+(g<<8)+b;
 			}

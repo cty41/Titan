@@ -1,5 +1,6 @@
 void terrain_vs(float2	inPos : POSITION0,
 				float2 	inUV: TEXCOORD0,
+				float3  inNormal: NORMAL,
 				float  	inHeight: POSITION1,
 				uniform float4x4 WorldViewProj,
 				uniform float4 uvScaleOffset,
