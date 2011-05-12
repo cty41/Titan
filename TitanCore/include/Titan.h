@@ -43,6 +43,8 @@
 #include "TiBaseTerrainSection.h"
 #include "TiChunkTerrain.h"
 #include "TiChunkTerrainSection.h"
+#include "TiGeoTerrain.h"
+#include "TiGeoTerrainSection.h"
 
 #include "TiShader.h"
 #include "TiShaderParams.h"

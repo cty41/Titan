@@ -13,10 +13,10 @@ namespace Titan
 
 		~D3D9HardwareBufferMgr();
 
-		virtual VertexBufferSharedPtr	createVertexBuffer(
+		virtual VertexBufferPtr	createVertexBuffer(
 			size_t vertexSize, size_t numVertices, VertexBuffer::Usage usage, bool useSystemMemory);
 
-		virtual IndexBufferSharedPtr	createIndexBuffer(
+		virtual IndexBufferPtr	createIndexBuffer(
 			size_t numIndexes, HardwareBuffer::Usage usage, bool useSystemMemory);
 
 		VertexDeclaration*				createVertexDeclaration();

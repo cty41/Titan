@@ -218,7 +218,7 @@ namespace Titan
 		unsetAllBindings();
 	}
 	//-------------------------------------------------------------------------------//
-	void VertexBufferBinding::setBinding(ushort index, const VertexBufferSharedPtr& buffer)
+	void VertexBufferBinding::setBinding(ushort index, const VertexBufferPtr& buffer)
 	{
 		mBindingMap[index] = buffer;
 		mHighestIndex = std::max(mHighestIndex, (ushort)(index));
@@ -258,7 +258,7 @@ namespace Titan
 		return mBindingMap;
 	}
 	//-------------------------------------------------------------------------------//
-	const VertexBufferSharedPtr& VertexBufferBinding::getBuffer(ushort index)
+	const VertexBufferPtr& VertexBufferBinding::getBuffer(ushort index)
 	{
 		VertexBufferBindingMap::iterator i = mBindingMap.find(index);
 		if(i != mBindingMap.end())
@@ -280,7 +280,7 @@ namespace Titan
 		return mBindingMap.empty() ? 0 : mBindingMap.rbegin()->first + 1;
 	}
 
-	VertexBufferSharedPtr::VertexBufferSharedPtr(VertexBuffer* buf)
+	VertexBufferPtr::VertexBufferPtr(VertexBuffer* buf)
 		: SharedPtr<VertexBuffer>(buf)
 	{
 	}

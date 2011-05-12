@@ -176,16 +176,21 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_buildIndexData()
 	{
+#if 1
 		int total_strips = mSectorVerts-1;
 		int total_indexes_per_strip = mSectorVerts<<1;
-
-		// the total number of indices is equal
-		// to the number of strips times the
-		// indices used per strip plus one
-		// degenerate triangle between each strip
 		int total_indexes = (total_indexes_per_strip * total_strips) + (total_strips<<1) - 2;
 		mIndexData = HardwareBufferMgr::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-		mIndexData->createSingleStripGrid(mSectorVerts, mSectorVerts, 1, 1, mSectorVerts, 0);
+		mIndexData->createSingleStripGrid(mSectorVerts, mSectorVerts, 1, 1, mSectorVerts);
+#else
+		int total_lists = mSectorVerts - 1;
+		int total_indexes_per_list = (mSectorVerts - 1) * 6;
+		int total_indexes = total_lists * total_indexes_per_list;
+		mIndexData = HardwareBufferMgr::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+		mIndexData->createTriangleListGrid(mSectorVerts, mSectorVerts, 1, 1, mSectorVerts);
+#endif
+
+
 	}
 	//-------------------------------------------------------------------------------//
 	void BaseTerrain::_createTerrainSections()

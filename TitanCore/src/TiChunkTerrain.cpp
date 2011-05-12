@@ -133,10 +133,7 @@ namespace Titan
 		while (stepSize && mDetailLevels < CHUNK_MAX_LOD)
 		{
 			mLODIndexArray[0][mDetailLevels] = HardwareBufferMgr::getSingletonPtr()->createIndexBuffer(total_indexes, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-			mLODIndexArray[0][mDetailLevels]->createSingleStripGrid(
-				vertCount, vertCount, 
-				stepSize, stepSize, 
-				stride, 0);
+			mLODIndexArray[0][mDetailLevels]->createSingleStripGrid(vertCount, vertCount, stepSize, stepSize, stride);
 
 			stepSize >>= 1;
 			++mDetailLevels;
@@ -227,7 +224,7 @@ namespace Titan
 
 	}
 	//-------------------------------------------------------------------------------//
-	IndexBufferSharedPtr ChunkTerrain::getLodIndexBuffer(uint8 indexType, uint8 lod)
+	IndexBufferPtr ChunkTerrain::getLodIndexBuffer(uint8 indexType, uint8 lod)
 	{
 		assert(indexType < 2 && lod < CHUNK_MAX_LOD);
 		return mLODIndexArray[indexType][lod];

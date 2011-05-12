@@ -94,7 +94,7 @@ namespace Titan
 		}
 		else
 		{
-			VertexBufferSharedPtr vbuf;
+			VertexBufferPtr vbuf;
 
 			vbuf = HardwareBufferMgr::getSingleton().createVertexBuffer(
 				mDeclSize, rd->vertexData->vertexCount,

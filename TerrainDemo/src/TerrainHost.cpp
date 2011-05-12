@@ -41,7 +41,7 @@ void TerrainHost::loadResources()
 
 	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
 
-	mTerrain = TITAN_NEW Titan::BaseTerrain();
+	mTerrain = TITAN_NEW Titan::GeoTerrain();
 	mTerrain->create(mSceneMgr->getRootSceneNode(), pHeightmap, Titan::AABB(-500.0f, 0, -500.0f, 500.0f, 500.0f, 500.0f));
 	Titan::BaseTerrain::elevationDataVec elevationDatas;
 	Titan::BaseTerrain::elevationData elevation[3];

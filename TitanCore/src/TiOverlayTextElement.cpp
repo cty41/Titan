@@ -103,7 +103,7 @@ namespace Titan
 
 			// Create dynamic since text tends to change alot
 			// positions & texcoords
-			VertexBufferSharedPtr vbuf = 
+			VertexBufferPtr vbuf = 
 				HardwareBufferMgr::getSingleton().
 				createVertexBuffer(
 				decl->getVertexSize(0), 
@@ -162,7 +162,7 @@ namespace Titan
 		checkMemoryAllocation(charlen);
 		
 		mRenderData.vertexData->vertexCount = charlen * 6;
-		const VertexBufferSharedPtr& vbuf = 
+		const VertexBufferPtr& vbuf = 
 			mRenderData.vertexData->vertexBufferBinding->getBuffer(0);
 		float *pVert;
 		pVert = static_cast<float*>(vbuf->lock(HardwareBuffer::HBL_DISCARD));
@@ -345,7 +345,7 @@ namespace Titan
 		Root::getSingleton().convertColor(mColorTop, & topColor);
 		Root::getSingleton().convertColor(mColorBottom, & bottomColor);
 
-		VertexBufferSharedPtr vbuf = mRenderData.vertexData->vertexBufferBinding->getBuffer(1);
+		VertexBufferPtr vbuf = mRenderData.vertexData->vertexBufferBinding->getBuffer(1);
 
 		RGBA* pDest = static_cast<RGBA*>(vbuf->lock(HardwareBuffer::HBL_DISCARD));
 

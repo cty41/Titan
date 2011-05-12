@@ -3,6 +3,7 @@
 <material name="terrainBlend">
 	<pass name="p0">
 		<render_state name="lighting" val="off"/>
+		<render_state name="polygon_mode" val="solid"/>
 		<texture_unit tex_address_mode="wrap" texcoord_set ="0"/>
 		<texture_unit texture="jungle_0_diffuse.png" tex_address_mode="wrap" texcoord_set ="1"/>
 		<texture_unit texture="desert_4_diffuse.png" tex_address_mode="wrap" texcoord_set ="1"/>

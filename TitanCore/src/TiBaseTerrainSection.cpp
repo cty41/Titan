@@ -81,7 +81,8 @@ namespace Titan
 		mVertexBufferBinding->setBinding(1, mSectorVerts);
 
 		mTerrainSectionRend = TITAN_NEW TerrainSectionRend(this);
-		mTerrainSectionRend->_buildRenderData(this);
+		RenderData* rd = mTerrainSectionRend->getRenderData();
+		_buildRenderData(rd);
 
 		Vector4 uvScaleOffset = Vector4((float)1.0f/(mCreator->getSectorCountX()+1),
 										(float)1.0f/(mCreator->getSectorCountZ()+1),
@@ -134,11 +135,6 @@ namespace Titan
 	{
 		Vector3 diff = mCreator->getWorldBound().getCenter() - cam->getPosition();
 		return diff.squaredLength();
-	}
-	//-------------------------------------------------------------------------------//
-	void BaseTerrainSection::TerrainSectionRend::_buildRenderData(BaseTerrainSection* creator)
-	{
-		mCreator->_buildRenderData(&mRenderData);
 	}
 	//------------------------------------------------------------------------------//
 	void BaseTerrainSection::TerrainSectionRend::setSectionPos(const Vector3& pos)

@@ -9,8 +9,8 @@ namespace Titan
 {
 	class _DllExport HardwareBufferMgr : public Singleton<HardwareBufferMgr>, public GeneralAlloc
 	{
-		friend class VertexBufferSharedPtr;
-		friend class IndexBufferSharedPtr;
+		friend class VertexBufferPtr;
+		friend class IndexBufferPtr;
 	protected:
 		typedef set<VertexBuffer*>::type VertexBufferList;
 		typedef set<IndexBuffer*>::type IndexBufferList;
@@ -27,11 +27,11 @@ namespace Titan
 
 		virtual ~HardwareBufferMgr();
 
-		virtual VertexBufferSharedPtr	createVertexBuffer(
+		virtual VertexBufferPtr	createVertexBuffer(
 			size_t vertexSize, size_t numVertices,
 			VertexBuffer::Usage usage, bool useSystemMemory = false) = 0;
 
-		virtual IndexBufferSharedPtr	createIndexBuffer(
+		virtual IndexBufferPtr	createIndexBuffer(
 			size_t numIndexes, HardwareBuffer::Usage usage,
 			bool useSystemMemory = false) = 0;
 

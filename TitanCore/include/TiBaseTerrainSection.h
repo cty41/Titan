@@ -38,8 +38,6 @@ namespace Titan
 
 			void	setCreator(BaseTerrainSection* creator){ mCreator = creator; }
 
-			void	_buildRenderData(BaseTerrainSection* creator);
-
 			void	setSectionPos(const Vector3& pos);
 
 		protected:
@@ -66,7 +64,7 @@ namespace Titan
 
 		BaseTerrain*	getCreator() const { return mCreator; }
 
-		VertexBufferSharedPtr	getSectorVertices() { return mSectorVerts; }
+		VertexBufferPtr	getSectorVertices() { return mSectorVerts; }
 
 		const AABB&		getWorldBound() const { return mWorldBound; }
 
@@ -90,7 +88,7 @@ namespace Titan
 
 	protected:
 		BaseTerrain*			mCreator;
-		VertexBufferSharedPtr	mSectorVerts;
+		VertexBufferPtr	mSectorVerts;
 		VertexBufferBinding*	mVertexBufferBinding;
 
 		TerrainSectionRend*		mTerrainSectionRend;

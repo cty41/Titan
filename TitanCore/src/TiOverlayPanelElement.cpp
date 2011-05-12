@@ -37,7 +37,7 @@ namespace Titan
 			mRenderData.vertexData->vertexStart = 0;
 			mRenderData.vertexData->vertexCount = 4;
 
-			VertexBufferSharedPtr vbuf = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(0), mRenderData.vertexData->vertexCount,
+			VertexBufferPtr vbuf = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(0), mRenderData.vertexData->vertexCount,
 				HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 			mRenderData.vertexData->vertexBufferBinding->setBinding(0, vbuf);
 
@@ -75,7 +75,7 @@ namespace Titan
 		top = -((offsetTop * 2) - 1);
 		bottom = top - mHeight * 2;
 
-		VertexBufferSharedPtr vbuf = mRenderData.vertexData->vertexBufferBinding->getBuffer(0);
+		VertexBufferPtr vbuf = mRenderData.vertexData->vertexBufferBinding->getBuffer(0);
 
 		float* pPos = static_cast<float*>(vbuf->lock(HardwareBuffer::HBL_DISCARD));
 
@@ -110,7 +110,7 @@ namespace Titan
 			{
 				decl->addElement(1, 0,VET_FLOAT2, VES_TEXTURE_COORDINATES, 0);
 
-				VertexBufferSharedPtr vbuf = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(1), mRenderData.vertexData->vertexCount,
+				VertexBufferPtr vbuf = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(decl->getVertexSize(1), mRenderData.vertexData->vertexCount,
 					HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
 
 				mRenderData.vertexData->vertexBufferBinding->setBinding(1,vbuf);
@@ -119,7 +119,7 @@ namespace Titan
 
 			if(mTexCoordNum)
 			{
-				VertexBufferSharedPtr buf = mRenderData.vertexData->vertexBufferBinding->getBuffer(1);
+				VertexBufferPtr buf = mRenderData.vertexData->vertexBufferBinding->getBuffer(1);
 				float* pVBStart = static_cast<float*>(buf->lock(HardwareBuffer::HBL_DISCARD));
 
 				size_t uvSize = VertexElement::getTypeSize(VET_FLOAT2) / sizeof(float);

@@ -62,6 +62,18 @@ namespace Titan
 		SharedPtr& operator=(const SharedPtr& r) {
 			if (pRep == r.pRep)
 				return *this;
+			//add for direct null ptr assignment - 2011/5/12
+			if(pRep == NULL)
+			{
+				pRep = r.getPointer();
+				pUseCount = r.useCountPointer();
+				useFreeMethod = r.freeMethod();
+				if(pUseCount)
+				{
+					++(*pUseCount);
+				}
+				return *this;
+			}
 			// Swap current data into a local copy
 			// this ensures we deal with rhs and this being dependent
 			SharedPtr<T> tmp(r);
@@ -86,6 +98,18 @@ namespace Titan
 		SharedPtr& operator=(const SharedPtr<Y>& r) {
 			if (pRep == r.getPointer())
 				return *this;
+			//add for direct null ptr assignment - 2011/5/12
+			if(pRep == NULL)
+			{
+				pRep = r.getPointer();
+				pUseCount = r.useCountPointer();
+				useFreeMethod = r.freeMethod();
+				if(pUseCount)
+				{
+					++(*pUseCount);
+				}
+				return *this;
+			}
 			// Swap current data into a local copy
 			// this ensures we deal with rhs and this being dependent
 			SharedPtr<T> tmp(r);

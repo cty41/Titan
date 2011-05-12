@@ -23,7 +23,7 @@ namespace Titan
 
 		uint32	getDetailLevels() const { return mDetailLevels;}
 		
-		IndexBufferSharedPtr	getLodIndexBuffer(uint8 indexType, uint8 lod);
+		IndexBufferPtr	getLodIndexBuffer(uint8 indexType, uint8 lod);
 
 	protected:
 
@@ -34,8 +34,8 @@ namespace Titan
 		virtual void _buildIndexData();
 
 	protected:
-		IndexBufferSharedPtr	mLODIndexArray[CHUNK_INDEX_TYPE][CHUNK_MAX_LOD];
-		uint32		mDetailLevels;
+		IndexBufferPtr	mLODIndexArray[CHUNK_INDEX_TYPE][CHUNK_MAX_LOD];
+		uint32			mDetailLevels;
 	};
 }
 #endif

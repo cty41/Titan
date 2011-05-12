@@ -44,7 +44,7 @@ namespace Titan
 
 		~IndexData();
 
-		IndexBufferSharedPtr	indexBuffer;
+		IndexBufferPtr	indexBuffer;
 
 		size_t indexStart;
 		/// The number of vertices used in this operation

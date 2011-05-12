@@ -26,11 +26,11 @@ namespace Titan
 
 	};
 
-	class _DllExport VertexBufferSharedPtr : public SharedPtr<VertexBuffer>
+	class _DllExport VertexBufferPtr : public SharedPtr<VertexBuffer>
 	{
 	public:
-		VertexBufferSharedPtr() : SharedPtr<VertexBuffer>() {}
-		explicit VertexBufferSharedPtr(VertexBuffer* buf);
+		VertexBufferPtr() : SharedPtr<VertexBuffer>() {}
+		explicit VertexBufferPtr(VertexBuffer* buf);
 
 	};
 
@@ -199,7 +199,7 @@ namespace Titan
 	class _DllExport VertexBufferBinding : public GeneralAlloc
 	{
 	public:
-		typedef  map<ushort, VertexBufferSharedPtr>::type VertexBufferBindingMap;
+		typedef  map<ushort, VertexBufferPtr>::type VertexBufferBindingMap;
 	protected:
 		VertexBufferBindingMap mBindingMap;
 		ushort	mHighestIndex;
@@ -208,7 +208,7 @@ namespace Titan
 
 		virtual ~VertexBufferBinding();
 
-		virtual void setBinding(ushort index, const VertexBufferSharedPtr& buffer);
+		virtual void setBinding(ushort index, const VertexBufferPtr& buffer);
 
 		virtual void unsetBinding(ushort index);
 
@@ -216,7 +216,7 @@ namespace Titan
 
 		virtual const VertexBufferBindingMap& getBindings() const;
 
-		virtual const VertexBufferSharedPtr&  getBuffer(ushort index) ;
+		virtual const VertexBufferPtr&  getBuffer(ushort index) ;
 
 		virtual bool  isBufferBound(ushort index) const;
 

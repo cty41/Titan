@@ -18,13 +18,9 @@ namespace Titan
 		/// Get the size in bytes of each index
 		size_t getIndexSize(void) const { return mIndexSize; }
 
-		void createSingleStripGrid(
-			uint16 xVerts,	// width of grid
-			uint16 yVerts,	// height of grid
-			uint16 xStep,	// horz vertex count per cell
-			uint16 yStep,	// vert vertex count per cell
-			uint16 stride,	// horz vertex count in vbuffer
-			uint16 flags);
+		void createSingleStripGrid(uint16 xVerts, uint16 yVerts, uint16 xStep, uint16 yStep, uint16 stride);	
+
+		void createTriangleListGrid(uint16 xVerts, uint16 yVerts, uint16 xStep, uint16 yStep, uint16 stride);
 
 	protected:
 		HardwareBufferMgr*	mMgr;
@@ -32,11 +28,11 @@ namespace Titan
 		size_t mIndexSize;
 	};
 
-	class _DllExport IndexBufferSharedPtr : public SharedPtr<IndexBuffer>
+	class _DllExport IndexBufferPtr : public SharedPtr<IndexBuffer>
 	{
 	public:
-		IndexBufferSharedPtr() : SharedPtr<IndexBuffer>() {}
-		explicit IndexBufferSharedPtr(IndexBuffer* buf);
+		IndexBufferPtr() : SharedPtr<IndexBuffer>() {}
+		explicit IndexBufferPtr(IndexBuffer* buf);
 
 	};
 }

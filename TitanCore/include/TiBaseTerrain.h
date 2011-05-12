@@ -49,9 +49,9 @@ namespace Titan
 
 		VertexDeclaration*	getVertexDecl() const { return mVertexDecl; }
 
-		VertexBufferSharedPtr	getHorzVertexData() const { return mHorzVertexData; }
+		VertexBufferPtr	getHorzVertexData() const { return mHorzVertexData; }
 
-		IndexBufferSharedPtr	getSharedIndexData() const { return mIndexData; }
+		IndexBufferPtr	getSharedIndexData() const { return mIndexData; }
 
 		float readWorldHeight(uint16 mapX, uint16 mapZ) const;
 
@@ -118,9 +118,9 @@ namespace Titan
 		float*					mHeightTable;
 		Vector3*				mNormalTable;
 
-		VertexBufferSharedPtr	mHorzVertexData;
+		VertexBufferPtr	mHorzVertexData;
 		VertexDeclaration*		mVertexDecl;
-		IndexBufferSharedPtr	mIndexData;
+		IndexBufferPtr	mIndexData;
 
 		AABB			mWorldBound;
 		
