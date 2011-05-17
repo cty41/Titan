@@ -17,6 +17,10 @@ namespace Titan
 
 		void unlockRect(uint level);
 
+		virtual void save(const String& filename);
+
+		virtual void	_createCoreObject();
+
 		IDirect3DBaseTexture9* getD3dTexture() const;
 
 	protected:
@@ -33,8 +37,6 @@ namespace Titan
 		void	_loadCubeTex();
 
 		void	_perlinNoiseImpl(float scale, int octaves, float falloff);
-
-		virtual void	_createCoreObject();
 
 		void	_create2DTex();
 

@@ -53,6 +53,8 @@ namespace Titan
 		static D3DPOOL	convertD3D9Pool(TexPool pool);
 
 		static ShaderConstantType convertConstantType(D3DXPARAMETER_TYPE type);
+
+		static D3DXIMAGE_FILEFORMAT	convertToD3D9(const String& extName);
 	};
 }
 #endif

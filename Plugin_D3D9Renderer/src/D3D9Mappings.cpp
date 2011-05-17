@@ -550,4 +550,21 @@ namespace Titan
 			return SCT_UNUSED;
 		}
 	}
+	//------------------------------------------------------------------------------//
+	D3DXIMAGE_FILEFORMAT D3D9Mappings::convertToD3D9(const String& extName)
+	{
+		if(extName == "bmp")
+			return D3DXIFF_BMP;
+		else if(extName == "jpg")
+			return D3DXIFF_JPG;
+		else if(extName == "tga")
+			return D3DXIFF_TGA;
+		else if(extName == "png")
+			return D3DXIFF_PNG;
+		else if(extName == "dds")
+			return D3DXIFF_DDS;
+		else
+			return D3DXIFF_FORCE_DWORD;
+	}
+
 }

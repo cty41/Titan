@@ -49,13 +49,15 @@ namespace Titan
 		return tex;
 	}
 	//------------------------------------------------------------------------------//
-	TexturePtr TextureMgr::load(const String& name, const String& group, TexType texType, int numMipmaps, PixelFormat desiredFormat)
+	TexturePtr TextureMgr::load(const String& name, const String& group, TexType texType, int numMipmaps, PixelFormat desiredFormat, TexUsage usage, TexPool pool)
 	{
 		CreatedResource res  = create(name, group);
 		TexturePtr tex = res.second;
 		tex->setTexType(texType);
 		tex->setMipmapLevel(numMipmaps);
 		tex->setPixelFormat(desiredFormat);
+		tex->setTexUsage(usage);
+		tex->setTexPool(pool);
 		tex->load();
 
 		return tex;

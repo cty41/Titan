@@ -12,6 +12,27 @@ namespace Titan
 	//------------------------------------------------------------------------------//
 	GeoTerrain::~GeoTerrain()
 	{
+		// Detail Level 0 (lowest detail level)
+		TITAN_DELETE mDetailLevelStructs[0].tileBodies[0];
+
+		// Detail Level 1-3, main body tiles
+		for (int body = 0; body < 16; ++body)
+		{
+			TITAN_DELETE mDetailLevelStructs[1].tileBodies[body];
+			TITAN_DELETE mDetailLevelStructs[2].tileBodies[body];
+			TITAN_DELETE mDetailLevelStructs[3].tileBodies[body];
+		}
+
+		// create the tile connectors
+		for (int side = 0; side < TotalSides; ++side)
+		{
+			TITAN_DELETE mDetailLevelStructs[1].tileConnectors[side][0];
+			TITAN_DELETE mDetailLevelStructs[2].tileConnectors[side][0];
+			TITAN_DELETE mDetailLevelStructs[2].tileConnectors[side][1];
+			TITAN_DELETE mDetailLevelStructs[3].tileConnectors[side][0];
+			TITAN_DELETE mDetailLevelStructs[3].tileConnectors[side][1];
+			TITAN_DELETE mDetailLevelStructs[3].tileConnectors[side][2];
+		}
 	}
 	//------------------------------------------------------------------------------//
 	void GeoTerrain::create(SceneNode* rootNode, TexturePtr heightMap, const AABB& worldBound, uint8 shift)

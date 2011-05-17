@@ -405,6 +405,37 @@ namespace Titan
 		}
 	}
 	//------------------------------------------------------------------------------//
+	void D3D9Texture::save(const String& filename)
+	{
+		size_t dotPos = filename.find_first_of(".");
+		if(dotPos == String::npos)
+		{
+			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
+				"filename does not contain a extension name: " + filename,
+				"D3D9Texture::save");
+			return ;
+		}
+		String extName = filename.substr(dotPos + 1);
+		LPDIRECT3DBASETEXTURE9 pBaseTex = NULL;
+		if(mType == TT_2D)
+			pBaseTex = mTexUnion.pTex;
+		else if(mType == TT_3D)
+			pBaseTex = mTexUnion.pVolTex;
+		else
+			pBaseTex = mTexUnion.pCubeTex;
+
+		HRESULT hr;
+		if(FAILED(hr = D3DXSaveTextureToFile(
+			filename.c_str(), D3D9Mappings::convertToD3D9(extName), pBaseTex, NULL)))
+		{
+			String errMsg;
+			DXGetErrorDescription(hr);
+			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
+				"save texture to file failed: " + errMsg,
+				"D3D9Texture::save");
+		}
+	}
+	//------------------------------------------------------------------------------//
 	inline IDirect3DBaseTexture9*	D3D9Texture::getD3dTexture() const
 	{
 		if (mType == TT_2D || TT_1D)

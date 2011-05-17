@@ -88,6 +88,9 @@ namespace Titan
 
 		virtual	void	_createCoreObject() = 0;
 
+		//temp method?
+		virtual void	save(const String& filename) = 0;
+
 	protected:
 		uint			mWidth;
 		uint			mHeight;

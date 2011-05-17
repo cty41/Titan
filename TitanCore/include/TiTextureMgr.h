@@ -20,7 +20,7 @@ namespace Titan
 			TexPool pool = TP_DEFAULT);
 
 
-		TexturePtr		load(const String& name, const String& group, TexType texType = TT_2D, int numMipmaps = 1, PixelFormat desiredFormat = PF_UNKNOWN);
+		TexturePtr		load(const String& name, const String& group, TexType texType = TT_2D, int numMipmaps = 1, PixelFormat desiredFormat = PF_UNKNOWN, TexUsage usage = TU_DEFAULT, TexPool pool = TP_DEFAULT);
 
 	protected:
 	public:

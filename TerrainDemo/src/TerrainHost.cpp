@@ -37,16 +37,19 @@ void TerrainHost::loadResources()
 
 #if 1
 	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
-		Titan::TT_2D, 128, 128, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
+		Titan::TT_2D, 1024, 1024, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
 
-	pHeightmap->generatePerlinNoise(0.01f, 5, 0.6f);
+	pHeightmap->generatePerlinNoise(0.005f, 5, 0.6f);
+	pHeightmap->save("terrain_noise.dds");
 
-	mTerrain = TITAN_NEW Titan::GeoTerrain();
+#else
+	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->load("terrain_noise.dds", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP, Titan::TT_2D, 1, Titan::PF_UNKNOWN, Titan::TU_DYNAMIC);
+#endif
+	mTerrain = TITAN_NEW Titan::BaseTerrain();
 	mTerrain->create(mSceneMgr->getRootSceneNode(), pHeightmap, Titan::AABB(-500.0f, 0, -500.0f, 500.0f, 500.0f, 500.0f));
 	Titan::BaseTerrain::elevationDataVec elevationDatas;
 	Titan::BaseTerrain::elevationData elevation[3];
 
-#endif
 
 #if 1
 	// grass (all elevations and slopes)
