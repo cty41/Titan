@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib Foundation.lib OpenMaya.lib"
 				OutputFile="..\bin\$(ConfigurationName)\TitanX.mll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;c:\Program Files\Autodesk\Maya2011\lib&quot;"
@@ -188,6 +189,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\MayaHeader.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -14,6 +14,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin_D3D9Renderer", "Plug
 		{8F5C2BF8-4C98-4DB5-8FCA-90A90414149E} = {8F5C2BF8-4C98-4DB5-8FCA-90A90414149E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaExporter", "MayaExporter\MayaExporter.vcproj", "{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -32,13 +34,17 @@ Global
 		{50174353-C97F-4EC3-B302-9180C6FB87E3}.Debug|Win32.Build.0 = Debug|Win32
 		{50174353-C97F-4EC3-B302-9180C6FB87E3}.Release|Win32.ActiveCfg = Release|Win32
 		{50174353-C97F-4EC3-B302-9180C6FB87E3}.Release|Win32.Build.0 = Release|Win32
+		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Debug|Win32.Build.0 = Debug|Win32
+		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Release|Win32.ActiveCfg = Release|Win32
+		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaPersistentConfig = Debug|Win32
-		AMDCaPersistentStartup = TerrainDemo
 		AMDCaProjectFile = D:\Programmer\Work\Terrain\CodeAnalyst\Titan.caw
+		AMDCaPersistentStartup = TerrainDemo
+		AMDCaPersistentConfig = Debug|Win32
 	EndGlobalSection
 EndGlobal
