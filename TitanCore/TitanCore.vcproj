@@ -336,6 +336,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TiMeshLord.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\TiOverlayElement.cpp"
 				>
 			</File>
@@ -731,6 +735,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\TiMeshLord.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\TiMeshLordFormat.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\TiOverlayElement.h"
 				>
 			</File>
@@ -1019,22 +1031,6 @@
 				</File>
 				<File
 					RelativePath=".\include\rapidxml-1.13\rapidxml_utils.hpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Header Files"
-				>
-				<File
-					RelativePath="..\TerrainDemo\include\BaseHost.h"
-					>
-				</File>
-				<File
-					RelativePath="..\TerrainDemo\include\CameraController.h"
-					>
-				</File>
-				<File
-					RelativePath="..\TerrainDemo\include\TerrainHost.h"
 					>
 				</File>
 			</Filter>

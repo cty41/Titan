@@ -636,11 +636,11 @@ namespace Titan
 	{
 		if(x0 > x1)
 		{
-			swap(x0, x1);
+			std::swap(x0, x1);
 		}
 		if(y0 > y1)
 		{
-			swap(y0, y1);
+			std::swap(y0, y1);
 		}
 	}
 

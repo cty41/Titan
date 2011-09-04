@@ -37,7 +37,7 @@ void TerrainHost::loadResources()
 
 #if 1
 	Titan::TexturePtr pHeightmap = Titan::TextureMgr::getSingletonPtr()->createManually("heightMap1", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
-		Titan::TT_2D, 1024, 1024, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
+		Titan::TT_2D, 256, 256, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
 
 	pHeightmap->generatePerlinNoise(0.005f, 5, 0.6f);
 	pHeightmap->save("terrain_noise.dds");

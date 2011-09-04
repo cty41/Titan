@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8F5C2BF8-4C98-4DB5-8FCA-90A90414149E}</ProjectGuid>
+    <RootNamespace>TitanCore</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">*.ilb%3b*.obj%3b*.ilk%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.pgc%3b*.pgd%3b*.meta%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>./include/;./include/rapidxml-1.13/;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;TITAN_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>TitanStableHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ProgramDataBaseFileName>..\bin\$(Configuration)\TitanCore_d.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>..\Dependencies\lib\$(Configuration)\freetype2311_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\bin\$(Configuration)\TitanCore_d.dll</OutputFile>
+      <Version>0.1</Version>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>..\bin\$(Configuration)\TitanCore_d.pdb</ProgramDatabaseFile>
+      <SubSystem>NotSet</SubSystem>
+      <ImportLibrary>..\lib\$(Configuration)\TitanCore_d.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>./include/;./include/rapidxml-1.13/;./src/nedmalloc;..\Dependencies\include\;..\Dependencies\include\OIS;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;TITAN_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>TitanStableHeader.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>..\Dependencies\lib\$(Configuration)\freetype2311.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\bin\$(Configuration)\TitanCore.dll</OutputFile>
+      <Version>0.1</Version>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>..\bin\$(Configuration)\TitanCore.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\lib\$(Configuration)\TitanCore.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\TiAutoParamsSetter.cpp" />
+    <ClCompile Include="src\TiBaseTerrain.cpp" />
+    <ClCompile Include="src\TiBaseTerrainSection.cpp" />
+    <ClCompile Include="src\TiCamera.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\TiChunkTerrain.cpp" />
+    <ClCompile Include="src\TiChunkTerrainSection.cpp" />
+    <ClCompile Include="src\TiColor.cpp" />
+    <ClCompile Include="src\TICommonFileSystem.cpp" />
+    <ClCompile Include="src\TiConfigFile.cpp" />
+    <ClCompile Include="src\TiConsoleDebugger.cpp" />
+    <ClCompile Include="src\TiDataStream.cpp" />
+    <ClCompile Include="src\TiDataType.cpp" />
+    <ClCompile Include="src\TiDynLib.cpp" />
+    <ClCompile Include="src\TiException.cpp" />
+    <ClCompile Include="src\TiFileSystemMgr.cpp" />
+    <ClCompile Include="src\TiFont.cpp" />
+    <ClCompile Include="src\TiFontMgr.cpp" />
+    <ClCompile Include="src\TiFrustum.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\TiGeoTerrain.cpp" />
+    <ClCompile Include="src\TiGeoTerrainSection.cpp" />
+    <ClCompile Include="src\TiHardwareBufferMgr.cpp" />
+    <ClCompile Include="src\TiHelperMethods.cpp" />
+    <ClCompile Include="src\TiImage.cpp" />
+    <ClCompile Include="src\TiIndexBuffer.cpp" />
+    <ClCompile Include="src\TiManualObject.cpp" />
+    <ClCompile Include="src\TiMaterial.cpp" />
+    <ClCompile Include="src\TiMaterialMgr.cpp" />
+    <ClCompile Include="src\TiMath.cpp" />
+    <ClCompile Include="src\TiMatrix3.cpp" />
+    <ClCompile Include="src\TiMatrix4.cpp" />
+    <ClCompile Include="src\TiMemoryNedAlloc.cpp" />
+    <ClCompile Include="src\TiMemoryStdAlloc.cpp" />
+    <ClCompile Include="src\TiMemoryTracker.cpp" />
+    <ClCompile Include="src\TiMeshLord.cpp" />
+    <ClCompile Include="src\TiOverlayElement.cpp" />
+    <ClCompile Include="src\TiOverlayMgr.cpp" />
+    <ClCompile Include="src\TiOverlayPanelElement.cpp" />
+    <ClCompile Include="src\TiOverlayTextElement.cpp" />
+    <ClCompile Include="src\TiPass.cpp" />
+    <ClCompile Include="src\TiPerlinNoise.cpp" />
+    <ClCompile Include="src\TiPixelFormat.cpp" />
+    <ClCompile Include="src\TiPlane.cpp" />
+    <ClCompile Include="src\TiQuadtree.cpp" />
+    <ClCompile Include="src\TiQuadtreeNode.cpp" />
+    <ClCompile Include="src\TiQuadtreeSceneMgr.cpp" />
+    <ClCompile Include="src\TiQuaternion.cpp" />
+    <ClCompile Include="src\TiReflector.cpp" />
+    <ClCompile Include="src\TiRenderer.cpp" />
+    <ClCompile Include="src\TiRenderQueue.cpp" />
+    <ClCompile Include="src\TiRenderQueueGroup.cpp" />
+    <ClCompile Include="src\TiRenderTarget.cpp" />
+    <ClCompile Include="src\TiRenderWindow.cpp" />
+    <ClCompile Include="src\TiResource.cpp" />
+    <ClCompile Include="src\TiResourceGroupMgr.cpp" />
+    <ClCompile Include="src\TiResourceMgr.cpp" />
+    <ClCompile Include="src\TiRoot.cpp" />
+    <ClCompile Include="src\TiSceneMgr.cpp" />
+    <ClCompile Include="src\TiSceneMgrSelector.cpp" />
+    <ClCompile Include="src\TiSceneNode.cpp" />
+    <ClCompile Include="src\TiSceneObject.cpp" />
+    <ClCompile Include="src\TiScriptCompiler.cpp" />
+    <ClCompile Include="src\TiScriptCompilerMgr.cpp" />
+    <ClCompile Include="src\TiScriptTranslator.cpp" />
+    <ClCompile Include="src\TiScriptTranslatorMgr.cpp" />
+    <ClCompile Include="src\TiShader.cpp" />
+    <ClCompile Include="src\TiShaderMgr.cpp" />
+    <ClCompile Include="src\TiShaderParams.cpp" />
+    <ClCompile Include="src\TiShaderUnit.cpp" />
+    <ClCompile Include="src\TiStringConverter.cpp" />
+    <ClCompile Include="src\TiStringFuncs.cpp" />
+    <ClCompile Include="src\TitanStableHeader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClCompile Include="src\TiTexture.cpp" />
+    <ClCompile Include="src\TiTextureMgr.cpp" />
+    <ClCompile Include="src\TiTextureUnit.cpp" />
+    <ClCompile Include="src\TiVector2.cpp" />
+    <ClCompile Include="src\TiVector3.cpp" />
+    <ClCompile Include="src\TiVector4.cpp" />
+    <ClCompile Include="src\TiVertexBuffer.cpp" />
+    <ClCompile Include="src\TiVertexIndexBufferData.cpp" />
+    <ClCompile Include="src\TiViewport.cpp" />
+    <ClCompile Include="src\Win32\Timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\asm_math.h" />
+    <ClInclude Include="include\TiAny.h" />
+    <ClInclude Include="include\TiAutoParamsSetter.h" />
+    <ClInclude Include="include\TiBaseTerrain.h" />
+    <ClInclude Include="include\TiBaseTerrainSection.h" />
+    <ClInclude Include="include\TiBitOperation.h" />
+    <ClInclude Include="include\TiCamera.h" />
+    <ClInclude Include="include\TiChunkTerrain.h" />
+    <ClInclude Include="include\TiChunkTerrainSection.h" />
+    <ClInclude Include="include\TiColor.h" />
+    <ClInclude Include="include\TiCommon.h" />
+    <ClInclude Include="include\TiCommonFileSystem.h" />
+    <ClInclude Include="include\TiConfigFile.h" />
+    <ClInclude Include="include\TiConsoleDebugger.h" />
+    <ClInclude Include="include\TiDataStream.h" />
+    <ClInclude Include="include\TiDataType.h" />
+    <ClInclude Include="include\TiDynLib.h" />
+    <ClInclude Include="include\TiException.h" />
+    <ClInclude Include="include\TiFileSystem.h" />
+    <ClInclude Include="include\TiFileSystemMgr.h" />
+    <ClInclude Include="include\TiFont.h" />
+    <ClInclude Include="include\TiFontMgr.h" />
+    <ClInclude Include="include\TiFrustum.h" />
+    <ClInclude Include="include\TiGeoTerrain.h" />
+    <ClInclude Include="include\TiGeoTerrainDefs.h" />
+    <ClInclude Include="include\TiGeoTerrainSection.h" />
+    <ClInclude Include="include\TiHardwareBuffer.h" />
+    <ClInclude Include="include\TiHardwareBufferMgr.h" />
+    <ClInclude Include="include\TiHelperMethods.h" />
+    <ClInclude Include="include\TiImage.h" />
+    <ClInclude Include="include\TiIndexBuffer.h" />
+    <ClInclude Include="include\TiIteratorWrapper.h" />
+    <ClInclude Include="include\TiManualObject.h" />
+    <ClInclude Include="include\TiMaterial.h" />
+    <ClInclude Include="include\TiMaterialMgr.h" />
+    <ClInclude Include="include\TiMath.h" />
+    <ClInclude Include="include\TiMatrix3.h" />
+    <ClInclude Include="include\TiMatrix4.h" />
+    <ClInclude Include="include\TiMemoryAllocatedObject.h" />
+    <ClInclude Include="include\TiMemoryAllocatorConfig.h" />
+    <ClInclude Include="include\TiMemoryNedAlloc.h" />
+    <ClInclude Include="include\TiMemoryStdAlloc.h" />
+    <ClInclude Include="include\TiMemorySTLAllocator.h" />
+    <ClInclude Include="include\TiMemoryTracker.h" />
+    <ClInclude Include="include\Timer.h" />
+    <ClInclude Include="include\TiMeshLord.h" />
+    <ClInclude Include="include\TiMeshLordFormat.h" />
+    <ClInclude Include="include\TiOverlayElement.h" />
+    <ClInclude Include="include\TiOverlayMgr.h" />
+    <ClInclude Include="include\TiOverlayPanelElement.h" />
+    <ClInclude Include="include\TiOverlayTextElement.h" />
+    <ClInclude Include="include\TiPass.h" />
+    <ClInclude Include="include\TiPerlinNoise.h" />
+    <ClInclude Include="include\TiPixelFormat.h" />
+    <ClInclude Include="include\TiPlane.h" />
+    <ClInclude Include="include\TiPlaneBoundedVolume.h" />
+    <ClInclude Include="include\TiPlugin.h" />
+    <ClInclude Include="include\TiPrerequisites.h" />
+    <ClInclude Include="include\TiQuadtree.h" />
+    <ClInclude Include="include\TiQuadtreeNode.h" />
+    <ClInclude Include="include\TiQuadtreeSceneMgr.h" />
+    <ClInclude Include="include\TiQuaternion.h" />
+    <ClInclude Include="include\TiRay.h" />
+    <ClInclude Include="include\TiRect2D.h" />
+    <ClInclude Include="include\TiReflector.h" />
+    <ClInclude Include="include\TiRenderable.h" />
+    <ClInclude Include="include\TiRenderData.h" />
+    <ClInclude Include="include\TiRenderer.h" />
+    <ClInclude Include="include\TiRenderQueue.h" />
+    <ClInclude Include="include\TiRenderQueueGroup.h" />
+    <ClInclude Include="include\TiRenderTarget.h" />
+    <ClInclude Include="include\TiRenderWindow.h" />
+    <ClInclude Include="include\TiResource.h" />
+    <ClInclude Include="include\TiResourceGroupMgr.h" />
+    <ClInclude Include="include\TiResourceMgr.h" />
+    <ClInclude Include="include\TiRoot.h" />
+    <ClInclude Include="include\TiSceneMgr.h" />
+    <ClInclude Include="include\TiSceneMgrSelector.h" />
+    <ClInclude Include="include\TiSceneNode.h" />
+    <ClInclude Include="include\TiSceneObject.h" />
+    <ClInclude Include="include\TiScriptCompiler.h" />
+    <ClInclude Include="include\TiScriptCompilerMgr.h" />
+    <ClInclude Include="include\TiScriptLoader.h" />
+    <ClInclude Include="include\TiScriptTranslator.h" />
+    <ClInclude Include="include\TiScriptTranslatorMgr.h" />
+    <ClInclude Include="include\TiShader.h" />
+    <ClInclude Include="include\TiShaderMgr.h" />
+    <ClInclude Include="include\TiShaderParams.h" />
+    <ClInclude Include="include\TiShaderUnit.h" />
+    <ClInclude Include="include\TiSharedPtr.h" />
+    <ClInclude Include="include\TiSingleton.h" />
+    <ClInclude Include="include\TiStlHeader.h" />
+    <ClInclude Include="include\TiStringConverter.h" />
+    <ClInclude Include="include\TiStringFuncs.h" />
+    <ClInclude Include="include\Titan.h" />
+    <ClInclude Include="include\TitanAABB.h" />
+    <ClInclude Include="include\TitanBitFlags.h" />
+    <ClInclude Include="include\TitanBlendMode.h" />
+    <ClInclude Include="include\TitanConfig.h" />
+    <ClInclude Include="include\TitanHeaderPrefix.h" />
+    <ClInclude Include="include\TitanHeaderSuffix.h" />
+    <ClInclude Include="include\TitanNumericTools.h" />
+    <ClInclude Include="include\TitanSphere.h" />
+    <ClInclude Include="include\TitanStableHeader.h" />
+    <ClInclude Include="include\TiTexture.h" />
+    <ClInclude Include="include\TiTextureMgr.h" />
+    <ClInclude Include="include\TiTextureUnit.h" />
+    <ClInclude Include="include\TiVector2.h" />
+    <ClInclude Include="include\TiVector3.h" />
+    <ClInclude Include="include\TiVector4.h" />
+    <ClInclude Include="include\TiVertexBuffer.h" />
+    <ClInclude Include="include\TiVertexIndexBufferData.h" />
+    <ClInclude Include="include\TiViewport.h" />
+    <ClInclude Include="include\Win32\Win32TimerImp.h" />
+    <ClInclude Include="include\rapidxml-1.13\rapidxml.hpp" />
+    <ClInclude Include="include\rapidxml-1.13\rapidxml_iterators.hpp" />
+    <ClInclude Include="include\rapidxml-1.13\rapidxml_print.hpp" />
+    <ClInclude Include="include\rapidxml-1.13\rapidxml_utils.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

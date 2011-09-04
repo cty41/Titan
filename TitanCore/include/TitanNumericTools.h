@@ -42,10 +42,6 @@ template <class T> T raiseToPower(T value, T power);
 template <class T> T modulus(T value, T Y);
 template <class T> T align(const T& value, T alignment);
 
-// swap two objects
-template <class T> void swap(T& a, T& b);
-
-
 // floating-point specific inverse (1/value)
 float inverse(float value);
 
@@ -93,9 +89,9 @@ template<> inline int32 fast_cast(double input)
 
 /*	
 -----------------------------------------------------------------
-    
+	
 	Floating Point Macros
-    
+	
 -----------------------------------------------------------------
 */
 // reinterpret a float as an int32
@@ -146,10 +142,10 @@ inline T absoluteValue(T value)
 template <> 
 inline float absoluteValue(float value)
 {
-    uint32 absValue = fpBits(value);
-    absValue &= 0x7fffffff;
+	uint32 absValue = fpBits(value);
+	absValue &= 0x7fffffff;
 
-    return intBits(absValue);
+	return intBits(absValue);
 }
 
 // yes, we even handle unsigned values (quickly)
@@ -168,14 +164,14 @@ template <> inline uint32 absoluteValue(uint32 a) {return a;}
 template <class T> 
 inline bool isPositive(T a)
 {
-    return (a >= 0) ? true : false;
+	return (a >= 0) ? true : false;
 }
 
 // floating point version
 template <> 
 inline bool isPositive(float a)
 {
-    return !fpSign(a);
+	return !fpSign(a);
 }
 
 // yes, we even handle unsigned values (quickly)
@@ -194,14 +190,14 @@ template <> inline bool isPositive(uint32 a) {return true;}
 template <class T> 
 inline bool isNegative(T a)
 {
-    return (a < 0) ? true : false;
+	return (a < 0) ? true : false;
 }
 
 // floating point version
 template <> 
 inline bool isNegative(float a)
 {
-    return fpSign(a) ? true:false;
+	return fpSign(a) ? true:false;
 }
 
 // yes, we even handle unsigned values (quickly)
@@ -220,7 +216,7 @@ template <> inline bool isNegative(uint32 a) {return false;}
 template<class T> 
 inline bool sameSigns(T a, T b)
 {
-    return (isNegative(a) == isNegative(b));
+	return (isNegative(a) == isNegative(b));
 }
 
 
@@ -234,7 +230,7 @@ inline bool sameSigns(T a, T b)
 template<class T> 
 inline T copySign(T value, T s)
 {
-    return isNegative(s) ? -absoluteValue(value) : absoluteValue(value);
+	return isNegative(s) ? -absoluteValue(value) : absoluteValue(value);
 }
 
 
@@ -248,7 +244,7 @@ inline T copySign(T value, T s)
 template <class T>
 inline bool deltaRangeTest(T a, T b, T epsilon)
 {
-    return (absoluteValue(a - b) < epsilon) ? true : false;
+	return (absoluteValue(a - b) < epsilon) ? true : false;
 }
 
 //:	deltaRangeTest (default epsilon)
@@ -260,12 +256,12 @@ inline bool deltaRangeTest(T a, T b, T epsilon)
 template <class T>
 inline bool deltaRangeTest(T a, T b)
 {
-    return (a==b);
+	return (a==b);
 }
 template <>
 inline bool deltaRangeTest(float a, float b)
 {
-    return (absoluteValue(a - b) < DEFAULT_EPSILON) ? true : false;
+	return (absoluteValue(a - b) < DEFAULT_EPSILON) ? true : false;
 }
 
 //:	min
@@ -335,12 +331,12 @@ inline T clampPositive(T value)
 template <> 
 inline float clampPositive(float input)
 {
-    // if the value is negative, set it to zero
-    int value = fpBits(input);
-    int sign_mask = ~fpSign(input);
+	// if the value is negative, set it to zero
+	int value = fpBits(input);
+	int sign_mask = ~fpSign(input);
 	value &= sign_mask;
 
-    return intBits(value);
+	return intBits(value);
 }
 
 
@@ -360,11 +356,11 @@ inline T clampNegative(T value)
 template <> 
 inline float clampNegative(float input)
 {
-    // if the value is positive, set it to zero
-    int value = fpBits(input);
-    int sign_mask = fpSign(input);
+	// if the value is positive, set it to zero
+	int value = fpBits(input);
+	int sign_mask = fpSign(input);
 	value &= sign_mask;
-    return intBits(value);
+	return intBits(value);
 }
 
 
@@ -377,15 +373,15 @@ inline float clampNegative(float input)
 //-------------------------------------------------------------------------------//----------------://
 inline float clampUnitSize(float input)
 {
-    // if the absolute value is greater than one, 
-    // set it to one
-    uint32 value = fpBits(input);
-    uint32 abs_value = value & 0x7fffffff;
-    abs_value -= (127<<23);
-    abs_value >>= 31;
-    uint32 one = (127<<23) & ~abs_value;
-    value = (value & abs_value) + one;
-    return intBits(value);
+	// if the absolute value is greater than one, 
+	// set it to one
+	uint32 value = fpBits(input);
+	uint32 abs_value = value & 0x7fffffff;
+	abs_value -= (127<<23);
+	abs_value >>= 31;
+	uint32 one = (127<<23) & ~abs_value;
+	value = (value & abs_value) + one;
+	return intBits(value);
 } 
 
 
@@ -400,10 +396,10 @@ template<class T>
 inline int highestBitSet(T input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    assert(sizeof(T)==4); // 32bit data only!
-    _asm bsr eax, input
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	assert(sizeof(T)==4); // 32bit data only!
+	_asm bsr eax, input
+	_asm mov result, eax
 	return result;
 }
 
@@ -411,22 +407,22 @@ template<>
 inline int highestBitSet (uint8 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dl, input // copy into a 32bit reg
-    _asm and edx, 0xff // keep only the bits we want
-    _asm bsr eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dl, input // copy into a 32bit reg
+	_asm and edx, 0xff // keep only the bits we want
+	_asm bsr eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 template<>
 inline int highestBitSet (int8 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dl, input // copy into a 32bit reg
-    _asm and edx, 0xff // keep only the bits we want
-    _asm bsr eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dl, input // copy into a 32bit reg
+	_asm and edx, 0xff // keep only the bits we want
+	_asm bsr eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 
@@ -434,22 +430,22 @@ template<>
 inline int highestBitSet (uint16 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dx, input // copy into a 32bit reg
-    _asm and edx, 0xffff // keep only the bits we want
-    _asm bsr eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dx, input // copy into a 32bit reg
+	_asm and edx, 0xffff // keep only the bits we want
+	_asm bsr eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 template<>
 inline int highestBitSet (int16 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dx, input // copy into a 32bit reg
-    _asm and edx, 0xffff // keep only the bits we want
-    _asm bsr eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dx, input // copy into a 32bit reg
+	_asm and edx, 0xffff // keep only the bits we want
+	_asm bsr eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 
@@ -458,9 +454,9 @@ inline int highestBitSet (float f)
 {
 	register int result;
 	register uint32 input = fpBits(f);
-    assert(input); // zero is invalid input!
-    _asm bsr eax, input
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm bsr eax, input
+	_asm mov result, eax
 	return result;
 }
 
@@ -476,10 +472,10 @@ template<class T>
 inline int lowestBitSet(T input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    assert(sizeof(T)==4); // 32bit data only!
-    _asm bsf eax, input
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	assert(sizeof(T)==4); // 32bit data only!
+	_asm bsf eax, input
+	_asm mov result, eax
 	return result;
 }
 
@@ -487,22 +483,22 @@ template<>
 inline int lowestBitSet (uint8 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dl, input // copy into a 32bit reg
-    _asm and edx, 0xff // keep only the bits we want
-    _asm bsf eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dl, input // copy into a 32bit reg
+	_asm and edx, 0xff // keep only the bits we want
+	_asm bsf eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 template<>
 inline int lowestBitSet (int8 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dl, input // copy into a 32bit reg
-    _asm and edx, 0xff // keep only the bits we want
-    _asm bsf eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dl, input // copy into a 32bit reg
+	_asm and edx, 0xff // keep only the bits we want
+	_asm bsf eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 
@@ -510,22 +506,22 @@ template<>
 inline int lowestBitSet (uint16 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dx, input // copy into a 32bit reg
-    _asm and edx, 0xffff // keep only the bits we want
-    _asm bsf eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dx, input // copy into a 32bit reg
+	_asm and edx, 0xffff // keep only the bits we want
+	_asm bsf eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 template<>
 inline int lowestBitSet (int16 input)
 {
 	register int result;
-    assert(input); // zero is invalid input!
-    _asm mov dx, input // copy into a 32bit reg
-    _asm and edx, 0xffff // keep only the bits we want
-    _asm bsf eax, edx // perform the scan
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm mov dx, input // copy into a 32bit reg
+	_asm and edx, 0xffff // keep only the bits we want
+	_asm bsf eax, edx // perform the scan
+	_asm mov result, eax
 	return result;
 }
 
@@ -534,9 +530,9 @@ inline int lowestBitSet (float f)
 {
 	register int result;
 	register uint32 input = fpBits(f);
-    assert(input); // zero is invalid input!
-    _asm bsf eax, input
-    _asm mov result, eax
+	assert(input); // zero is invalid input!
+	_asm bsf eax, input
+	_asm mov result, eax
 	return result;
 }
 
@@ -551,9 +547,9 @@ inline int lowestBitSet (float f)
 template<class T>
 inline bool isPowerOfTwo(T input)
 {
-    // if the value is greater than zero, and has only one
-    // bit set, it must be a power of two
-    return (input>0 && highestBitSet(input) == lowestBitSet(input));
+	// if the value is greater than zero, and has only one
+	// bit set, it must be a power of two
+	return (input>0 && highestBitSet(input) == lowestBitSet(input));
 }
 
 template<>
@@ -561,7 +557,7 @@ inline bool isPowerOfTwo(float input)
 {
 	// for floating-point values, we know the value is a power-of-two if
 	// the mantissa is zero (not including the implied bit)
-    return (!fpPureMantissa(input));
+	return (!fpPureMantissa(input));
 }
 
 
@@ -576,21 +572,21 @@ inline bool isPowerOfTwo(float input)
 template<class T>
 inline T nearestPowerOfTwo(T input)
 {
-    
-    // the least possible power-of-two value is 1
-    if (input <= 1) return 1;
+	
+	// the least possible power-of-two value is 1
+	if (input <= 1) return 1;
 
-    int highestBit = highestBitSet(input);
-    int roundingTest = input & (1<< (highestBit-1)); 
-    if (roundingTest) ++highestBit;
-    return static_cast<T>(1<<highestBit);
+	int highestBit = highestBitSet(input);
+	int roundingTest = input & (1<< (highestBit-1)); 
+	if (roundingTest) ++highestBit;
+	return static_cast<T>(1<<highestBit);
 }
 
 template<>
 inline float nearestPowerOfTwo(float input)
 {
-    // convert the value to an int
-    int result = fpBits(input);
+	// convert the value to an int
+	int result = fpBits(input);
 
 	// if the value is negative, or less than 1.0f, return 1.0f
 	// this mask test for the sign bit and the exponents sign in one step
@@ -600,11 +596,11 @@ inline float nearestPowerOfTwo(float input)
 	// use it to add one to the exponent
 	result += (result & 0x800000)<<1;
 
-    // trim away the mantissa
-    result &= ~((1<<23)-1);
+	// trim away the mantissa
+	result &= ~((1<<23)-1);
 
-    // convert back to floating-point as we return
-    return (intBits(result));
+	// convert back to floating-point as we return
+	return (intBits(result));
 }
 
 
@@ -619,20 +615,20 @@ inline float nearestPowerOfTwo(float input)
 template<class T>
 inline T ceilingPowerOfTwo(T input)
 {
-    // the least possible power-of-two value is 1
-    if (input <= (T)1) return 1;
+	// the least possible power-of-two value is 1
+	if (input <= (T)1) return 1;
 
-    int highestBit = highestBitSet(index);
-    int mask = input & ((1<< highestBit)-1); 
-    highestBit += mask & 1;
-    return static_cast<T>(1<<highestBit);
+	int highestBit = highestBitSet(index);
+	int mask = input & ((1<< highestBit)-1); 
+	highestBit += mask & 1;
+	return static_cast<T>(1<<highestBit);
 }
 
 template<>
 inline float ceilingPowerOfTwo(float input)
 {
-    // convert the value to an int
-    int result = fpBits(input);
+	// convert the value to an int
+	int result = fpBits(input);
 
 	// if the value is negative, or less than 1.0f, return 1.0f
 	// this mask test for the sign bit and the exponents sign in one step
@@ -641,11 +637,11 @@ inline float ceilingPowerOfTwo(float input)
 	// if anything is in the mantissa, round up
 	result += 0x7fffff;
 
-    // trim away the mantissa
-    result &= ~((1<<23)-1);
+	// trim away the mantissa
+	result &= ~((1<<23)-1);
 
-    // convert back to floating-point as we return
-    return (intBits(result));
+	// convert back to floating-point as we return
+	return (intBits(result));
 }
 
 
@@ -660,28 +656,28 @@ inline float ceilingPowerOfTwo(float input)
 template<class T>
 inline T floorPowerOfTwo(T input)
 {
-    // the least possible power-of-two value is 1
-    if (input <= (T)1) return 1;
+	// the least possible power-of-two value is 1
+	if (input <= (T)1) return 1;
 
-    int highestBit = highestBitSet(input);
-    return static_cast<T>(1<<highestBit);
+	int highestBit = highestBitSet(input);
+	return static_cast<T>(1<<highestBit);
 }
 
 template<>
 inline float floorPowerOfTwo(float input)
 {
-    // convert the value to an int
-    int result = fpBits(input);
+	// convert the value to an int
+	int result = fpBits(input);
 
 	// if the value is negative, or less than 1.0f, return 1.0f
 	// this mask test for the sign bit and the exponents sign in one step
 	if (result & 0xc0000000) return 1.0f;
 
-    // trim away the mantissa
-    result &= ~((1<<23)-1);
+	// trim away the mantissa
+	result &= ~((1<<23)-1);
 
-    // convert back to floating-point as we return
-    return (intBits(result));
+	// convert back to floating-point as we return
+	return (intBits(result));
 }
 
 
@@ -769,19 +765,6 @@ inline T alignDown(const T& value, T alignment)
 
 
 
-//:	swap
-//-------------------------------------------------------------------------------//-------------------
-//
-//	swap the value of two numbers
-//
-//-------------------------------------------------------------------------------//----------------://
-template <class T>
-inline void swap(T& a, T& b)
-{
-	T temp(a);
-	a = b;
-	b = temp;
-}
 
 
 
@@ -793,9 +776,9 @@ inline void swap(T& a, T& b)
 //-------------------------------------------------------------------------------//----------------://
 inline float inverse(float value)
 {
-    int _i = 2 * fpOneBits - fpBits(value);                                 
-    float r = intBits(_i);                                                       
-    return fpBits(value) ? (r * (2.0f - (value) * r)) : 0;  
+	int _i = 2 * fpOneBits - fpBits(value);                                 
+	float r = intBits(_i);                                                       
+	return fpBits(value) ? (r * (2.0f - (value) * r)) : 0;  
 }
 
 
@@ -809,42 +792,42 @@ inline float inverse(float value)
 //-------------------------------------------------------------------------------//----------------://
 inline float trimFloat(float input, uint8 precision)
 {
-    float result = input;
-    int32 exponent      = fpExponent(input);
-    int32 bias          = 23 - (exponent + precision);
+	float result = input;
+	int32 exponent      = fpExponent(input);
+	int32 bias          = 23 - (exponent + precision);
 
-    if (bias < 1)
-    {
-        return result;
-    }
-    else if (bias > 24)
-    {
-        return 0.0f;
-    }
-    else if (bias == 24)
-    {
+	if (bias < 1)
+	{
+		return result;
+	}
+	else if (bias > 24)
+	{
+		return 0.0f;
+	}
+	else if (bias == 24)
+	{
 		int32 value = fpBits(input);
 		value &= (1<<31);
-        exponent = -precision;
-        value += (exponent+127)<<23;
+		exponent = -precision;
+		value += (exponent+127)<<23;
 		return intBits(value);
-    }
+	}
 
 	int32 value         = fpBits(input);
-    _asm
-    {
-        clc
-        mov ecx, bias
-        mov eax, value
+	_asm
+	{
+		clc
+		mov ecx, bias
+		mov eax, value
 
-        shr eax, cl
-        adc eax, 0
-        shl eax, cl
+		shr eax, cl
+		adc eax, 0
+		shl eax, cl
 
-        mov value, eax
-    };
+		mov value, eax
+	};
 
-    return intBits(value);
+	return intBits(value);
 };
 
 
@@ -876,16 +859,16 @@ inline int32 realToInt32(float input)
 //-------------------------------------------------------------------------------//----------------://
 inline int32 realToInt32_chop(float input)
 {
-    // read the exponent and decide how much we need to shift the mantissa down
-    int32 shift = 23-fpExponent(input);
-    // read the mantissa and shift it down to remove all fractional values
-    int32 result = fpMantissa(input)>>shift;
-    // set the sign of the new result
-    result = flipSign(result, fpSign(input));
-    // if the exponent was negative, (-1<input<1) we must return zero
-    result &= ~fpExponentSign(input);
-    // return the result
-    return result;                  
+	// read the exponent and decide how much we need to shift the mantissa down
+	int32 shift = 23-fpExponent(input);
+	// read the mantissa and shift it down to remove all fractional values
+	int32 result = fpMantissa(input)>>shift;
+	// set the sign of the new result
+	result = flipSign(result, fpSign(input));
+	// if the exponent was negative, (-1<input<1) we must return zero
+	result &= ~fpExponentSign(input);
+	// return the result
+	return result;                  
 }
 
 
@@ -898,21 +881,21 @@ inline int32 realToInt32_chop(float input)
 //-------------------------------------------------------------------------------//----------------://
 inline int32 realToInt32_floor(float input)
 { 
-    // read the exponent and decide how much we need to shift the mantissa down
-    int shift = 23-fpExponent(input);
-    // read the mantissa and shift it down to remove all fractional values
-    int result = fpMantissa(input)>>shift;
-    // set the sign of the new result
-    result = flipSign(result, fpSign(input));
-    // if the exponent was negative, (-1<input<1) we must return zero
-    result &= ~fpExponentSign(input);
+	// read the exponent and decide how much we need to shift the mantissa down
+	int shift = 23-fpExponent(input);
+	// read the mantissa and shift it down to remove all fractional values
+	int result = fpMantissa(input)>>shift;
+	// set the sign of the new result
+	result = flipSign(result, fpSign(input));
+	// if the exponent was negative, (-1<input<1) we must return zero
+	result &= ~fpExponentSign(input);
 
 	// if the original value is negative, and any fractional values are present,
 	// decrement the result by one
 	result -= fpSign(input) && (fpExponentSign(input) || (fpPureMantissa(input) & ((1<<shift)-1)));
 
-    // return the result
-    return result;                  
+	// return the result
+	return result;                  
 }
 
 
@@ -926,21 +909,21 @@ inline int32 realToInt32_floor(float input)
 //-------------------------------------------------------------------------------//----------------://
 inline int32 realToInt32_ceiling(float input)
 { 
-    // read the exponent and decide how much we need to shift the mantissa down
-    int shift = 23-fpExponent(input);
-    // read the mantissa and shift it down to remove all fractional values
-    int result = fpMantissa(input)>>shift;
-    // set the sign of the new result
-    result = flipSign(result, fpSign(input));
-    // if the exponent was negative, (-1<input<1) we must return zero
-    result &= ~fpExponentSign(input);
+	// read the exponent and decide how much we need to shift the mantissa down
+	int shift = 23-fpExponent(input);
+	// read the mantissa and shift it down to remove all fractional values
+	int result = fpMantissa(input)>>shift;
+	// set the sign of the new result
+	result = flipSign(result, fpSign(input));
+	// if the exponent was negative, (-1<input<1) we must return zero
+	result &= ~fpExponentSign(input);
 
 	// if the original value is positive and not zero, and any fractional values are present,
 	// increment the result by one
 	result += (!fpSign(input) && fpBits(input)) && (fpExponentSign(input) || (fpPureMantissa(input) & ((1<<shift)-1)));
 
-    // return the result
-    return result;                  
+	// return the result
+	return result;                  
 }
 
 

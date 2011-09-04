@@ -1,20 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainDemo", "TerrainDemo\TerrainDemo.vcproj", "{039F9AEB-32B7-4D66-95E3-6A8AFEB5A991}"
-	ProjectSection(ProjectDependencies) = postProject
-		{50174353-C97F-4EC3-B302-9180C6FB87E3} = {50174353-C97F-4EC3-B302-9180C6FB87E3}
-		{8F5C2BF8-4C98-4DB5-8FCA-90A90414149E} = {8F5C2BF8-4C98-4DB5-8FCA-90A90414149E}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrainDemo", "TerrainDemo\TerrainDemo.vcxproj", "{039F9AEB-32B7-4D66-95E3-6A8AFEB5A991}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TitanCore", "TitanCore\TitanCore.vcproj", "{8F5C2BF8-4C98-4DB5-8FCA-90A90414149E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TitanCore", "TitanCore\TitanCore.vcxproj", "{8F5C2BF8-4C98-4DB5-8FCA-90A90414149E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin_D3D9Renderer", "Plugin_D3D9Renderer\Plugin_D3D9Renderer.vcproj", "{50174353-C97F-4EC3-B302-9180C6FB87E3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8F5C2BF8-4C98-4DB5-8FCA-90A90414149E} = {8F5C2BF8-4C98-4DB5-8FCA-90A90414149E}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin_D3D9Renderer", "Plugin_D3D9Renderer\Plugin_D3D9Renderer.vcxproj", "{50174353-C97F-4EC3-B302-9180C6FB87E3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaExporter", "MayaExporter\MayaExporter.vcproj", "{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaExporter", "MayaExporter\MayaExporter.vcxproj", "{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,8 +36,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaProjectFile = D:\Programmer\Work\Terrain\CodeAnalyst\Titan.caw
-		AMDCaPersistentStartup = TerrainDemo
 		AMDCaPersistentConfig = Debug|Win32
+		AMDCaPersistentStartup = TerrainDemo
+		AMDCaProjectFile = D:\Programmer\Work\Terrain\CodeAnalyst\Titan.caw
 	EndGlobalSection
 EndGlobal
