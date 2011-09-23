@@ -31,9 +31,9 @@ namespace Titan
 		ResourceMap::iterator it = mResourceMap.find(name);
 		if(it != mResourceMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"The shader resource with this name has existed: " + name,
-				"ShaderMgr::create");
+			TITAN_EXCEPT_INTERNALERROR(
+				"The shader resource with this name has existed: " + name
+				);
 			return ResourcePtr();
 		}
 		ResourcePtr res = ResourcePtr(createImpl(name, getNextHandle(), group, type));

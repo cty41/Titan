@@ -19,10 +19,6 @@ namespace Titan
 
 		void update();
 
-		void clear(unsigned int buffers = FBT_COLOR | FBT_DEPTH,
-			const Color& color = Color::Grey, 
-			float depth = 1.0f, unsigned short stencil = 0);
-
 		void setDimensions(float left, float top, float width, float height);
 
 		Camera* getCamera(void) const;

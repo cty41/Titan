@@ -47,9 +47,8 @@ namespace Titan
 			}
 			else
 			{
-				TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-					"this paramCommand has existed:" + name,
-					"Reflector::addParamsCommand");
+				TITAN_EXCEPT_INTERNALERROR(
+					"this paramCommand has existed:" + name);
 			}
 		}
 	};
@@ -77,9 +76,9 @@ namespace Titan
 			}
 			else
 			{
-				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-					"we did not find this paramCommand named: " + name,
-					"Reflector::setSingleParam");
+				TITAN_EXCEPT_ITEMLOST(
+					"we did not find this paramCommand named: " + name
+				);
 			}
 		}
 
@@ -95,9 +94,9 @@ namespace Titan
 				}
 				else
 				{
-					TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-						"we did not find this paramCommand named: " + it->first,
-						"Reflector::setSingleParam");
+					TITAN_EXCEPT_ITEMLOST(
+						"we did not find this paramCommand named: " + it->first
+						);
 				}
 			}
 		}

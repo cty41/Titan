@@ -230,9 +230,9 @@ namespace Titan
 		if( i == mBindingMap.end())
 		{
 			String errorMsg = "Cannot find buffer binding for index " + index;
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				errorMsg,
-				"VertexBufferBinding::unsetBinding");
+			TITAN_EXCEPT_INTERNALERROR(
+				errorMsg
+				);
 		}
 		mBindingMap.erase(i);
 	}
@@ -266,7 +266,7 @@ namespace Titan
 		else
 		{
 			String errorMsg = "can not find specfied vertex buffer bind with index" + index;
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND, errorMsg, "VertexBufferBinding::getBuffer");
+			TITAN_EXCEPT_ITEMLOST( errorMsg);
 		}
 	}
 	//-------------------------------------------------------------------------------//

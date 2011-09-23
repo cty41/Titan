@@ -21,19 +21,9 @@ namespace Titan
 
 		void					destroy();
 
-		void					preRender();
-
-		void					render();
-
-		void					postRender();
-
 		const String&			getName() const;
 
-		void					loadDefaultConfigOptions();
-
 		RenderWindow*			createRenderWindow(const String& caption, uint width, uint height, bool fullscreen);
-
-		void					createD3D9Device();
 
 		String					getErrorDiscription(long result) const;
 
@@ -113,6 +103,8 @@ namespace Titan
 		void					_setTextureMatrix(size_t unit, const Matrix4& xform);
 
 		LPDIRECT3DDEVICE9		__getD3D9Device() const { return mpD3dDevice; }
+
+		virtual void			initRenderDevice();
 
 		static D3D9Renderer*	getSingletonPtr();
 

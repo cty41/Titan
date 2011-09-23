@@ -47,8 +47,7 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"the resource called" + name + " does not exist in " + mType,"ResourceMgr::remove" );
+			TITAN_EXCEPT_ITEMLOST("the resource called" + name + " does not exist in " + mType);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -64,8 +63,8 @@ namespace Titan
 		{
 			StringStream resID;
 			resID<<ResourceID;
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"the resource with this ID:" + resID.str() + " does not exist in " + mType,"ResourceMgr::remove" );
+			TITAN_EXCEPT_ITEMLOST(
+				"the resource with this ID:" + resID.str() + " does not exist in " + mType);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -114,9 +113,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"The resource called" + name + " does not found in" + mType,
-				"ResourceMgr::unload");
+			TITAN_EXCEPT_ITEMLOST(
+				"The resource called" + name + " does not found in" + mType);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -131,9 +129,8 @@ namespace Titan
 		{
 			StringStream errMsg;
 			errMsg<<ResourceID;
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"The resource with ID " + errMsg.str() + " does not found in" + mType,
-				"ResourceMgr::unload");
+			TITAN_EXCEPT_ITEMLOST(
+				"The resource with ID " + errMsg.str() + " does not found in" + mType);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -171,9 +168,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				String("resource called this name: " + name + "does not exist!"),
-				"ResourceMgr::getByName");
+			TITAN_EXCEPT_ITEMLOST(
+				String("resource called this name: " + name + "does not exist!"));
 		}
 
 		return res;

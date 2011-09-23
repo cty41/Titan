@@ -104,6 +104,10 @@ namespace Titan
 		
 
 	protected:
+		virtual	void		prepareImpl();
+
+		virtual void		unprepareImpl();
+
 		virtual void		_perlinNoiseImpl(float scale, int octaves, float falloff) = 0;
 
 		virtual void		_loadImages( const ConstImagePtrList& images);

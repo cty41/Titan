@@ -42,9 +42,7 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_WARNNING, 
-				"There has a same named " + name +" texture existed, we just return old one in case of security",
-				"TextureMgr::createManually");
+			TITAN_EXCEPT_WARN("There has a same named " + name +" texture existed, we just return old one in case of security");
 		}
 		return tex;
 	}

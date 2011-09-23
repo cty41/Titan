@@ -38,9 +38,7 @@ namespace Titan
 
 		if(mFilePtr == NULL)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_CANNOT_WRITE_TO_FILE,
-				"open mesh file failed : " + filename,
-				"MeshLord::exportFile");
+			TITAN_EXCEPT_FAILWRITEFILE("open mesh file failed : " + filename);
 			return ;
 		}
 

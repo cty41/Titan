@@ -27,7 +27,7 @@ namespace Titan
 
 		void	_updateRenderQueue(RenderQueue* queue, Camera* cam);
 
-		void	begin(RenderData::OperationType ot = RenderData::OT_TRIANGLE_LIST);
+		void	begin(OperationType ot = OT_TRIANGLE_LIST);
 
 		ManualObjectSection*	end();
 		
@@ -75,7 +75,7 @@ namespace Titan
 			RenderData		mRenderData;
 
 		public:
-			ManualObjectSection(ManualObject* parent, RenderData::OperationType ot);
+			ManualObjectSection(ManualObject* parent, OperationType ot);
 
 			~ManualObjectSection();
 

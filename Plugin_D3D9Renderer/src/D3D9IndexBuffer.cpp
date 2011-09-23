@@ -43,7 +43,7 @@ namespace Titan
 				if(FAILED(hr))
 				{
 					String errorMsg = DXGetErrorDescription(hr);
-					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Create D3D9 Index Buffer failed : " + errorMsg, "D3D9IndexBuffer::createD3D9Buffer()");
+					TITAN_EXCEPT_API( "Create D3D9 Index Buffer failed : " + errorMsg);
 				}
 		}
 	}
@@ -72,9 +72,7 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
-				"D3D9 lock index buffer failed: " + msg, 
-				"D3D9IndexBuffer::lockImpl");
+			TITAN_EXCEPT_API( "D3D9 lock index buffer failed: " + msg);
 		}
 		return (void*)((char*)pDst + offset);
 	}
@@ -86,9 +84,7 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
-				"D3D9 unlock index buffer failed: " + msg,
-				"D3D9IndexBuffer::unlockImpl");
+			TITAN_EXCEPT_API( "D3D9 unlock index buffer failed: " + msg);
 		}
 	}
 

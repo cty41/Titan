@@ -38,9 +38,8 @@ namespace Titan
 
 		if(depth < OD_MinDepth || depth > OD_MaxDepth)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"Octree depth is invalid( 0 < depth < 10)",
-				"QuadtreeSceneMgr::setOctreeConfigs");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"Octree depth is invalid( 0 < depth < 10)");
 			return ;
 		}
 

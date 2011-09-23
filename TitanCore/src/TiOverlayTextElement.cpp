@@ -75,7 +75,7 @@ namespace Titan
 			// Colours - store these in a separate buffer because they change less often
 			decl->addElement(1, 0, VET_COLOR, VES_DIFFUSE);
 
-			mRenderData.operationType = RenderData::OT_TRIANGLE_LIST;
+			mRenderData.operationType = OT_TRIANGLE_LIST;
 			mRenderData.useIndex = false;
 			mRenderData.vertexData->vertexStart = 0;
 			// Vertex buffer will be created in checkMemoryAllocation
@@ -375,9 +375,9 @@ namespace Titan
 	{
 		mpFont = FontMgr::getSingleton().load(name);
 		if(mpFont.isNull())
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-			"could not find font" + name,
-			"OverlayTextElement::setFontName");
+			TITAN_EXCEPT_ITEMLOST(
+			"could not find font" + name
+			);
 		
 		notifyGeometryOld();
 		notifyTexDataOld();

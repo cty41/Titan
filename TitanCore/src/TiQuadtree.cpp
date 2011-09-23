@@ -68,9 +68,8 @@ namespace Titan
 	{
 		if(member->getAttachedQuadTree() != this)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"Error removing quad tree member",
-				"Quadtree::removeMember");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"Error removing quad tree member");
 		}
 		else
 		{

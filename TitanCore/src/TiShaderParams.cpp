@@ -265,9 +265,7 @@ namespace Titan
 		{
 			if (throwExceptionIfMissing)
 			{
-				TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-					"Named constants is empty.",
-					"ShaderParams::_findNamedConstantDefinition");
+				TITAN_EXCEPT_INVALIDPARAMS( "Named constants is empty.");
 			}
 			return NULL;
 		}
@@ -277,9 +275,7 @@ namespace Titan
 		{
 			if (throwExceptionIfMissing)
 			{
-				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-					"param called" + name + "does not exist.",
-					"ShaderParams::_findNamedConstantDefinition");
+				TITAN_EXCEPT_ITEMLOST( "param called" + name + "does not exist.");
 			}
 			return NULL;
 		}

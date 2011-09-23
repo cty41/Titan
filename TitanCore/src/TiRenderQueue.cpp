@@ -46,9 +46,8 @@ namespace Titan
 		{
 			StringStream err;
 			err<<type;
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"Render Queue Group with this type:"+ err.str() + "does not exist",
-				"RenderQueue::addRenderable");
+			TITAN_EXCEPT_ITEMLOST(
+				"Render Queue Group with this type:"+ err.str() + "does not exist");
 		}
 		else
 		{

@@ -186,9 +186,16 @@ namespace Titan
 	};
 
 #ifndef TITAN_EXCEPT
-#define TITAN_EXCEPT(num, desc, src) throw Titan::ExceptionFactory::create(\
-	Titan::ExceptionCodeType<num>(), desc, src, __FILE__, __LINE__);
-#endif
+#define TITAN_EXCEPT(num, desc) throw Titan::ExceptionFactory::create(\
+	Titan::ExceptionCodeType<num>(), desc, __FUNCTION__, __FILE__, __LINE__);
 
+#define TITAN_EXCEPT_API(desc)				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, desc)
+#define TITAN_EXCEPT_FILELOST(desc)			TITAN_EXCEPT(Exception::EXCEP_FILE_NOT_FOUND, desc)
+#define TITAN_EXCEPT_ITEMLOST(desc)			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND, desc)
+#define TITAN_EXCEPT_FAILWRITEFILE(desc)	TITAN_EXCEPT(Exception::EXCEP_CANNOT_WRITE_TO_FILE, desc)
+#define TITAN_EXCEPT_INTERNALERROR(desc)	TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR, desc)
+#define TITAN_EXCEPT_INVALIDPARAMS(desc)	TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, desc)
+#define TITAN_EXCEPT_WARN(desc)				TITAN_EXCEPT(Exception::EXCEP_INTERNAL_WARNNING, desc)
+#endif
 }
 #endif

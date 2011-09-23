@@ -117,7 +117,7 @@ namespace Titan
 		std::ofstream of(mConfigFileName.c_str());
 
 		if(of == 0)
-			TITAN_EXCEPT(Exception::EXCEP_CANNOT_WRITE_TO_FILE, "can not write config text", "Root::saveConfig()");
+			TITAN_EXCEPT_FAILWRITEFILE( "can not write config text");
 
 
 		const ConfigOptionMap& com = mActiveRenderer->getConfigOptionMap();
@@ -213,8 +213,7 @@ namespace Titan
 			DLL_START_PLUGIN pFunc = (DLL_START_PLUGIN)lib->getSymbol("dllStartPlugin");
 
 			if (!pFunc)
-				TITAN_EXCEPT(Exception::EXCEP_FILE_NOT_FOUND, "Cannot find symbol dllStartPlugin in library " + pluginName,
-				"Root::loadPlugin");
+				TITAN_EXCEPT_FILELOST("Cannot find symbol dllStartPlugin in library " + pluginName);
 
 			// This must call installPlugin
 			pFunc();
@@ -261,9 +260,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"SceneObjectFactory called " + factory->getType() + " has existed!!",
-				"Root::addSceneObjectFactory");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"SceneObjectFactory called " + factory->getType() + " has existed!!");
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -289,9 +287,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"SceneObjectFactory called " + typeName + " does not exist!!",
-				"Root::getSceneObjectFactory");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"SceneObjectFactory called " + typeName + " does not exist!!");
 			return 0;
 		}
 	}

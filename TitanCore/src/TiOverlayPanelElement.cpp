@@ -42,7 +42,7 @@ namespace Titan
 			mRenderData.vertexData->vertexBufferBinding->setBinding(0, vbuf);
 
 			mRenderData.useIndex = false;
-			mRenderData.operationType = RenderData::OT_TRIANGLE_STRIP;
+			mRenderData.operationType = OT_TRIANGLE_STRIP;
 
 			mIsInitialised = true;
 		}

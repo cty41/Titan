@@ -19,17 +19,11 @@ namespace Titan
 
 		virtual ~Renderer();
 
-		virtual RenderWindow*	initialize() = 0;
+		virtual RenderWindow*	initialize();
 
 		virtual void			destroy() = 0;
 
-		virtual void			preRender() = 0;
-
-		virtual void			render() = 0;
-
-		virtual void			postRender() = 0;
-
-		virtual void			loadDefaultConfigOptions() = 0;
+		virtual void			loadDefaultConfigOptions();
 
 		virtual void			updateAllTargets();
 
@@ -109,7 +103,7 @@ namespace Titan
 
 		virtual void			_setTexAddressMode(uint stage, const TexAddressModeSets& tam) = 0;
 
-		void			_setSamplerFilter(uint sampler, FilterOptions minFilter, FilterOptions magFilter, FilterOptions mipFilter);
+		void					_setSamplerFilter(uint sampler, FilterOptions minFilter, FilterOptions magFilter, FilterOptions mipFilter);
 
 		virtual void			_setSamplerFilter(uint sampler, FilterType type, FilterOptions fo) = 0;
 
@@ -135,6 +129,10 @@ namespace Titan
 		virtual float			getHorizontalTexelOffset() = 0;
 
 		virtual void			_setTextureMatrix(size_t unit, const Matrix4& xform) = 0;
+
+		virtual void			initRenderDevice() = 0;
+
+
 
 	protected:
 		int						mHeight;

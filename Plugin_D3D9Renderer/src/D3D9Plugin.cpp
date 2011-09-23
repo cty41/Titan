@@ -3,7 +3,7 @@
 
 namespace Titan
 {
-	const String cPluginName = "Direct3D9 Renderer";
+	const String cPluginName = "Direct3D10 Renderer";
 	D3D9Plugin::D3D9Plugin()
 		: mRenderer(0)
 	{

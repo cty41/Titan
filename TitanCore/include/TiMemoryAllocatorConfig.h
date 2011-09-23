@@ -54,7 +54,7 @@ namespace Titan
 	{
 		for (size_t i = 0; i < count; ++i)
 		{
-			new ((void*)(basePtr+i)) T();
+			new ((void*)(basePtr+i)) T;
 		}
 		return basePtr;
 	}

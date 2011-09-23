@@ -48,7 +48,7 @@ namespace Titan
 		}
 		catch(const Exception& e)
 		{
-			ConsoleDebugger::getSingleton().stream()<<"shader named" + mName + "got error when loading"<<e.getFullDescription();
+			DEBUG_OUTPUT<<"shader named" + mName + "got error when loading"<<e.getFullDescription();
 			mHasCompiledError = true;
 		}
 	}

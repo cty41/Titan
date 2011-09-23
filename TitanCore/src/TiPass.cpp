@@ -236,9 +236,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"cull_mode value includes 'off' , 'clockwise' or 'counter_clockwise', not " + val,
-				"Pass::CullModeCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"cull_mode value includes 'off' , 'clockwise' or 'counter_clockwise', not " + val);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -275,9 +274,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"polygon mode value includes 'solid' , 'wireframe' or 'points', not " + val,
-				"Pass::PolygonModeCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"polygon mode value includes 'solid' , 'wireframe' or 'points', not " + val);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -313,9 +311,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"shader mode value includes 'flat' , 'gouraud' or 'phong', not " + val,
-				"Pass::ShadeModeCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"shader mode value includes 'flat' , 'gouraud' or 'phong', not " + val);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -345,9 +342,7 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"src blend factor error: " + val,
-				"Pass::SrcBlendCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS("src blend factor error: " + val);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -367,9 +362,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"dst blend factor error: " + val,
-				"Pass::DstBlendCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"dst blend factor error: " + val);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -389,9 +383,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"src blend alpha factor error: " + val,
-				"Pass::SrcBlendAlphaCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"src blend alpha factor error: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -411,9 +405,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"dst blend alpha factor error: " + val,
-				"Pass::DstBlendAlphaCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"dst blend alpha factor error: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -433,9 +427,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"scene blend operation error: " + val,
-				"Pass::BlendOperationCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"scene blend operation error: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -455,9 +449,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"scene blend operation error: " + val,
-				"Pass::BlendOperationCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"scene blend operation error: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -480,9 +474,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"depth_check value includes 'on' or 'off', not " + val,
-				"Pass::DepthCheckCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"depth_check value includes 'on' or 'off', not " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -508,9 +502,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"depth_write value includes 'on' or 'off', not " + val,
-				"Pass::DepthWriteCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"depth_write value includes 'on' or 'off', not " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -533,9 +527,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"depth func error: " + val,
-				"Pass::DepthFuncCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"depth func error: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -554,9 +548,9 @@ namespace Titan
 			pass->setTransparentSort(false);
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"sort_transparent value error: " + val,
-				"Pass::SortTransparentCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"sort_transparent value error: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -582,9 +576,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"lighting value includes 'on' or 'off', not " + val,
-				"Pass::ShadeModeCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"lighting value includes 'on' or 'off', not " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//

@@ -13,6 +13,8 @@ namespace Titan
 
 		~D3D9Shader();
 
+		ID3DXBuffer* getConstantBuffer(ShaderParamsPtr params);
+
 		void	setShaderEntry(const String& entry){ mEntryName = entry;}
 
 		const String& getShaderEntry() const { return mEntryName; }
@@ -44,17 +46,33 @@ namespace Titan
 		class _D3D9DllExport D3D9TargetCmd : public ParamsCommand
 		{
 		public:
-			virtual String getter(void* target);
+			virtual String getter(void* target)
+			{
+				D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+				return shader->getTarget();
+			}
 
-			virtual void setter(void* target, const String& val);
+			virtual void setter(void* target, const String& val)
+			{
+				D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+				shader->setTarget(val);
+			}
 		};
 
 		class _D3D9DllExport D3D9EntryCmd : public ParamsCommand
 		{
 		public:
-			virtual String getter(void* target);
+			virtual String getter(void* target)
+			{
+				D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+				return shader->getShaderEntry();
+			}
 
-			virtual void setter(void* target, const String& val);
+			virtual void setter(void* target, const String& val)
+			{
+				D3D9Shader* shader = static_cast<D3D9Shader*>(target);
+				shader->setShaderEntry(val);
+			}
 		};
 
 		static D3D9TargetCmd	msD3D9TargetCmd;

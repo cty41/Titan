@@ -21,9 +21,9 @@ namespace Titan
 		ScriptTranslatorMap::iterator it = mScriptTranslatorMap.find(translator->getName());
 		if(it != mScriptTranslatorMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"This kind of ScriptTranslator has existed!: " + translator->getName(),
-				"ScriptTranslatorMgr::addTranslator");
+			TITAN_EXCEPT_INTERNALERROR(
+				"This kind of ScriptTranslator has existed!: " + translator->getName()
+				);
 		}
 		else
 		{
@@ -52,9 +52,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"we can not find this type of ScriptTranslator: " + name,
-				"ScriptTranslatorMgr::getTranslator");
+			TITAN_EXCEPT_ITEMLOST(
+				"we can not find this type of ScriptTranslator: " + name
+				);
 			return NULL;
 		}
 	}

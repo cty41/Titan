@@ -493,8 +493,7 @@ namespace Titan {
     {
 		if (delim.empty())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, "No delimiter provided",
-				"FileStreamDataStream::readLine");
+			TITAN_EXCEPT_INVALIDPARAMS( "No delimiter provided");
 		}
 		if (delim.size() > 1)
 		{
@@ -531,9 +530,8 @@ namespace Titan {
 			}
 			else
 			{
-				TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR, 
-					"Streaming error occurred", 
-					"FileStreamDataStream::readLine");
+				TITAN_EXCEPT_INTERNALERROR( 
+					"Streaming error occurred");
 			}
 		}
 		else 

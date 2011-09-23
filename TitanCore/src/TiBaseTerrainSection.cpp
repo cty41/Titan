@@ -94,7 +94,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::_buildRenderData(RenderData* rend)
 	{
-		rend->operationType = RenderData::OT_TRIANGLE_STRIP;
+		rend->operationType = OT_TRIANGLE_STRIP;
 		rend->vertexData = TITAN_NEW VertexData(mCreator->getVertexDecl(), mVertexBufferBinding);
 		rend->vertexData->vertexCount = mCreator->getHorzVertexData()->getNumVertices();
 

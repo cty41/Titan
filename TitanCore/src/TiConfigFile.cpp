@@ -30,9 +30,8 @@ namespace Titan
 
 		if(fp == 0)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				" Can not find config file called: "+ name, 
-				"ConfigFile::load");
+			TITAN_EXCEPT_ITEMLOST(
+				" Can not find config file called: "+ name);
 			return ;
 		}
 

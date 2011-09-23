@@ -263,6 +263,9 @@
     <ClCompile Include="src\Win32\Timer.cpp">
       <Filter>Source Files\Win32</Filter>
     </ClCompile>
+    <ClCompile Include="src\TiPixelBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\asm_math.h">
@@ -618,6 +621,9 @@
     </ClInclude>
     <ClInclude Include="include\rapidxml-1.13\rapidxml_utils.hpp">
       <Filter>Header Files\rapidxml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TiPixelBuffer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

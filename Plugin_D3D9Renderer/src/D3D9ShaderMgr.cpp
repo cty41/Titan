@@ -21,9 +21,8 @@ namespace Titan
 		AnyMap::const_iterator ait;
 		if(!extraParams || (ait = extraParams->find("type")) == extraParams->end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"we can not find shader type param",
-				"D3D9ShaderMgr::createImpl");
+			TITAN_EXCEPT_ITEMLOST(
+				"we can not find shader type param");
 			return NULL;
 		}
 		else

@@ -19,7 +19,7 @@ namespace Titan
 		virtual IndexBufferPtr	createIndexBuffer(
 			size_t numIndexes, HardwareBuffer::Usage usage, bool useSystemMemory);
 
-		VertexDeclaration*				createVertexDeclaration();
+		VertexDeclaration*		createVertexDeclaration();
 	};
 }
 #endif

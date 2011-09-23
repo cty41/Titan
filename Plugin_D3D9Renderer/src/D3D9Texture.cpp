@@ -45,8 +45,8 @@ namespace Titan
 		//add compressed later
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
-				"Invalid pixel format", "fromD3DLock");
+			TITAN_EXCEPT_INVALIDPARAMS( 
+				"Invalid pixel format");
 		}
 
 		rval.data = lrect.pBits;
@@ -64,8 +64,8 @@ namespace Titan
 		//add compressed later
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
-				"Invalid pixel format", "fromD3DLock");
+			TITAN_EXCEPT_INVALIDPARAMS( 
+				"Invalid pixel format");
 		}
 		rval.data = lbox.pBits;
 	}
@@ -151,8 +151,7 @@ namespace Titan
 			if(FAILED(hr))
 			{
 				String errMsg = DXGetErrorDescription(hr);
-				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Texture lock rect failed because of: " + errMsg,
-					"D3D9Texture::lockRect");
+				TITAN_EXCEPT_API( "Texture lock rect failed because of: " + errMsg);
 			}
 			lockRect->format = mPixelFormat;
 			fromD3DLock(*lockRect, lockedRect);
@@ -167,8 +166,7 @@ namespace Titan
 		{
 			if(FAILED(hr = mTexUnion.pTex->UnlockRect(level)))
 			{
-				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Texture unlock rect failed",
-					"D3D9Texture::unlockRect");
+				TITAN_EXCEPT_API( "Texture unlock rect failed");
 			}
 		}
 	}
@@ -187,19 +185,7 @@ namespace Titan
 		freeD3d9Tex();
 	}
 	//------------------------------------------------------------------------------//
-	void D3D9Texture::prepareImpl()
-	{
-		if (isManualLoaded())
-			return;
 
-		DataStreamPtr dataStream = ResourceGroupMgr::getSingltonPtr()->openResource(mName, mGroup);
-		mPreparedData = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(dataStream));
-	}
-	//------------------------------------------------------------------------------//
-	void D3D9Texture::unprepareImpl()
-	{
-		mPreparedData.setNull();
-	}
 	//-------------------------------------------------------------//
 	void D3D9Texture::_loadNormalTex()
 	{
@@ -225,9 +211,8 @@ namespace Titan
 			&mTexUnion.pTex)))
 		{
 			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				" create texture failed because of " + errMsg ,
-				"D3D9Texture::_loadNormalTex()");
+			TITAN_EXCEPT_API(
+				" create texture failed because of " + errMsg );
 		}
 
 		D3DSURFACE_DESC texDesc;
@@ -261,9 +246,8 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				"create cube texture failed : " + errMsg,
-				"D3D9Texture::_loadCubeTex");
+			TITAN_EXCEPT_API(
+				"create cube texture failed : " + errMsg);
 			return ;
 		}
 
@@ -305,7 +289,7 @@ namespace Titan
 			&mTexUnion.pTex)))
 		{
 			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3DXCreateTexture failed: " + errMsg, "D3D9Texture::_create2DTex()");
+			TITAN_EXCEPT_API( "D3DXCreateTexture failed: " + errMsg);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -333,7 +317,7 @@ namespace Titan
 			&mTexUnion.pTex)))
 		{
 			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "D3DXCreateTexture failed: " + errMsg, "D3D9Texture::_create2DTex()");
+			TITAN_EXCEPT_API( "D3DXCreateTexture failed: " + errMsg, "D3D9Texture::_create2DTex()");
 		}
 #endif
 	}
@@ -350,9 +334,8 @@ namespace Titan
 				if(FAILED(hr = mTexUnion.pTex->GetSurfaceLevel(i, & pDstSurface)))
 				{
 					String errMsg = DXGetErrorDescription(hr);
-					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-						"get textures surface failed : " + errMsg,
-						"D3D9Texture::_loadImgsImpl");
+					TITAN_EXCEPT_API(
+						"get textures surface failed : " + errMsg);
 					SAFE_RELEASE(pDstSurface);
 					return;
 				}
@@ -372,9 +355,8 @@ namespace Titan
 					D3DX_DEFAULT, 0)))
 				{
 					String errMsg = DXGetErrorDescription(hr);
-					TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-						"create textures surface failed" + errMsg,
-						"D3D9Texture::_loadImgsImpl");
+					TITAN_EXCEPT_API(
+						"create textures surface failed" + errMsg);
 					return;
 				}
 				
@@ -399,9 +381,8 @@ namespace Titan
 			(LPVOID) &packet)))
 		{
 			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				"generate Perlin Noise Texture failed :" + errMsg,
-				"D3D9Texture::_perlinNoiseImpl")
+			TITAN_EXCEPT_API(
+				"generate Perlin Noise Texture failed :" + errMsg)
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -410,9 +391,8 @@ namespace Titan
 		size_t dotPos = filename.find_first_of(".");
 		if(dotPos == String::npos)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"filename does not contain a extension name: " + filename,
-				"D3D9Texture::save");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"filename does not contain a extension name: " + filename);
 			return ;
 		}
 		String extName = filename.substr(dotPos + 1);
@@ -430,9 +410,8 @@ namespace Titan
 		{
 			String errMsg;
 			DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				"save texture to file failed: " + errMsg,
-				"D3D9Texture::save");
+			TITAN_EXCEPT_API(
+				"save texture to file failed: " + errMsg);
 		}
 	}
 	//------------------------------------------------------------------------------//

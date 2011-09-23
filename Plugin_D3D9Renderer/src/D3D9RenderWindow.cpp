@@ -54,27 +54,26 @@ namespace Titan
 		if( FAILED( hr = mpD3dDevice->Present(0, 0, 0, 0)))
 		{
 			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, "Error in D3D9 Present function : " 
-				+ msg, "void D3D9RenderWindow::swapBuffer()" );
+			TITAN_EXCEPT_API( "Error in D3D9 Present function : " + msg);
 		}
 	}
 	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::buildD3D9PrensentParameters(D3DPRESENT_PARAMETERS* params)
 	{
 		params->BackBufferWidth				= mWidth;
-		params->BackBufferHeight			= mHeight;
-		params->BackBufferFormat			= D3DFMT_A8R8G8B8;
+		params->BackBufferHeight				= mHeight;
+		params->BackBufferFormat				= D3DFMT_A8R8G8B8;
 		params->BackBufferCount				= 1;
 		params->MultiSampleType				= D3DMULTISAMPLE_NONE;
 		params->MultiSampleQuality			= 0;
 		params->SwapEffect					= D3DSWAPEFFECT_DISCARD; 
 		params->hDeviceWindow				= mhWnd;
-		params->Windowed					= mIsWindowed;
+		params->Windowed						= mIsWindowed;
 		params->EnableAutoDepthStencil		= true; 
 		params->AutoDepthStencilFormat		= D3DFMT_D24S8;
 		//params->Flags						= 0;
 		//params->FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
-		params->PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
+		params->PresentationInterval			= D3DPRESENT_INTERVAL_IMMEDIATE;
 	}
 	//-------------------------------------------------------------------------------//
 	void D3D9RenderWindow::getCustomParams(const String& name, void* pDst)

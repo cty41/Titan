@@ -8,6 +8,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin_D3D9Renderer", "Plugin_D3D9Renderer\Plugin_D3D9Renderer.vcxproj", "{50174353-C97F-4EC3-B302-9180C6FB87E3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaExporter", "MayaExporter\MayaExporter.vcxproj", "{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8F5C2BF8-4C98-4DB5-8FCA-90A90414149E} = {8F5C2BF8-4C98-4DB5-8FCA-90A90414149E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin_D3D11Renderer", "Plugin_D3D11Renderer\Plugin_D3D11Renderer.vcxproj", "{73910420-578A-4999-940F-901718C68956}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,13 +36,17 @@ Global
 		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Debug|Win32.Build.0 = Debug|Win32
 		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Release|Win32.ActiveCfg = Release|Win32
 		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Release|Win32.Build.0 = Release|Win32
+		{73910420-578A-4999-940F-901718C68956}.Debug|Win32.ActiveCfg = Debug|Win32
+		{73910420-578A-4999-940F-901718C68956}.Debug|Win32.Build.0 = Debug|Win32
+		{73910420-578A-4999-940F-901718C68956}.Release|Win32.ActiveCfg = Release|Win32
+		{73910420-578A-4999-940F-901718C68956}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaPersistentConfig = Debug|Win32
-		AMDCaPersistentStartup = TerrainDemo
 		AMDCaProjectFile = D:\Programmer\Work\Terrain\CodeAnalyst\Titan.caw
+		AMDCaPersistentStartup = TerrainDemo
+		AMDCaPersistentConfig = Debug|Win32
 	EndGlobalSection
 EndGlobal

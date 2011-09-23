@@ -44,9 +44,8 @@ namespace Titan
 		if(it != mFactoryMap.end())
 		{
 			TITAN_DELETE factory;
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"this type of factory has existed!!",
-				"SceneMgrSelector::addFactory");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"this type of factory has existed!!");
 		}
 		else
 		{
@@ -65,9 +64,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"this type of factory did not existed!!",
-				"SceneMgrSelector::removeFactory");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"this type of factory did not existed!!");
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -76,9 +74,8 @@ namespace Titan
 		SceneMgrMap::iterator i = mSceneMgrMap.find(smt);
 		if(i != mSceneMgrMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"this type of SceneMgr has existed!!",
-				"SceneMgrSelector::createSceneMgr");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"this type of SceneMgr has existed!!");
 			return 0;
 		}
 		else
@@ -114,9 +111,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"this type of SceneMgr did not existed!!",
-				"SceneMgrSelector::getSceneMgr");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"this type of SceneMgr did not existed!!");
 			return 0;
 		}
 	}

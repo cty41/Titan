@@ -10,6 +10,7 @@ namespace Titan
 	Renderer::Renderer()
 		: mHeight(0), mWidth(0),mWaitForVSync(false)
 	{
+		loadDefaultConfigOptions();
 	}
 	//-------------------------------------------------------------------------------//
 	Renderer::~Renderer()
@@ -33,7 +34,7 @@ namespace Titan
 		{
 			StringStream str;
 			str<<"option : ' "<<first<<"' does not exist.";
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, str.str(), "void D3D9Renderer::setConfigOption(const String& first, const String& second)");
+			TITAN_EXCEPT_INVALIDPARAMS( str.str());
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -82,8 +83,8 @@ namespace Titan
 		{
 			if(i->second == target)
 			{
-				TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR, 
-					"This RenderTarget has already been added!", "void Renderer::addTargetToRender(RenderTarget* target)");
+				TITAN_EXCEPT_INTERNALERROR( 
+					"This RenderTarget has already been added!");
 				return;
 			}
 		}
@@ -135,16 +136,16 @@ namespace Titan
 
 		switch(rd.operationType)
 		{
-		case RenderData::OT_TRIANGLE_LIST:
+		case OT_TRIANGLE_LIST:
 			mFaceCount += val / 3;
 			break;
-		case RenderData::OT_TRIANGLE_STRIP:
-		case RenderData::OT_TRIANGLE_FAN:
+		case OT_TRIANGLE_STRIP:
+		case OT_TRIANGLE_FAN:
 			mFaceCount += val - 2;
 			break;
-		case RenderData::OT_POINT_LIST:
-		case RenderData::OT_LINE_LIST:
-		case RenderData::OT_LINE_STRIP:
+		case OT_POINT_LIST:
+		case OT_LINE_LIST:
+		case OT_LINE_STRIP:
 			break;
 		}
 
@@ -247,6 +248,49 @@ namespace Titan
 			return mSetPixelShader;
 		}
 		return false;
+	}
+	
+	//change set default option into father class, not pure virutual
+	void Renderer::loadDefaultConfigOptions()
+	{
+		ConfigOption resolutionMode;
+		resolutionMode.name = "Resolution Mode";
+		resolutionMode.value = "800 x 600";
+
+		ConfigOption fullScreen;
+		fullScreen.name = "Full Screen";
+		fullScreen.value = "No";
+
+		ConfigOption windowTitle;
+		windowTitle.name = "Window Title";
+		windowTitle.value = "Titan";
+
+		mConfigOptions[resolutionMode.name] = resolutionMode;
+		mConfigOptions[fullScreen.name] = fullScreen;
+		mConfigOptions[windowTitle.name] = windowTitle;
+	}
+	// add a base initialize function, every sub class must call this, is this strcuture a little confused?
+	RenderWindow* Renderer::initialize()
+	{
+		ConfigOptionMap::iterator opt = mConfigOptions.find("Full Screen");
+		bool fullScreen = opt->second.value == "Yes";
+
+		uint width, height;
+		opt = mConfigOptions.find("Resolution Mode");
+		String::size_type widthEnd = opt->second.value.find(' ');
+		// we know that the height starts 3 characters after the width and goes until the next space
+		String::size_type heightEnd = opt->second.value.find(' ', widthEnd+3);
+		// Now we can parse out the values
+		width = StringConverter::parseInt(opt->second.value.substr(0, widthEnd));
+		height = StringConverter::parseInt(opt->second.value.substr(widthEnd+3, heightEnd));
+
+		String windowTitle;
+		opt = mConfigOptions.find("Window Title");
+		windowTitle = opt->second.value;
+
+		mWidth = width;
+		mHeight = height;
+		return createRenderWindow(windowTitle, width, height, fullScreen);
 	}
 
 }

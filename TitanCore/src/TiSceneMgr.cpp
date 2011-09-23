@@ -59,9 +59,7 @@ namespace Titan
 		CameraMap::iterator it = mCameras.find(name);
 		if(it != mCameras.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"This name has been used for other camera",
-				"SceneMgr::createCamera");
+			TITAN_EXCEPT_INVALIDPARAMS("This name has been used for other camera");
 			return 0;
 		}
 
@@ -80,9 +78,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"This name has not been used for any cameras",
-				"SceneMgr::removeCamera");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"This name has not been used for any cameras");
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -317,9 +314,8 @@ namespace Titan
 			}
 			else
 			{
-				TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-					"The SceneObject called" + name + "has existed in type " + typeName,
-					"SceneMgr::createSceneObject");
+				TITAN_EXCEPT_INVALIDPARAMS(
+					"The SceneObject called" + name + "has existed in type " + typeName);
 			}
 		}
 

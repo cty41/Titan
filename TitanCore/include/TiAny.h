@@ -159,9 +159,8 @@ namespace Titan
     	{
 			if (!mContent) 
 			{
-				TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-					"Bad cast from uninitialised Any", 
-					"Any::operator()");
+				TITAN_EXCEPT_INVALIDPARAMS(
+					"Bad cast from uninitialised Any");
 			}
 			else if(getType() == typeid(ValueType))
 			{
@@ -172,9 +171,8 @@ namespace Titan
 				StringStream str;
 				str << "Bad cast from type '" << getType().name() << "' "
 					<< "to '" << typeid(ValueType).name() << "'";
-				TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-					 str.str(), 
-					"Any::operator()");
+				TITAN_EXCEPT_INVALIDPARAMS(
+					 str.str());
 			}
 		}
 
@@ -366,9 +364,8 @@ namespace Titan
 			StringStream str;
 			str << "Bad cast from type '" << operand.getType().name() << "' "
 				<< "to '" << typeid(ValueType).name() << "'";
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				str.str(), 
-				"Titan::any_cast");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				str.str());
 		}
         return *result;
     }

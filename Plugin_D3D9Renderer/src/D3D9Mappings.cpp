@@ -156,16 +156,10 @@ namespace Titan
 		DWORD ret = 0;
 		if (options == HardwareBuffer::HBL_DISCARD)
 		{
-#if OGRE_D3D_MANAGE_BUFFERS
-			// Only add the discard flag for dynamic usgae and default pool
-			if ((usage & HardwareBuffer::HBU_DYNAMIC) &&
-				(usage & HardwareBuffer::HBU_DISCARDABLE))
-				ret |= D3DLOCK_DISCARD;
-#else
 			// D3D doesn't like discard or no_overwrite on non-dynamic buffers
 			if (usage & HardwareBuffer::HBU_DYNAMIC)
 				ret |= D3DLOCK_DISCARD;
-#endif
+
 		}
 		if (options == HardwareBuffer::HBL_READ_ONLY)
 		{
@@ -178,16 +172,9 @@ namespace Titan
 		}
 		if (options == HardwareBuffer::HBL_NO_OVERWRITE)
 		{
-#if OGRE_D3D_MANAGE_BUFFERS
-			// Only add the nooverwrite flag for dynamic usgae and default pool
-			if ((usage & HardwareBuffer::HBU_DYNAMIC) &&
-				(usage & HardwareBuffer::HBU_DISCARDABLE))
-				ret |= D3DLOCK_NOOVERWRITE;
-#else
 			// D3D doesn't like discard or no_overwrite on non-dynamic buffers
 			if (usage & HardwareBuffer::HBU_DYNAMIC)
 				ret |= D3DLOCK_NOOVERWRITE;
-#endif 
 		}
 
 		return ret;

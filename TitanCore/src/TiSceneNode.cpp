@@ -25,9 +25,8 @@ namespace Titan
 		SceneObjectMap::iterator it = mSceneObjects.find(object->getName());
 		if(it != mSceneObjects.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
-				"this object has attached in this scene node!!",
-				"SceneNode::attachObject");
+			TITAN_EXCEPT_INVALIDPARAMS( 
+				"this object has attached in this scene node!!");
 		}
 		else
 		{
@@ -41,9 +40,8 @@ namespace Titan
 		SceneObjectMap::iterator it = mSceneObjects.find(object->getName());
 		if(it == mSceneObjects.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
-				"this object called" + object->getName() + "has not attached in this scene node!!",
-				"SceneNode::detachObject");
+			TITAN_EXCEPT_INVALIDPARAMS( 
+				"this object called" + object->getName() + "has not attached in this scene node!!");
 		}
 		else
 		{
@@ -57,9 +55,8 @@ namespace Titan
 		SceneObjectMap::iterator it = mSceneObjects.find(objectName);
 		if(it == mSceneObjects.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
-				"this object called" + objectName + "has not attached in this scene node!!",
-				"SceneNode::detachObject");
+			TITAN_EXCEPT_INVALIDPARAMS( 
+				"this object called" + objectName + "has not attached in this scene node!!");
 		}
 		else
 		{

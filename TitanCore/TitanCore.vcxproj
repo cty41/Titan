@@ -38,7 +38,7 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Intermediate\$(Configuration)\</IntDir>
     <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">*.ilb%3b*.obj%3b*.ilk%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.pgc%3b*.pgd%3b*.meta%3b$(TargetPath)</ExtensionsToDeleteOnClean>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
@@ -149,6 +149,7 @@
     <ClCompile Include="src\TiOverlayTextElement.cpp" />
     <ClCompile Include="src\TiPass.cpp" />
     <ClCompile Include="src\TiPerlinNoise.cpp" />
+    <ClCompile Include="src\TiPixelBuffer.cpp" />
     <ClCompile Include="src\TiPixelFormat.cpp" />
     <ClCompile Include="src\TiPlane.cpp" />
     <ClCompile Include="src\TiQuadtree.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="include\TiOverlayTextElement.h" />
     <ClInclude Include="include\TiPass.h" />
     <ClInclude Include="include\TiPerlinNoise.h" />
+    <ClInclude Include="include\TiPixelBuffer.h" />
     <ClInclude Include="include\TiPixelFormat.h" />
     <ClInclude Include="include\TiPlane.h" />
     <ClInclude Include="include\TiPlaneBoundedVolume.h" />

@@ -18,9 +18,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"There has a file with same name: " + name + "  exists in  group " + groupName,
-				"ResourceGroup::insertFileLocation");
+			TITAN_EXCEPT_INTERNALERROR(
+				"There has a file with same name: " + name + "  exists in  group " + groupName);
 		}
 	}
 
@@ -88,9 +87,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"There has not a group with  name: " + group,
-				"ResourceGroupMgr::getResourceGroup");
+			TITAN_EXCEPT_INTERNALERROR(
+				"There has not a group with  name: " + group);
 		}
 
 		return gp;
@@ -110,9 +108,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"There has a group with  name: " + group,
-				"ResourceGroupMgr::createResourceGroup");
+			TITAN_EXCEPT_INTERNALERROR(
+				"There has a group with  name: " + group);
 		}
 		//cache the res group
 		if(mCurrentGroup != gp)
@@ -188,9 +185,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"We does not have a resource group called : " + group,
-				"ResourceGroupMgr::initResourceGroup");
+			TITAN_EXCEPT_ITEMLOST(
+				"We does not have a resource group called : " + group);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -225,9 +221,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				" the resource group called" + group + " does not exist!",
-				"ResourceGroupMgr::destroyResourceGroup");
+			TITAN_EXCEPT_ITEMLOST(
+				" the resource group called" + group + " does not exist!");
 		}
 
 	}
@@ -277,9 +272,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				" the resource group called" + group + " does not exist!",
-				"ResourceGroupMgr::loadResourceGroup");
+			TITAN_EXCEPT_ITEMLOST(
+				" the resource group called" + group + " does not exist!");
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -301,9 +295,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				" the resource group called" + group + " does not exist!",
-				"ResourceGroupMgr::loadResourceGroup");
+			TITAN_EXCEPT_ITEMLOST(
+				" the resource group called" + group + " does not exist!");
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -354,9 +347,8 @@ namespace Titan
 			
 		}
 
-		TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-			" the resource called" + name + "in group " + group + " does not exist!",
-			"ResourceGroupMgr::openResource");
+		TITAN_EXCEPT_ITEMLOST(
+			" the resource called" + name + "in group " + group + " does not exist!");
 	
 	}
 	//------------------------------------------------------------------------------//
@@ -365,9 +357,8 @@ namespace Titan
 		ScriptLoaderMap::iterator it = mScriptLoaderMap.find(su->getScriptLoaderPriority());
 		if(it != mScriptLoaderMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"the script loader with same priority has existed!",
-				"ResourceGroupMgr::_registerScriptLoader");
+			TITAN_EXCEPT_INTERNALERROR(
+				"the script loader with same priority has existed!");
 		}
 		else
 		{
@@ -380,9 +371,8 @@ namespace Titan
 		ScriptLoaderMap::iterator it = mScriptLoaderMap.find(su->getScriptLoaderPriority());
 		if(it == mScriptLoaderMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"the script loader has not add to resource group mgr!",
-				"ResourceGroupMgr::_unregisterScriptLoader");
+			TITAN_EXCEPT_INTERNALERROR(
+				"the script loader has not add to resource group mgr!");
 		}
 		else
 		{

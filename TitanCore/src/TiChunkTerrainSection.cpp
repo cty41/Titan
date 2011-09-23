@@ -279,7 +279,7 @@ namespace Titan
 			int vertexCount = mCreator->getSectorVertex() * mCreator->getSectorVertex();
 			RenderData* rend;
 			rend = chunkRend->getRenderData();
-			rend->operationType = RenderData::OT_TRIANGLE_STRIP;
+			rend->operationType = OT_TRIANGLE_STRIP;
 			rend->vertexData = TITAN_NEW VertexData(mCreator->getVertexDecl(),mVertexBufferBinding);
 			rend->vertexData->vertexStart = rendBaseVertex;
 			rend->vertexData->vertexCount = vertexCount;
@@ -295,7 +295,7 @@ namespace Titan
 			TerrainSectionRend* skirtRend = TITAN_NEW TerrainSectionRend(this);
 			skirtRend->setSectionPos(getSectionPos());
 			rend2 = skirtRend->getRenderData();
-			rend2->operationType = RenderData::OT_TRIANGLE_STRIP;
+			rend2->operationType = OT_TRIANGLE_STRIP;
 			rend2->vertexData = TITAN_NEW VertexData(mCreator->getVertexDecl(),mVertexBufferBinding);
 			rend2->vertexData->vertexStart = rendBaseVertex;
 			rend2->vertexData->vertexCount = vertexCount;

@@ -43,9 +43,7 @@ namespace Titan
 		if( !m_hInst )
 			TITAN_EXCEPT(
 			Exception::EXCEP_INTERNAL_ERROR, 
-			"Could not load dynamic library " + mName + 
-			".  System Error: " + dynlibError(),
-			"DynLib::load" );
+			"Could not load dynamic library " + mName + ".  System Error: " + dynlibError() );
 	}
 
 	//-------------------------------------------------------------------------------//--
@@ -58,9 +56,7 @@ namespace Titan
 		{
 			TITAN_EXCEPT(
 				Exception::EXCEP_INTERNAL_ERROR, 
-				"Could not unload dynamic library " + mName +
-				".  System Error: " + dynlibError(),
-				"DynLib::unload");
+				"Could not unload dynamic library " + mName +".  System Error: " + dynlibError());
 		}
 
 	}

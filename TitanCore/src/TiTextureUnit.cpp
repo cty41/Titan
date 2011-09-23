@@ -103,9 +103,9 @@ namespace Titan
 		int fo = mapToFilterOptions(val);
 		if (fo == FO_INVALID)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"Min Filter does not support this value: " + val,
-				"TextureUnit::MinFilterCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"Min Filter does not support this value: " + val
+				);
 		}
 		else
 			tu->setMinFilter(FilterOptions(fo));
@@ -123,9 +123,9 @@ namespace Titan
 		int fo = mapToFilterOptions(val);
 		if (fo == FO_INVALID)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"Mag Filter does not support this value: " + val,
-				"TextureUnit::MagFilterCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"Mag Filter does not support this value: " + val
+				);
 		}
 		else
 			tu->setMagFilter(FilterOptions(fo));
@@ -143,9 +143,9 @@ namespace Titan
 		int fo = mapToFilterOptions(val);
 		if (fo == FO_INVALID)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"Mip Filter does not support this value: " + val,
-				"TextureUnit::MipFilterCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"Mip Filter does not support this value: " + val
+				);
 		}
 		else
 			tu->setMipFilter(FilterOptions(fo));
@@ -178,9 +178,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"texture address mode does not support this value: " + val,
-				"TextureUnit::TexAddressModeCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"texture address mode does not support this value: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -211,9 +211,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"We only support 8 sets of texcoords",
-				"TextureUnit::TexCoordSetCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"We only support 8 sets of texcoords"
+				);
 		}
 
 	}

@@ -86,7 +86,7 @@ namespace Titan
 						bodyTile += 1<<GeoTerrain::Left;
 						RenderData* rd = mConnectorRends[GeoTerrain::Left].getRenderData();
 						GeoTerrain::IndexBufferInfo* indexInfo = geoCreator->getDetailLevelStruct(mCurrentLod).tileConnectors[GeoTerrain::Left][sideLod];
-						rd->operationType = indexInfo->isStrip ? RenderData::OT_TRIANGLE_STRIP: RenderData::OT_TRIANGLE_LIST;
+						rd->operationType = indexInfo->isStrip ? OT_TRIANGLE_STRIP: OT_TRIANGLE_LIST;
 						rd->indexData->indexBuffer = indexInfo->pIndex;
 						rd->indexData->indexCount = rd->indexData->indexBuffer->getNumIndexes();
 						queue->addRenderable(&mConnectorRends[GeoTerrain::Left]);
@@ -101,7 +101,7 @@ namespace Titan
 						bodyTile += 1<<GeoTerrain::Top;
 						RenderData* rd = mConnectorRends[GeoTerrain::Top].getRenderData();
 						GeoTerrain::IndexBufferInfo* indexInfo = geoCreator->getDetailLevelStruct(mCurrentLod).tileConnectors[GeoTerrain::Top][sideLod];
-						rd->operationType = indexInfo->isStrip ? RenderData::OT_TRIANGLE_STRIP: RenderData::OT_TRIANGLE_LIST;
+						rd->operationType = indexInfo->isStrip ? OT_TRIANGLE_STRIP: OT_TRIANGLE_LIST;
 						rd->indexData->indexBuffer = indexInfo->pIndex;
 						rd->indexData->indexCount = rd->indexData->indexBuffer->getNumIndexes();
 						queue->addRenderable(&mConnectorRends[GeoTerrain::Top]);
@@ -116,7 +116,7 @@ namespace Titan
 						bodyTile += 1<<GeoTerrain::Right;
 						RenderData* rd = mConnectorRends[GeoTerrain::Right].getRenderData();
 						GeoTerrain::IndexBufferInfo* indexInfo = geoCreator->getDetailLevelStruct(mCurrentLod).tileConnectors[GeoTerrain::Right][sideLod];
-						rd->operationType = indexInfo->isStrip ? RenderData::OT_TRIANGLE_STRIP: RenderData::OT_TRIANGLE_LIST;
+						rd->operationType = indexInfo->isStrip ? OT_TRIANGLE_STRIP: OT_TRIANGLE_LIST;
 						rd->indexData->indexBuffer = indexInfo->pIndex;
 						rd->indexData->indexCount = rd->indexData->indexBuffer->getNumIndexes();
 						queue->addRenderable(&mConnectorRends[GeoTerrain::Right]);
@@ -131,7 +131,7 @@ namespace Titan
 						bodyTile += 1<<GeoTerrain::Bottom;
 						RenderData* rd = mConnectorRends[GeoTerrain::Bottom].getRenderData();
 						GeoTerrain::IndexBufferInfo* indexInfo = geoCreator->getDetailLevelStruct(mCurrentLod).tileConnectors[GeoTerrain::Bottom][sideLod];
-						rd->operationType = indexInfo->isStrip ? RenderData::OT_TRIANGLE_STRIP: RenderData::OT_TRIANGLE_LIST;
+						rd->operationType = indexInfo->isStrip ? OT_TRIANGLE_STRIP: OT_TRIANGLE_LIST;
 						rd->indexData->indexBuffer = indexInfo->pIndex;
 						rd->indexData->indexCount = rd->indexData->indexBuffer->getNumIndexes();
 						queue->addRenderable(&mConnectorRends[GeoTerrain::Bottom]);
@@ -144,7 +144,7 @@ namespace Titan
 			{
 				RenderData* rend = mTerrainSectionRend->getRenderData();
 				GeoTerrain::IndexBufferInfo* indexInfo = geoCreator->getDetailLevelStruct(mCurrentLod).tileBodies[bodyTile];
-				rend->operationType = indexInfo->isStrip ? RenderData::OT_TRIANGLE_STRIP: RenderData::OT_TRIANGLE_LIST;
+				rend->operationType = indexInfo->isStrip ? OT_TRIANGLE_STRIP: OT_TRIANGLE_LIST;
 				rend->indexData->indexBuffer = indexInfo->pIndex;
 				rend->indexData->indexCount = rend->indexData->indexBuffer->getNumIndexes();
 				queue->addRenderable(mTerrainSectionRend);

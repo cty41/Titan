@@ -46,9 +46,7 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
-				"Cannot create D3D9 vertex buffer: " + msg, 
-				"void D3D9VertexBuffer::createD3D9Buffer()");
+			TITAN_EXCEPT_API( "Cannot create D3D9 vertex buffer: " + msg);
 		}
 
 	}
@@ -77,9 +75,7 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
-				"D3D9 lock vertex buffer failed: " + msg, 
-				"3D9VertexBuffer::lockImpl");
+			TITAN_EXCEPT_API( "D3D9 lock vertex buffer failed: " + msg);
 		}
 		return (void*)((char*)dstBytes + offset);
 	}
@@ -91,9 +87,8 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
-				"D3D9 unlock vertex buffer failed: " + msg,
-				"3D9VertexBuffer::unlockImpl");
+			TITAN_EXCEPT_API( 
+				"D3D9 unlock vertex buffer failed: " + msg);
 		}
 	}
 }

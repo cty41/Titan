@@ -12,6 +12,20 @@ namespace Titan
 	Texture::~Texture()
 	{
 	}
+
+	void Texture::prepareImpl()
+	{
+		if (isManualLoaded())
+			return;
+
+		DataStreamPtr dataStream = ResourceGroupMgr::getSingltonPtr()->openResource(mName, mGroup);
+		mPreparedData = MemoryDataStreamPtr(TITAN_NEW MemoryDataStream(dataStream));
+	}
+
+	void Texture::unprepareImpl()
+	{
+		mPreparedData.setNull();
+	}
 	//------------------------------------------------------------------------------//
 	void Texture::loadImage(const Image& img)
 	{
@@ -33,9 +47,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"Perlin noise can only made in 2d texture!",
-				"Texture::generatePerlinNoise");
+			TITAN_EXCEPT_INTERNALERROR(
+				"Perlin noise can only made in 2d texture!"
+				);
 		}
 
 	}
@@ -48,9 +62,9 @@ namespace Titan
 	void Texture::_loadImages(const ConstImagePtrList& images)
 	{
 		if(images.size() < 1)
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-			"image list is empty",
-			"Texture::_loadImages");
+			TITAN_EXCEPT_INVALIDPARAMS(
+			"image list is empty"
+			);
 
 		mWidth = images[0]->getWidth();
 		mHeight = images[0]->getHeight();

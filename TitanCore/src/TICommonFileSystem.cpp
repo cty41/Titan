@@ -66,9 +66,8 @@ namespace Titan
 		{
 			TITAN_DELETE_T(roStream, basic_ifstream, MEMCATEGORY_GENERAL);
 			TITAN_DELETE_T(rwStream, basic_fstream, MEMCATEGORY_GENERAL);
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"Cannot open file: " + filename,
-				"CommonFileSystem::open");
+			TITAN_EXCEPT_ITEMLOST(
+				"Cannot open file: " + filename);
 		}
 
 		/// Construct return stream, tell it to delete on destroy

@@ -30,9 +30,8 @@ namespace Titan
 		ViewportList::iterator it= mViewportList.find(ZOrder);
 		if(it != mViewportList.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
-				"We can not create this viewport 'cause its zorder has been used",
-				"RenderTarget::addViewport");
+			TITAN_EXCEPT_INVALIDPARAMS( 
+				"We can not create this viewport 'cause its zorder has been used");
 			return 0;
 		}
 		Viewport* vp = TITAN_NEW Viewport(cam, this,left, top, width, height, ZOrder);
@@ -51,9 +50,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"We do not have this viewport with this zorder",
-				"RenderTarget::getViewport");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"We do not have this viewport with this zorder");
 			return 0;
 		}
 	}
@@ -67,9 +65,8 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"We do not have this viewport with this zorder, can not delete",
-				"RenderTarget::removeViewport");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"We do not have this viewport with this zorder, can not delete");
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -126,7 +123,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void RenderTarget::getCustomParams(const String& name, void* pDst)
 	 {
-		 TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR," you have called the empty base function", "RenderTarget::getCustomParams");
+		 TITAN_EXCEPT_INTERNALERROR(" you have called the empty base function");
 	 }
 	//-------------------------------------------------------------------------------//
 	void RenderTarget::getStatistics(float& lastFPS, float& avgFPS,

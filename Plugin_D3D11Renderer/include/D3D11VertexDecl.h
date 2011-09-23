@@ -1,0 +1,30 @@
+#ifndef __D3D11_VERTEX_DECL__HH
+#define __D3D11_VERTEX_DECL__HH
+
+#include "D3D11Prerequisites.h"
+#include "TiVertexBuffer.h"
+
+
+namespace Titan
+{
+	class _D3D11DllExport D3D11VertexDecl : public VertexDeclaration
+	{
+	public:
+		typedef hash_map<D3D11HLSLShader*, ID3D11InputLayout*>::type ShaderToLayoutMap;
+	public:
+		D3D11VertexDecl();
+
+		~D3D11VertexDecl();
+
+		ID3D11InputLayout*	getD11InputLayoutByShader(D3D11HLSLShader* shader);
+
+		void		createInputElementDescs();
+	protected:
+		ShaderToLayoutMap	mShaderToLayoutMap;
+
+		D3D11_INPUT_ELEMENT_DESC*	mInputElementDescs;
+		/// the input layout need to recreate?
+		bool mNeedRecreate;
+	};
+}
+#endif

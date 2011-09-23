@@ -37,11 +37,11 @@ namespace Titan
 	struct _DllExport ShaderConstantDef
 	{
 		ShaderConstantType	type;
-		size_t physicalIndex;	//?
-		size_t	registerIndex;
+		size_t physicalIndex;	//memory pos
+		size_t	registerIndex;	//gpu register pos
 
-		size_t elementSize;
-		size_t arraySize;
+		size_t elementSize; //the size of a single element
+		size_t arraySize;	//how many elements
 
 		bool isFloat() const
 		{ return isFloat(type); }
@@ -192,7 +192,7 @@ namespace Titan
 		/// Current physical size allocation
 		size_t currentSize;
 		ShaderRegisterIndexUse() 
-			: physicalIndex(99999), currentSize(0){}
+			: physicalIndex(0), currentSize(0){}
 		ShaderRegisterIndexUse(size_t bufIdx, size_t curSz) 
 			: physicalIndex(bufIdx), currentSize(curSz){}
 	};

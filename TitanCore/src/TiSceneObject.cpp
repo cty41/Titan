@@ -40,9 +40,7 @@ namespace Titan
 	{
 		if(mAttachedNode)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS, 
-				"this object has attached a scene node!!",
-				"SceneObject::_setAttachedNode");
+			TITAN_EXCEPT_INVALIDPARAMS( "this object has attached a scene node!!");
 		}
 		else
 		{

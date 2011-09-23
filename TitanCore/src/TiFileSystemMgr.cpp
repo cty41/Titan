@@ -51,9 +51,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"The FileSystemFactory with this type " + type + " does not exist!",
-				"FileSystemManager::load");
+			TITAN_EXCEPT_INTERNALERROR(
+				"The FileSystemFactory with this type " + type + " does not exist!"
+				);
 		}
 		return pFile;
 	}
@@ -68,9 +68,9 @@ namespace Titan
 		}	
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"The FileSystem with this name " + name + " does exist!",
-				"FileSystemManager::load");
+			TITAN_EXCEPT_INTERNALERROR(
+				"The FileSystem with this name " + name + " does exist!"
+				);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -84,9 +84,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"The FileSystemFactory with this type " + system->getType() + " does not exist!",
-				"FileSystemManager::load");
+			TITAN_EXCEPT_INTERNALERROR(
+				"The FileSystemFactory with this type " + system->getType() + " does not exist!"
+				);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -109,9 +109,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"The FileSystemFactory with this type " + factory->getType() + " does exist!",
-				"FileSystemManager::addFileSystemFactory");
+			TITAN_EXCEPT_INTERNALERROR(
+				"The FileSystemFactory with this type " + factory->getType() + " does exist!"
+				);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -125,9 +125,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"The FileSystemFactory with this type " + factory->getType() + " does not exist!",
-				"FileSystemManager::removeFileSystemFactory");
+			TITAN_EXCEPT_INTERNALERROR(
+				"The FileSystemFactory with this type " + factory->getType() + " does not exist!"
+				);
 		}
 	}
 	//-------------------------------------------------------------------------------//

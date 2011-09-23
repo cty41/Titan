@@ -7,6 +7,11 @@
 
 namespace Titan
 {
+	enum IndexBufferType
+	{
+		IBT_16Bits = 1,
+		IBT_32Bits = 2
+	};
 	class _DllExport IndexBuffer : public HardwareBuffer
 	{
 	public:
@@ -22,10 +27,20 @@ namespace Titan
 
 		void createTriangleListGrid(uint16 xVerts, uint16 yVerts, uint16 xStep, uint16 yStep, uint16 stride);
 
+		void setIndexType(IndexBufferType ibt)
+		{
+			mIndexType = ibt;
+			mIndexSize = mIndexType * 2;
+			mSizeInBytes = mIndexSize * mNumIndexes;
+		}
+
+		IndexBufferType getIndexType() const { return mIndexType; }
+
 	protected:
 		HardwareBufferMgr*	mMgr;
 		size_t mNumIndexes;
 		size_t mIndexSize;
+		IndexBufferType mIndexType;
 	};
 
 	class _DllExport IndexBufferPtr : public SharedPtr<IndexBuffer>

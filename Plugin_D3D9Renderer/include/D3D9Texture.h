@@ -13,38 +13,38 @@ namespace Titan
 
 		~D3D9Texture();
 
-		void lockRect(uint level, PixelBox* lockRect, const Box* rect, LockOptions options);
+		//super class override [begin]
+		virtual void lockRect(uint level, PixelBox* lockRect, const Box* rect, LockOptions options);
 
-		void unlockRect(uint level);
+		virtual void unlockRect(uint level);
 
 		virtual void save(const String& filename);
 
-		virtual void	_createCoreObject();
+		virtual void _createCoreObject();
+		//super class override [End]
 
 		IDirect3DBaseTexture9* getD3dTexture() const;
 
 	protected:
-		void	loadImpl();
+		//super class override [begin]
+		virtual void loadImpl();
 
-		void	unloadImpl();
+		virtual void unloadImpl();
 
-		void	prepareImpl();
+		virtual void _loadImgsImpl(const ConstImagePtrList& images);
 
-		void	unprepareImpl();
+		virtual void _perlinNoiseImpl(float scale, int octaves, float falloff);
+		//super class override [End]
 
 		void	_loadNormalTex();
 
 		void	_loadCubeTex();
-
-		void	_perlinNoiseImpl(float scale, int octaves, float falloff);
 
 		void	_create2DTex();
 
 		void	_create3DTex();
 
 		void	_createCubeTex();
-
-		virtual void _loadImgsImpl(const ConstImagePtrList& images);
 
 		void	freeD3d9Tex();
 

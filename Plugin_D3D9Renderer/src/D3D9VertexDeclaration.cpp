@@ -59,11 +59,11 @@ namespace Titan
 			HRESULT hr = pD3D9Device->CreateVertexDeclaration(d3delems, &mD3D9VertexDeclaration);
 			if(FAILED(hr))
 			{
-				TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, 
-					"D3D9 Create IDirect3DVertexDeclaration9 failed" +
-					D3D9Renderer::getSingleton().getErrorDiscription(hr), 
-					"D3D9VertexDeclaration::getD3D9VertexDeclaration()");
+				TITAN_EXCEPT_API( 
+					"D3D9 Create IDirect3DVertexDeclaration9 failed" +D3D9Renderer::getSingleton().getErrorDiscription(hr));
 			}
+
+			delete d3delems;
 
 		}
 		return mD3D9VertexDeclaration;

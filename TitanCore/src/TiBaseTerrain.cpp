@@ -276,9 +276,8 @@ namespace Titan
 		else
 		{
 			//should I use assert here?
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"The index is valid",
-				"BaseTerrain::readWorldHeight");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"The index is valid");
 			return -1.0f;
 		}
 	}

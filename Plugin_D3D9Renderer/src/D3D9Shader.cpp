@@ -43,8 +43,7 @@ namespace Titan
 			String message = "Cannot compile D3D9 high-level shader " + mName + " Errors:\n" +
 				static_cast<const char*>(pErr->GetBufferPointer());
 			pErr->Release();
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR, message,
-				"D3D9Shader::loadFromSrc");
+			TITAN_EXCEPT_API( message);
 		}
 
 		_loadShaderFromBuffer();
@@ -59,16 +58,19 @@ namespace Titan
 	//----------------------------------------------------------------------------//
 	void D3D9Shader::buildConstantDefs()
 	{
-		assert(mpConstTable && "we do not load the shader");
+		if(!mpConstTable)
+		{
+			TITAN_EXCEPT_API("Shader not loaded correctly");
+			return ;
+		}
 
 		D3DXCONSTANTTABLE_DESC desc;
 		HRESULT hr = mpConstTable->GetDesc(&desc);
 
 		if(FAILED(hr))
 		{
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				"we can not get constants descriptions from shader",
-				"D3D9Shader::buildConstantDefs");
+			TITAN_EXCEPT_API("we can not get constants descriptions from shader");
+			return ;
 		}
 
 		createParamMappingBuffer(true);
@@ -88,9 +90,8 @@ namespace Titan
 		HRESULT hr = mpConstTable->GetConstantDesc(hConst, &desc, &numParams);
 		if(FAILED(hr))
 		{
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				"we can not get constants descriptions from shader",
-				"D3D9Shader::parseParam");
+			TITAN_EXCEPT_API(
+				"we can not get constants descriptions from shader");
 		}
 
 		String paramName = desc.Name;
@@ -138,16 +139,12 @@ namespace Titan
 						paramIndex, 
 						ShaderRegisterIndexUse(def.physicalIndex,def.arraySize * def.elementSize)));
 					mIntRegisterToPhysical->bufferSize += def.arraySize * def.elementSize;
-					mConstantDefs->floatBufferSize = mIntRegisterToPhysical->bufferSize;
+					mConstantDefs->intBufferSize = mIntRegisterToPhysical->bufferSize;
 				}
 
 				mConstantDefs->constantDefMap.insert(ShaderConstantDefMap::value_type(name, def));
 
 				mConstantDefs->genConstantDefArrayEntries(name, def);
-
-
-
-
 			}
 		}
 
@@ -283,29 +280,7 @@ namespace Titan
 		mClassParamsDict->addParamsCommand("entry", & msD3D9EntryCmd);
 	}
 	//------------------------------------------------------------------------------//
-	void D3D9Shader::D3D9TargetCmd::setter(void* target, const String& val)
-	{
-		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
-		shader->setTarget(val);
-	}
-	//------------------------------------------------------------------------------//
-	String D3D9Shader::D3D9TargetCmd::getter(void* target)
-	{
-		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
-		return shader->getTarget();
-	}
-	//------------------------------------------------------------------------------//
-	void D3D9Shader::D3D9EntryCmd::setter(void* target, const String& val)
-	{
-		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
-		shader->setShaderEntry(val);
-	}
-	//------------------------------------------------------------------------------//
-	String D3D9Shader::D3D9EntryCmd::getter(void* target)
-	{
-		D3D9Shader* shader = static_cast<D3D9Shader*>(target);
-		return shader->getShaderEntry();
-	}
+
 
 
 	//----------------------------------------------------------------------------//
@@ -328,9 +303,7 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				"create vertex shader failed because of: " + errMsg,
-				"D3D9VertexShader::_loadShaderFromBuffer()");
+			TITAN_EXCEPT_API("create vertex shader failed because of: " + errMsg);
 		}
 	}
 
@@ -355,9 +328,7 @@ namespace Titan
 		if(FAILED(hr))
 		{
 			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT(Exception::EXCEP_RENDERAPI_ERROR,
-				"create pixel shader failed because of: " + errMsg,
-				"D3D9PixelShader::_loadShaderFromBuffer()");
+			TITAN_EXCEPT_API("create pixel shader failed because of: " + errMsg);
 		}
 	}
 

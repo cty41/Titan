@@ -37,9 +37,8 @@ namespace Titan
 		OverlayElementMap::iterator it = mOverlayElementMap.find(name);
 		if(it != mOverlayElementMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"the overlay element called this name : "  + name + "has existed!",
-				"OverlayMgr::createElement");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"the overlay element called this name : "  + name + "has existed!");
 			return NULL;
 		}
 		else
@@ -47,9 +46,8 @@ namespace Titan
 			OverlayElementFactoryMap::iterator fit = mOverlayElementFactoryMap.find(type);
 			if(fit == mOverlayElementFactoryMap.end())
 			{
-				TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-					"overlay element Factory with this type : " + type + "does not exist!",
-					"OverlayMgr::createElement");
+				TITAN_EXCEPT_INVALIDPARAMS(
+					"overlay element Factory with this type : " + type + "does not exist!");
 				return NULL;
 			}
 			else
@@ -67,9 +65,9 @@ namespace Titan
 		OverlayElementMap::iterator it = mOverlayElementMap.find(name);
 		if(it == mOverlayElementMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"the overlay element called this name : "  + name + "does not exist!",
-				"OverlayMgr::removeElement");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"the overlay element called this name : "  + name + "does not exist!"
+				);
 		}
 		else
 		{
@@ -82,9 +80,9 @@ namespace Titan
 		OverlayElementMap::iterator it = mOverlayElementMap.find(element->getName());
 		if(it == mOverlayElementMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"the overlay element called this name : "  + element->getName() + "does not exist!",
-				"OverlayMgr::removeElement");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"the overlay element called this name : "  + element->getName() + "does not exist!"
+				);
 		}
 		else
 		{
@@ -109,9 +107,9 @@ namespace Titan
 		OverlayElementMap::iterator it = mOverlayElementMap.find(name);
 		if(it == mOverlayElementMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"We do not find overlay element named" + name,
-				"OverlayMgr::findElement");
+			TITAN_EXCEPT_ITEMLOST(
+				"We do not find overlay element named" + name
+				);
 			return NULL;
 		}
 		else
@@ -123,9 +121,9 @@ namespace Titan
 		OverlayElementMap::iterator it = mOverlayElementMap.find(old);
 		if(it == mOverlayElementMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"We do not find overlay element named" + old,
-				"OverlayMgr::findElement");
+			TITAN_EXCEPT_ITEMLOST(
+				"We do not find overlay element named" + old
+				);
 
 		}
 		else
@@ -145,9 +143,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"the overlay element factory with this type: "  + factory->getTypeName() + "has existed!",
-				"OverlayMgr::addFactory");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"the overlay element factory with this type: "  + factory->getTypeName() + "has existed!"
+				);
 		}
 	}
 	//-------------------------------------------------------------------------------//
@@ -161,9 +159,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"the overlay element factory with this type: "  + type + "does not exist!",
-				"OverlayMgr::removeFactory");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"the overlay element factory with this type: "  + type + "does not exist!"
+				);
 		}
 	}
 	//-------------------------------------------------------------------------------//

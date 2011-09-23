@@ -84,16 +84,16 @@ namespace Titan
 		StringKeyValueMap::iterator it = pScriptNode->keyValueMap.find("name"), itend = pScriptNode->keyValueMap.end();
 		if(it == itend)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"We can not locate the name of the material",
-				"MaterialTranslator::translate");
+			TITAN_EXCEPT_ITEMLOST(
+				"We can not locate the name of the material"
+				);
 		}
 		ResourceMgr::CreatedResource cr = MaterialMgr::getSingleton().create(it->second, group);
 		if(!cr.first)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"We have created a same name material: " + it->second,
-				"MaterialTranslator::translate");
+			TITAN_EXCEPT_INTERNALERROR(
+				"We have created a same name material: " + it->second
+				);
 			return ;
 		}
 		MaterialPtr pMaterial= cr.second;
@@ -158,9 +158,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"we could not find name node",
-				"PassTranslator::translateRenderState");
+			TITAN_EXCEPT_ITEMLOST(
+				"we could not find name node"
+				);
 			return ;
 		}
 
@@ -171,9 +171,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"we could not find val node",
-				"PassTranslator::translateRenderState");
+			TITAN_EXCEPT_ITEMLOST(
+				"we could not find val node"
+				);
 			return ;
 		}
 
@@ -247,9 +247,9 @@ namespace Titan
 		StringKeyValueMap::iterator it = pScriptNode->keyValueMap.find("name");
 		if(it == pScriptNode->keyValueMap.end())
 		{
-			TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-				"The vertex shader must have name attribute",
-				"ShaderTranslator::translate");
+			TITAN_EXCEPT_ITEMLOST(
+				"The vertex shader must have name attribute"
+				);
 			return;
 		}
 		String shaderName = it->second;
@@ -285,26 +285,26 @@ namespace Titan
 			StringKeyValueMap::iterator it = pScriptNode->keyValueMap.find("name");
 			if (it == pScriptNode->keyValueMap.end())
 			{
-				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-					"auto_named_param does not have a name ",
-					"ShaderTranslator::translateShaderParam");
+				TITAN_EXCEPT_ITEMLOST(
+					"auto_named_param does not have a name "
+					);
 				return ;
 			}
 			name = it->second;
 			it = pScriptNode->keyValueMap.find("annotation");
 			if (it == pScriptNode->keyValueMap.end())
 			{
-				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-					"auto_named_param does not have a annotation ",
-					"ShaderTranslator::translateShaderParam");
+				TITAN_EXCEPT_ITEMLOST(
+					"auto_named_param does not have a annotation "
+					);
 				return ;
 			}
 			const ShaderParams::AutoConstantDef* def = ShaderParams::getAutoConstantDef(it->second);
 			if(!def)
 			{
-				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-					"we do not have this type of auto_named_param: " + it->second,
-					"ShaderTranslator::translateShaderParam");
+				TITAN_EXCEPT_ITEMLOST(
+					"we do not have this type of auto_named_param: " + it->second
+					);
 			}
 
 			if(def->edType == ShaderParams::EDT_NONE)
@@ -314,9 +314,9 @@ namespace Titan
 				it = pScriptNode->keyValueMap.find("extra_data");
 				if (it == pScriptNode->keyValueMap.end())
 				{
-					TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-						"this auto_named_param need extra_data ",
-						"ShaderTranslator::translateShaderParam");
+					TITAN_EXCEPT_ITEMLOST(
+						"this auto_named_param need extra_data "
+						);
 					return ;
 				}
 				if(def->edType == ShaderParams::EDT_INT)
@@ -337,18 +337,18 @@ namespace Titan
 			StringKeyValueMap::iterator it = pScriptNode->keyValueMap.find("name");
 			if (it == pScriptNode->keyValueMap.end())
 			{
-				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-					"auto_named_param does not have a name ",
-					"ShaderTranslator::translateShaderParam");
+				TITAN_EXCEPT_ITEMLOST(
+					"auto_named_param does not have a name "
+					);
 				return ;
 			}
 			name = it->second;
 			it = pScriptNode->keyValueMap.find("type");
 			if (it == pScriptNode->keyValueMap.end())
 			{
-				TITAN_EXCEPT(Exception::EXCEP_ITEM_NOT_FOUND,
-					"auto_named_param does not have type ",
-					"ShaderTranslator::translateShaderParam");
+				TITAN_EXCEPT_ITEMLOST(
+					"auto_named_param does not have type "
+					);
 				return ;
 			}
 			type = it->second;
@@ -401,9 +401,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"we do not have this kind of shader param type: "+ pScriptNode->name,
-				"ShaderTranslator::translateShaderParam");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"we do not have this kind of shader param type: "+ pScriptNode->name
+				);
 		}
 		
 	}

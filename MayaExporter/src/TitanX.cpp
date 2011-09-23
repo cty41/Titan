@@ -80,7 +80,7 @@ protected:
 	int             edgeTableSize;
 	int             nextSmoothingGroup;
 	int             currSmoothingGroup;
-	bool            newSmoothingGroup;
+	bool            mNewSmoothingGroup;
 
 	// List of names of the mesh shapes that we export from maya
 	MStringArray	objectNodeNamesArray;
@@ -295,7 +295,6 @@ MStatus TitanXExporter::OutputPolygons(MDagPath& mdagPath, MObject&  mComponent)
 {
 	MStatus stat = MS::kSuccess;
 	MSpace::Space space = MSpace::kWorld;
-	int i;
 
 	MFnMesh fnMesh( mdagPath, &stat );
 	if ( MS::kSuccess != stat) 

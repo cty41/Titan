@@ -5,10 +5,10 @@
 namespace Titan
 {
 	IndexBuffer::IndexBuffer(HardwareBufferMgr* mgr, size_t numIndexes, HardwareBuffer::Usage usage, bool useSystemMemory)
-		: HardwareBuffer(usage, useSystemMemory), mMgr(mgr), mNumIndexes(numIndexes)
+		: HardwareBuffer(usage, useSystemMemory), mMgr(mgr), mNumIndexes(numIndexes), mIndexType(IBT_16Bits)
 	{
 		//change in the future
-		mIndexSize = sizeof(unsigned short);
+		mIndexSize = mIndexType * 2;
 		mSizeInBytes = mIndexSize * mNumIndexes;
 	}
 	//-------------------------------------------------------------------------------//

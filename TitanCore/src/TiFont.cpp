@@ -81,8 +81,8 @@ namespace Titan
 		FT_Library ftLibrary;
 		// Init freetype
 		if( FT_Init_FreeType( &ftLibrary ) )
-			TITAN_EXCEPT( Exception::EXCEP_INTERNAL_ERROR, "Could not init FreeType library!",
-			"Font::createTextureFromFont");
+			TITAN_EXCEPT( Exception::EXCEP_INTERNAL_ERROR, "Could not init FreeType library!"
+			);
 
 		FT_Face face;
 		// Add a gap between letters vert and horz
@@ -92,14 +92,14 @@ namespace Titan
 		// Load font
 		if( FT_New_Memory_Face( ftLibrary, mPreparedData->getPtr(), (FT_Long)mPreparedData->size() , 0, &face ) )
 			TITAN_EXCEPT( Exception::EXCEP_INTERNAL_ERROR,
-			"Could not open font face!", "Font::createTextureFromFont" );
+			"Could not open font face!" );
 
 
 		// Convert our point size to freetype 26.6 fixed point format
 		FT_F26Dot6 ftSize = (FT_F26Dot6)(mTtfSize * (1 << 6));
 		if( FT_Set_Char_Size( face, ftSize, 0, mTtfResolution, mTtfResolution ) )
 			TITAN_EXCEPT( Exception::EXCEP_INTERNAL_ERROR,
-			"Could not set char size!", "Font::createTextureFromFont" );
+			"Could not set char size!" );
 
 		//FILE *fo_def = stdout;
 
@@ -300,9 +300,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"font size is invalid: " + val,
-				"Font::FontSizeCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"font size is invalid: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//
@@ -322,9 +322,9 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"TrueType resolution is invalid: " + val,
-				"Font::FontResolutionCmd::setter");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"TrueType resolution is invalid: " + val
+				);
 		}
 	}
 	//------------------------------------------------------------------------------//

@@ -54,9 +54,7 @@ namespace Titan
 		{
 			String errMsg = pe.what();
 			errMsg += pe.where<char>();
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				errMsg  ,
-				"FontMgr::parseScript");
+			TITAN_EXCEPT_INTERNALERROR( errMsg );
 		}
 
 		processXmlNode(doc.first_node(), group);
@@ -66,9 +64,8 @@ namespace Titan
 	{
 		if (strcmp(xmlNode->name(), "font") != 0)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"font script does not support this kind of node: " + String(xmlNode->name()),
-				"FontMgr::processXmlNode");
+			TITAN_EXCEPT_INVALIDPARAMS(
+				"font script does not support this kind of node: " + String(xmlNode->name()));
 		}
 		xml_attribute<char>* xmlAttribute =  xmlNode->first_attribute();
 		if(xmlAttribute)

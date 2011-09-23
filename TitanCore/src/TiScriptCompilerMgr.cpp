@@ -52,9 +52,7 @@ namespace Titan
 			String errMsg = pe.what();
 			errMsg += "happened in: ";
 			errMsg.append(pe.where<char>());
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				errMsg  ,
-				"ScriptCompilerMgr::parseScript");
+			TITAN_EXCEPT_INTERNALERROR( errMsg );
 		}
 		processXmlNode(doc.first_node(), NULL);
 
@@ -81,9 +79,7 @@ namespace Titan
 			if (pTranslator == NULL)
 			{
 				String errMsg = "Root node with this type :" ;
-				TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-					errMsg + xmlNode->name() + "does not existed!",
-					"ScriptCompilerMgr::processXmlNode");
+				TITAN_EXCEPT_INVALIDPARAMS( errMsg + xmlNode->name() + "does not existed!");
 				return ;
 			}
 			

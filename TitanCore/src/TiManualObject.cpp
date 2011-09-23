@@ -47,20 +47,18 @@ namespace Titan
 	{
 		if(!mCurrentSection)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"you forgot to call begin() before you set material",
-				"ManualObject::setMaterial");
+			TITAN_EXCEPT_INTERNALERROR(
+				"you forgot to call begin() before you set material"
+				);
 		}
 		mCurrentSection->setMaterial(name, group);
 	}
 	//-------------------------------------------------------------------------------//
-	void ManualObject::begin(RenderData::OperationType ot)
+	void ManualObject::begin(OperationType ot)
 	{
 		if(mCurrentSection)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"you forgot to call end() to finish last Manual operation",
-				"ManualObject::begin");
+			TITAN_EXCEPT_INTERNALERROR("you forgot to call end() to finish last Manual operation");
 		}
 		mCurrentSection = TITAN_NEW ManualObjectSection(this, ot);
 		mSectionVector.push_back(mCurrentSection);
@@ -74,9 +72,9 @@ namespace Titan
 	{
 		if(!mCurrentSection)
 		{ 
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"You must call begin() before end()",
-				"ManualObject::end()");
+			TITAN_EXCEPT_INTERNALERROR(
+				"You must call begin() before end()"
+				);
 		}
 
 		if (mTempVertexPending)
@@ -149,9 +147,9 @@ namespace Titan
 	{
 		if(mCurrentSection == NULL)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"Must call begin first",
-				"ManualObject::position");
+			TITAN_EXCEPT_INTERNALERROR(
+				"Must call begin first"
+				);
 		}
 
 		if (mTempVertexPending)
@@ -190,9 +188,9 @@ namespace Titan
 	{
 		if(mCurrentSection == NULL)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"Must call begin first",
-				"ManualObject::texCoord");
+			TITAN_EXCEPT_INTERNALERROR(
+				"Must call begin first"
+				);
 		}
 		if (mFirstVertex)
 		{
@@ -217,9 +215,9 @@ namespace Titan
 	{
 		if(mCurrentSection == NULL)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INTERNAL_ERROR,
-				"Must call begin first",
-				"ManualObject::texCoord");
+			TITAN_EXCEPT_INTERNALERROR(
+				"Must call begin first"
+				);
 		}
 		if (mFirstVertex)
 		{
@@ -258,12 +256,9 @@ namespace Titan
 	void ManualObject::triangle(uint32 i1, uint32 i2, uint32 i3)
 	{
 		RenderData* rd = mCurrentSection->getRenderData();
-		if (rd->operationType !=
-			RenderData::OT_TRIANGLE_LIST)
+		if (rd->operationType != OT_TRIANGLE_LIST)
 		{
-			TITAN_EXCEPT(Exception::EXCEP_INVALID_PARAMS,
-				"This method is only valid on triangle lists",
-				"ManualObject::index");
+			TITAN_EXCEPT_INVALIDPARAMS("This method is only valid on triangle lists");
 		}
 
 		index(i1);
@@ -407,7 +402,7 @@ namespace Titan
 
 	typedef ManualObject::ManualObjectSection ManualObjectSection;
 
-	ManualObjectSection::ManualObjectSection(ManualObject* parent, RenderData::OperationType ot)
+	ManualObjectSection::ManualObjectSection(ManualObject* parent, OperationType ot)
 		:mParent(parent)
 	{
 		mRenderData.operationType = ot;

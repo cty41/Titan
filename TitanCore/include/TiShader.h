@@ -13,6 +13,7 @@ namespace Titan
 	{
 		ST_VERTEX_SHADER,
 		ST_PIXEL_SHADER,
+		ST_GEOMETRY_SHADER,
 	};
 	//now we only support high level shader ,not support assemble code
 	class _DllExport Shader : public Resource
