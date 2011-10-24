@@ -5,9 +5,8 @@
 #include <iostream>
 #include <string.h> 
 
-#include <maya/MFnPlugin.h>
-#include <maya/MPlug.h>
-#include <maya/MPxFileTranslator.h>
+
+
 #include <maya/MFnDagNode.h>
 #include <maya/MItDag.h>
 #include <maya/MDistance.h>
@@ -38,10 +37,6 @@
 #include <maya/MItDependencyGraph.h>
 #include <maya/MItGeometry.h>
 #include <maya/MFnBlendShapeDeformer.h>
-
-#include <maya/MPxNode.h>
-#include <maya/MPxCommand.h>
-#include <maya/MPxData.h>
 
 #include <maya/MFnSkinCluster.h>
 #include <maya/MItMeshPolygon.h>

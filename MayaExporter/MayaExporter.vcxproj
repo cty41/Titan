@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClCompile Include="src\MayaFuncs.cpp" />
     <ClCompile Include="src\SceneTranslator.cpp" />
-    <ClCompile Include="src\testExport.cpp" />
     <ClCompile Include="src\TitanX.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -80,7 +79,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;Foundation.lib;OpenMaya.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;Foundation.lib;OpenMaya.lib;openMayaAnim.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\bin\$(Configuration)\TitanX_d.mll</OutputFile>
       <AdditionalLibraryDirectories>c:\Program Files\Autodesk\Maya2011\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

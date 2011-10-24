@@ -409,10 +409,10 @@ namespace Titan
 	{
 		projDst = projSrc;
 
-		projDst[2][0] = (projDst[2][0] + projDst[3][0]) / 2;
-		projDst[2][1] = (projDst[2][1] + projDst[3][1]) / 2;
-		projDst[2][2] = (projDst[2][2] + projDst[3][2]) / 2;
-		projDst[2][3] = (projDst[2][3] + projDst[3][3]) / 2;
+		//projDst[2][0] = (projDst[2][0] + projDst[3][0]) / 2;
+		//projDst[2][1] = (projDst[2][1] + projDst[3][1]) / 2;
+		//projDst[2][2] = (projDst[2][2] + projDst[3][2]) / 2;
+		//projDst[2][3] = (projDst[2][3] + projDst[3][3]) / 2;
 
 		if (!forGpuProgram)
 		{

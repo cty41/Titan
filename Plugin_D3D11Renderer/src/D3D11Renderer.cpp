@@ -503,6 +503,6 @@ namespace Titan
 
 	void D3D11Renderer::_setTexture(size_t stage, const TexturePtr& pTex)
 	{
-		//todo,simulate fix-pipeline,set txeture
+		//todo,simulate fix-pipeline,set texture
 	}
 }

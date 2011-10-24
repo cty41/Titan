@@ -1,12 +1,23 @@
 #include "MayaHeader.h"
+#include "SceneTranslator.h"
 
+//these headers must include in main cpp
+#include <maya/MPlug.h>
+#include <maya/MFnPlugin.h>
+#include <maya/MPxFileTranslator.h>
 
 class TitanXExporter : public MPxFileTranslator
 {
 public:
-	TitanXExporter(){};
+	TitanXExporter()
+	{
+		mpTranslator = new SceneTranslator();
+	}
 
-	virtual ~TitanXExporter(){};
+	virtual ~TitanXExporter()
+	{
+		delete mpTranslator;
+	}
 
 	static void*	creator();
 
@@ -34,6 +45,7 @@ protected:
 	
 
 protected:
+	SceneTranslator*	mpTranslator;
 	// counters
 	int v,vt,vn;
 	// offsets
@@ -125,6 +137,8 @@ MStatus TitanXExporter::writer ( const MFileObject& file,
 
 {
 	MStatus status;
+
+	mpTranslator->processMayaScene();
 
 	MString mname = file.fullName(), unitName;
 
