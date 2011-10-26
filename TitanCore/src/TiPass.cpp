@@ -576,9 +576,7 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT_INVALIDPARAMS(
-				"lighting value includes 'on' or 'off', not " + val
-				);
+			TITAN_EXCEPT_INVALIDPARAMS("lighting value includes 'on' or 'off', not " + val);
 		}
 	}
 	//------------------------------------------------------------------------------//

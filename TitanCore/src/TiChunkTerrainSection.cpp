@@ -3,7 +3,7 @@
 #include "TiChunkTerrain.h"
 #include "TiHardwareBufferMgr.h"
 #include "TiRenderQueue.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 
 namespace Titan
 {
@@ -45,7 +45,7 @@ namespace Titan
 	void ChunkTerrainSection::_updateRenderQueue(RenderQueue* queue, Camera* cam)
 	{
 
-		if(cam->isVisible(mWorldBound))
+		if(cam->isVisible(mSectionBound))
 		{
 			TerrainSectionRendVec::iterator it = mTerrainSectionRendVec.begin(), itend = mTerrainSectionRendVec.end();
 			while (it != itend)
@@ -133,8 +133,8 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void ChunkTerrainSection::_buildVertexBuffer()
 	{
-		mWorldBound.getMinimum().y = MAX_REAL32;
-		mWorldBound.getMaximum().y = MIN_REAL32;
+		mSectionBound.getMinimum().y = MAX_REAL32;
+		mSectionBound.getMaximum().y = MIN_REAL32;
 
 		uint32 pageSize = mXVerts * mZVerts;
 		uint32 bufferSize = pageSize << 1;
@@ -161,10 +161,10 @@ namespace Titan
 				height -= SKIRT_HEIGHT;
 				pVerts[vertIndex + pageSize].height = height;
 
-				mWorldBound.getMinimum().y = 
-					minimum(mWorldBound.getMinimum().y, height);
-				mWorldBound.getMaximum().y = 
-					maximum(mWorldBound.getMaximum().y, height);
+				mSectionBound.getMinimum().y = 
+					minimum(mSectionBound.getMinimum().y, height);
+				mSectionBound.getMaximum().y = 
+					maximum(mSectionBound.getMaximum().y, height);
 			}
 		}
 
@@ -186,10 +186,10 @@ namespace Titan
 	void ChunkTerrainSection::_calcLod(Camera* cam)
 	{
 		// compute a 2d point for each corner of the section
-		Vector2 corner0(mWorldBound.getMinimum().x, mWorldBound.getMinimum().z);
-		Vector2 corner1(mWorldBound.getMinimum().x, mWorldBound.getMaximum().z);
-		Vector2 corner2(mWorldBound.getMaximum().x, mWorldBound.getMaximum().z);
-		Vector2 corner3(mWorldBound.getMaximum().x, mWorldBound.getMinimum().z);
+		Vector2 corner0(mSectionBound.getMinimum().x, mSectionBound.getMinimum().z);
+		Vector2 corner1(mSectionBound.getMinimum().x, mSectionBound.getMaximum().z);
+		Vector2 corner2(mSectionBound.getMaximum().x, mSectionBound.getMaximum().z);
+		Vector2 corner3(mSectionBound.getMaximum().x, mSectionBound.getMinimum().z);
 
 		Vector2 viewPoint= Vector2(cam->getPosition().x, cam->getPosition().z);
 

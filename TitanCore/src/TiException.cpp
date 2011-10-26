@@ -1,6 +1,6 @@
 #include "TitanStableHeader.h"
 #include "TiException.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 
 
 namespace Titan
@@ -13,11 +13,9 @@ namespace Titan
 	Exception::Exception(int number, const String& desc, const String& src, const char* type, const char* file, long line)
 		:line(line), number(number), typeName(type), description(desc), source(src), file(file)
 	{
-		if(ConsoleDebugger::getSingletonPtr())
+		if(LogMgr::getSingletonPtr())
 		{
-			ConsoleDebugger::getSingleton().outputMessage(
-					getFullDescription(),
-					CML_CRITICAL);
+			LogMgr::getSingleton().outputMessage(getFullDescription(),LML_CRITICAL);
 		}
 	}
 	//-------------------------------------------------------------------------------//

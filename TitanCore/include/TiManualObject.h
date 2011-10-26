@@ -17,19 +17,21 @@ namespace Titan
 	class _DllExport ManualObject : public SceneObject
 	{
 	public:
-		ManualObject(const String& name);
+		ManualObject(SceneObjectFactory* creator, const String& name);
 
 		~ManualObject();
 
 		class ManualObjectSection;
 
-		const String&	getType() const { return mType; }
-
+		//super class override [begin]
 		void	_updateRenderQueue(RenderQueue* queue, Camera* cam);
+
+		const AABB& getLocalBound() const { return mAABB;}
+		//super class override [End]
 
 		void	begin(OperationType ot = OT_TRIANGLE_LIST);
 
-		ManualObjectSection*	end();
+		ManualObjectSection* end();
 		
 		void	clear();
 
@@ -50,8 +52,6 @@ namespace Titan
 		void	triangle(uint32 i1, uint32 i2, uint32 i3);
 
 		void	quad(uint32 i1, uint32 i2, uint32 i3, uint32 i4);
-
-		const AABB& getAABB() const { return mAABB;}
 
 		void	setMaterial(const String&  name, const String&  group);
 

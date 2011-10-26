@@ -14,7 +14,8 @@ namespace Titan
 		~D3D11Texture();
 
 		//super class override
-		virtual void lockRect(uint level, PixelBox* lockRect, const Box* rect, LockOptions options);
+		////in d10/11, we can not lock part of the texture ,so 2th param is useless
+		virtual void lockRect(uint level, const Box* rect, LockOptions options, PixelBox* lockRect);
 
 		virtual void unlockRect(uint level);
 
@@ -22,6 +23,10 @@ namespace Titan
 
 		virtual void _createCoreObject();
 		//super class override [End]
+
+		ID3D11Resource*	getD11Texture() const;
+
+		ID3D11ShaderResourceView*	getSRV() const { return mShaderResView; }
 
 	protected:
 		//super class override [begin]
@@ -47,6 +52,12 @@ namespace Titan
 		void	freeD3d11Tex();
 
 	protected:
+		ID3D11Texture1D*	mTex1D;
+		ID3D11Texture2D*	mTex2D;
+		ID3D11Texture3D*	mTex3D;
+
+		ID3D11ShaderResourceView*	mShaderResView;
+		D3D11_SHADER_RESOURCE_VIEW_DESC mSRVDesc;
 
 	};
 }

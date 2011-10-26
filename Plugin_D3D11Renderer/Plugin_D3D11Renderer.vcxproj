@@ -54,6 +54,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PLUGIN_D3D11RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include;..\TitanCore\include;C:\Program Files\Microsoft DirectX SDK %28February 2010%29\Include</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -84,6 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\D3D11CacheStates.h" />
+    <ClInclude Include="include\D3D11FixedPipelineSimulator.h" />
     <ClInclude Include="include\D3D11HardwareBufferMgr.h" />
     <ClInclude Include="include\D3D11HLSLShader.h" />
     <ClInclude Include="include\D3D11IndexBuffer.h" />
@@ -99,6 +101,8 @@
     <ClInclude Include="include\D3D11VertexDecl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\D3D11CacheStates.cpp" />
+    <ClCompile Include="src\D3D11FixedPipelineSimulator.cpp" />
     <ClCompile Include="src\D3D11HardwareBufferMgr.cpp" />
     <ClCompile Include="src\D3D11HLSLShader.cpp" />
     <ClCompile Include="src\D3D11IndexBuffer.cpp" />

@@ -79,7 +79,7 @@ namespace Titan
 
 		typedef HardwareBuffer::LockOptions LockOptions;
 
-		virtual void		lockRect(uint level, PixelBox* lockRect, const Box* rect,  LockOptions options)  = 0;
+		virtual void		lockRect(uint level, const Box* rect,  LockOptions options, PixelBox* lockRect)  = 0;
 
 		virtual void		unlockRect(uint level) = 0;
 

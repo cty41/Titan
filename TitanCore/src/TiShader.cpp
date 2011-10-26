@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiShader.h"
 #include "TiShaderMgr.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiDataStream.h"
 #include "TiResourceGroupMgr.h"
 
@@ -48,7 +48,7 @@ namespace Titan
 		}
 		catch(const Exception& e)
 		{
-			DEBUG_OUTPUT<<"shader named" + mName + "got error when loading"<<e.getFullDescription();
+			DEBUG_LOG<<"shader named" + mName + "got error when loading"<<e.getFullDescription();
 			mHasCompiledError = true;
 		}
 	}
@@ -91,6 +91,8 @@ namespace Titan
 	void Shader::setParamsNames(ShaderParamsPtr params)
 	{
 		getConstantDefs();
+		if(mConstantDefs.isNull())
+			return ;
 		params->_setNamedConstants(mConstantDefs);
 		params->_setRegisterIndexes(mFloatRegisterToPhysical, mIntRegisterToPhysical);
 	}

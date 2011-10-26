@@ -66,17 +66,15 @@ namespace Titan
 
 		VertexBufferPtr	getSectorVertices() { return mSectorVerts; }
 
-		const AABB&		getWorldBound() const { return mWorldBound; }
-
 		const MaterialPtr&	getMaterial() const { return mCreator->getMaterial(); }
 
-		//interface implement
-		virtual const String&	getType() const { return mType; }
+		//super class override [begin]
+		virtual const String&	getType() const;
 
 		virtual void			_updateRenderQueue(RenderQueue* queue, Camera* cam);
 
-		virtual const AABB&		getAABB() const { return mWorldBound; }
-
+		virtual const AABB&		getLocalBound() const { return mSectionBound; }
+		//super class override [End]
 		const Vector3&	getSectionPos() const { return mSectionPos; }
 
 
@@ -93,7 +91,7 @@ namespace Titan
 
 		TerrainSectionRend*		mTerrainSectionRend;
 		TerrainSectionRendVec	mTerrainSectionRendVec;
-		AABB					mWorldBound;
+		AABB					mSectionBound;
 		
 		uint16					mHeightMapX;
 		uint16					mHeightMapZ;

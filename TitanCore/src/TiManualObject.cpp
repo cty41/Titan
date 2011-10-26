@@ -7,7 +7,6 @@
 
 namespace Titan
 {
-
 	static const TexturePtr sNullTexPtr;
 
 #define TEMP_INITIAL_SIZE 50
@@ -16,14 +15,13 @@ namespace Titan
 #define TEMP_INITIAL_INDEX_SIZE sizeof(uint32) * TEMP_INITIAL_SIZE
 
 	//-------------------------------------------------------------------------------//
-	ManualObject::ManualObject(const String& name)
-		: mName(name), mFirstVertex(true),
+	ManualObject::ManualObject(SceneObjectFactory* creator, const String& name)
+		: SceneObject(creator, name), mFirstVertex(true),
 		mTempVertexPending(false), mCurrentSection(0),
 		mTempVertexBuffer(0),mTempVertexSize(TEMP_INITIAL_VERTEX_SIZE),
 		mTempIndexBuffer(0), mTempIndexSize(TEMP_INITIAL_INDEX_SIZE),
 		mDeclSize(0), mTexCoordIndex(0)
 	{
-		mType = "ManualObject";
 		//If you got an error here, recompiled it..
 	}
 	//-------------------------------------------------------------------------------//
@@ -47,9 +45,7 @@ namespace Titan
 	{
 		if(!mCurrentSection)
 		{
-			TITAN_EXCEPT_INTERNALERROR(
-				"you forgot to call begin() before you set material"
-				);
+			TITAN_EXCEPT_INTERNALERROR("you forgot to call begin() before you set material");
 		}
 		mCurrentSection->setMaterial(name, group);
 	}
@@ -72,9 +68,7 @@ namespace Titan
 	{
 		if(!mCurrentSection)
 		{ 
-			TITAN_EXCEPT_INTERNALERROR(
-				"You must call begin() before end()"
-				);
+			TITAN_EXCEPT_INTERNALERROR("You must call begin() before end()");
 		}
 
 		if (mTempVertexPending)
@@ -110,7 +104,7 @@ namespace Titan
 					rd->indexData->indexCount,
 					HardwareBuffer::HBU_STATIC_WRITE_ONLY, true);
 
-				rd->indexData->indexBuffer->writeData(0, rd->indexData->indexCount * rd->indexData->indexBuffer->getIndexSize(), (void*)mTempIndexBuffer);
+				rd->indexData->indexBuffer->writeData(0, rd->indexData->indexCount * rd->indexData->indexBuffer->getIndexSize(), (void*)mTempIndexBuffer, true);
 
 			}
 		}
@@ -147,9 +141,7 @@ namespace Titan
 	{
 		if(mCurrentSection == NULL)
 		{
-			TITAN_EXCEPT_INTERNALERROR(
-				"Must call begin first"
-				);
+			TITAN_EXCEPT_INTERNALERROR("Must call begin first");
 		}
 
 		if (mTempVertexPending)
@@ -188,9 +180,7 @@ namespace Titan
 	{
 		if(mCurrentSection == NULL)
 		{
-			TITAN_EXCEPT_INTERNALERROR(
-				"Must call begin first"
-				);
+			TITAN_EXCEPT_INTERNALERROR("Must call begin first");
 		}
 		if (mFirstVertex)
 		{
@@ -215,9 +205,7 @@ namespace Titan
 	{
 		if(mCurrentSection == NULL)
 		{
-			TITAN_EXCEPT_INTERNALERROR(
-				"Must call begin first"
-				);
+			TITAN_EXCEPT_INTERNALERROR("Must call begin first");
 		}
 		if (mFirstVertex)
 		{
@@ -464,7 +452,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	SceneObject* ManualObjectFactory::createInstance(const String& name)
 	{
-		return TITAN_NEW ManualObject(name);
+		return TITAN_NEW ManualObject(this, name);
 	}
 	//-------------------------------------------------------------------------------//
 	void ManualObjectFactory::destroyInstance(SceneObject* object)

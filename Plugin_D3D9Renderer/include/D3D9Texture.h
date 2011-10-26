@@ -14,7 +14,7 @@ namespace Titan
 		~D3D9Texture();
 
 		//super class override [begin]
-		virtual void lockRect(uint level, PixelBox* lockRect, const Box* rect, LockOptions options);
+		virtual void lockRect(uint level, const Box* rect, LockOptions options, PixelBox* lockRect);
 
 		virtual void unlockRect(uint level);
 

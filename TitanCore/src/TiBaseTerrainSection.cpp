@@ -6,20 +6,25 @@
 
 namespace Titan
 {
+	static const String sBaseTerrainType = "BaseTerrainSection";
 	static const TexturePtr sNullTexPtr;
 
 
 	BaseTerrainSection::BaseTerrainSection()
-		: mCreator(NULL), mXVerts(0), mZVerts(0), mTerrainSectionRend(NULL), mVertexBufferBinding(NULL)
+		:SceneObject(nullptr), mCreator(NULL), mXVerts(0), mZVerts(0), mTerrainSectionRend(NULL), mVertexBufferBinding(NULL)
 	{
-		mType = "BaseTerrainSection";
-		mWorldBound.setFinite();
+		mSectionBound.setFinite();
 	}
 	//-------------------------------------------------------------------------------//
 	BaseTerrainSection::~BaseTerrainSection()
 	{
 		if(mTerrainSectionRend)
 			TITAN_DELETE mTerrainSectionRend;
+	}
+
+	const String& BaseTerrainSection::getType() const 
+	{
+		return sBaseTerrainType;
 	}
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::create(BaseTerrain* creator, uint16 sectorX, uint16 sectorZ, uint16 heightMapX, uint16 heightMapZ, uint16 xVerts, uint16 zVerts, const Rect2D& worldRect)
@@ -29,7 +34,7 @@ namespace Titan
 		mZVerts = zVerts;
 		mSectorX = sectorX;
 		mSectorZ = sectorZ;
-		mWorldBound = worldRect;
+		mSectionBound = worldRect;
 		mHeightMapX = heightMapX;
 		mHeightMapZ = heightMapZ;
 
@@ -43,8 +48,8 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::_buildVertexBuffer()
 	{
-		mWorldBound.getMinimum().y = MAX_REAL32;
-		mWorldBound.getMaximum().y = MIN_REAL32;
+		mSectionBound.getMinimum().y = MAX_REAL32;
+		mSectionBound.getMaximum().y = MIN_REAL32;
 
 		BaseTerrain::SectorVertex* pVerts = 
 			new BaseTerrain::SectorVertex[mXVerts * mZVerts];
@@ -65,10 +70,10 @@ namespace Titan
 					mHeightMapX + x, 
 					mHeightMapZ + z);
 
-				mWorldBound.getMinimum().y = 
-					minimum(mWorldBound.getMinimum().y, height);
-				mWorldBound.getMaximum().y = 
-					maximum(mWorldBound.getMaximum().y, height);
+				mSectionBound.getMinimum().y = 
+					minimum(mSectionBound.getMinimum().y, height);
+				mSectionBound.getMaximum().y = 
+					maximum(mSectionBound.getMaximum().y, height);
 			}
 		}
 		mSectorVerts = HardwareBufferMgr::getSingletonPtr()->createVertexBuffer(sizeof(BaseTerrain::SectorVertex), mXVerts * mZVerts, HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false);
@@ -107,7 +112,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void BaseTerrainSection::_updateRenderQueue(RenderQueue* queue, Camera* cam)
 	{
-		if(cam->isVisible(mWorldBound))
+		if(cam->isVisible(mSectionBound))
 		{
 			if(mTerrainSectionRend)
 				queue->addRenderable(mTerrainSectionRend);
@@ -133,7 +138,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	float BaseTerrainSection::TerrainSectionRend::getSquaredDistance(Camera* cam)
 	{
-		Vector3 diff = mCreator->getWorldBound().getCenter() - cam->getPosition();
+		Vector3 diff = mCreator->getLocalBound().getCenter() - cam->getPosition();
 		return diff.squaredLength();
 	}
 	//------------------------------------------------------------------------------//

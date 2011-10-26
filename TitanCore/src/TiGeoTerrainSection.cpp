@@ -66,7 +66,7 @@ namespace Titan
 	//------------------------------------------------------------------------------//
 	void GeoTerrainSection::_updateRenderQueue(RenderQueue* queue, Camera* cam)
 	{
-		if(cam->isVisible(mWorldBound))
+		if(cam->isVisible(mSectionBound))
 		{
 			_calcCurrentLod(cam);
 			
@@ -154,10 +154,10 @@ namespace Titan
 	//------------------------------------------------------------------------------//
 	void GeoTerrainSection::_calcCurrentLod(Camera* cam)
 	{
-		Vector2 corner0(mWorldBound.getMinimum().x, mWorldBound.getMinimum().z);
-		Vector2 corner1(mWorldBound.getMinimum().x, mWorldBound.getMaximum().z);
-		Vector2 corner2(mWorldBound.getMaximum().x, mWorldBound.getMaximum().z);
-		Vector2 corner3(mWorldBound.getMaximum().x, mWorldBound.getMinimum().z);
+		Vector2 corner0(mSectionBound.getMinimum().x, mSectionBound.getMinimum().z);
+		Vector2 corner1(mSectionBound.getMinimum().x, mSectionBound.getMaximum().z);
+		Vector2 corner2(mSectionBound.getMaximum().x, mSectionBound.getMaximum().z);
+		Vector2 corner3(mSectionBound.getMaximum().x, mSectionBound.getMinimum().z);
 
 		Vector2 viewPoint(cam->getPosition().x, cam->getPosition().z);
 

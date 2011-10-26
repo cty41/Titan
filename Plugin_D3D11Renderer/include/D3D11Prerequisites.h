@@ -35,6 +35,7 @@ namespace Titan
 	class D3D11ShaderMgr;
 	class D3D11VertexShader;
 	class D3D11PixelShader;
+	class D3D11FixedPipelineSimulator;
 
 #ifdef PLUGIN_D3D11RENDERER_EXPORTS
 #	define _D3D11DllExport __declspec(dllexport)
@@ -43,7 +44,7 @@ namespace Titan
 #endif
 
 
-#define TITAN_EXCEP_API_D11(hr, msg) {String errMsg = DXGetErrorDescription(hr); TITAN_EXCEPT_API(msg + errMsg);}
+#define TITAN_EXCEPT_API_D11(hr, msg) {String errMsg = DXGetErrorDescription(hr); TITAN_EXCEPT_API(msg + errMsg);}
 }
 
 

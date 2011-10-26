@@ -3,7 +3,7 @@
 #include "TiRoot.h"
 #include "TiManualObject.h"
 #include "TiViewport.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiRenderQueue.h"
 #include "TiRenderQueueGroup.h"
 #include "TiOverlayMgr.h"
@@ -133,6 +133,10 @@ namespace Titan
 		if(mSkyBoxEnable)
 			mSkybox->_updateRenderQueue(mRenderQueue, cam);
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//MAIN RENDER FUNCTION
+	//////////////////////////////////////////////////////////////////////////	
 	void SceneMgr::_renderScene(Camera* cam, Viewport* vp)
 	{
 		mCurrentCam = cam;
@@ -390,7 +394,7 @@ namespace Titan
 	
 		if(!mSkybox)
 		{
-			mSkybox = TITAN_NEW ManualObject("Skybox");
+			mSkybox = createManualObject("Skybox");
 			mSkyboxNode = TITAN_NEW SceneNode("SkyboxNode");
 			mSkyboxNode->attachObject(mSkybox);
 		}

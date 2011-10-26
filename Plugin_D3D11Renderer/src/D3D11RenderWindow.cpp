@@ -53,8 +53,7 @@ namespace Titan
 		HRESULT hr;
 		if( FAILED( hr = mSwapChain->Present(0, 0)))
 		{
-			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT_API( "Error in D3D9 Present function : " + msg);
+			TITAN_EXCEPT_API_D11(hr, "Error in D3D11 Present function : ");
 		}
 	}
 	//-------------------------------------------------------------------------------//

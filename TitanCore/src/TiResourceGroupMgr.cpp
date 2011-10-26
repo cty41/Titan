@@ -2,7 +2,7 @@
 #include "TiResourceGroupMgr.h"
 #include "TiResourceMgr.h"
 #include "TiFileSystemMgr.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiScriptLoader.h"
 
 namespace Titan
@@ -119,7 +119,7 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void ResourceGroupMgr::parseResourceGroup(ResourceGroup* rg)
 	{
-		ConsoleDebugger::getSingleton().stream()<<"Begin Parsing resource group named: " + rg->groupName;
+		LogMgr::getSingleton().stream()<<"Begin Parsing resource group named: " + rg->groupName;
 
 		ScriptLoaderToFileLocationMap scriptLoaderToFileLocationMap;
 
@@ -168,7 +168,7 @@ namespace Titan
 			++slit;
 		}
 
-		ConsoleDebugger::getSingleton().stream()<<"Finished Parsing resource group named: " + rg->groupName;
+		LogMgr::getSingleton().stream()<<"Finished Parsing resource group named: " + rg->groupName;
 	}
 	//-------------------------------------------------------------------------------//
 	void ResourceGroupMgr::initResourceGroup(const String& group)

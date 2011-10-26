@@ -43,7 +43,7 @@ namespace Titan
 	{
 		if (type == ST_VERTEX_SHADER)
 		{
-			return TITAN_NEW D3D11PixelShader(this, name, id, group, false);
+			return TITAN_NEW D3D11VertexShader(this, name, id, group, false);
 		}
 		else if(type == ST_PIXEL_SHADER)
 		{

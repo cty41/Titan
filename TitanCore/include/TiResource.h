@@ -54,6 +54,7 @@ namespace Titan
 
 
 	protected:
+		//todo: do we need just recode the prepare which seems useless?
 		virtual void	prepareImpl(){}
 
 		virtual void	unprepareImpl(){}

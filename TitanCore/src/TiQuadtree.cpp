@@ -140,15 +140,15 @@ namespace Titan
 				{
 					if(state)
 					{
-						if(Math::intersects(cam->getWorldAABB(), node->getAABB(), result))
+						if(Math::intersects(cam->getWorldAABB(), node->getWorldBound(), result))
 						{
-							if(cam->isVisible(node->getAABB()))
+							if(cam->isVisible(node->getWorldBound()))
 								node->_findVisibleObjects(queue, cam);
 						}
 					}
 					else
 					{
-						if(cam->isVisible(node->getAABB()))
+						if(cam->isVisible(node->getWorldBound()))
 							node->_findVisibleObjects(queue, cam);
 					}
 

@@ -12,18 +12,19 @@ namespace Titan
 	class _DllExport SceneObject : public GeneralAlloc
 	{
 	public:
-		SceneObject(const String& name);
+		SceneObject(SceneObjectFactory* creator, const String& name);
 
-		SceneObject();
+		SceneObject(SceneObjectFactory* creator);
 
-		virtual ~SceneObject();
+		virtual ~SceneObject(){};
 
-		virtual const String& getType() const = 0;
-
-		//temp method, which will be removed when we add render queue
 		virtual void _updateRenderQueue(RenderQueue* queue, Camera* cam) = 0;
 
-		virtual const AABB& getAABB() const = 0;
+		virtual const AABB& getLocalBound() const = 0;
+
+		virtual const AABB& getWorldBound();
+
+		const String& getType() const;
 
 		const String& getName() const { return mName; }
 
@@ -46,11 +47,12 @@ namespace Titan
 		uint8 getRenderQueuePriority() const { return mRenderQueuePriority; }
 
 	protected:
+		SceneObjectFactory*	mCreator;
 		SceneNode*			mAttachedNode;
 		String				mName;
-		String				mType;
 		uint				mRenderQueueID;
 		uint8				mRenderQueuePriority;
+		AABB				mWorldBoundBox;
 
 		static AutoNamer	mAutoNamer;
 

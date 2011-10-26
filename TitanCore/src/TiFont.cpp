@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiFont.h"
 #include "TiTextureMgr.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiBitOperation.h"
 #include "TiResourceGroupMgr.h"
 #include "TiStringConverter.h"
@@ -160,8 +160,8 @@ namespace Titan
 		size_t data_width = finalWidth * pixel_bytes;
 		size_t data_size = finalWidth * finalHeight * pixel_bytes;
 
-		ConsoleDebugger::getSingleton().outputMessage("Font " + mName + "using texture size " +
-			StringConverter::toString(finalWidth) + "x" + StringConverter::toString(finalHeight));
+		DEBUG_LOG<<"Font " + mName + "using texture size " +
+			StringConverter::toString(finalWidth) + "x" + StringConverter::toString(finalHeight);
 
 		uchar* imageData = TITAN_ALLOC_T(uchar, data_size, MEMCATEGORY_GENERAL);
 		// Reset content (White, transparent)
@@ -185,8 +185,7 @@ namespace Titan
 				if (ftResult)
 				{
 					// problem loading this glyph, continue
-					ConsoleDebugger::getSingleton().outputMessage("Info: cannot load character " +
-						StringConverter::toString(cp) + " in font " + mName);
+					DEBUG_LOG<<"Info: cannot load character " + StringConverter::toString(cp) + " in font " + mName;
 					continue;
 				}
 
@@ -197,8 +196,7 @@ namespace Titan
 				if (!buffer)
 				{
 					// Yuck, FT didn't detect this but generated a null pointer!
-					ConsoleDebugger::getSingleton().outputMessage("Info: Freetype returned null for character " +
-						StringConverter::toString(cp) + " in font " + mName);
+					DEBUG_LOG<<"Info: Freetype returned null for character " + StringConverter::toString(cp) + " in font " + mName;
 					continue;
 				}
 
@@ -251,7 +249,7 @@ namespace Titan
 		mFontTexture = TextureMgr::getSingleton().createManually("Font/"+ mSource, ResourceGroupMgr::GENERAL_RESOURCE_GROUP, TT_2D, finalWidth, finalHeight,1,TU_DYNAMIC, PF_BYTE_LA);
 		
 		PixelBox	lockedRect;
-		mFontTexture->lockRect(0, &lockedRect, NULL, HardwareBuffer::HBL_DISCARD);
+		mFontTexture->lockRect(0, NULL, HardwareBuffer::HBL_DISCARD, &lockedRect);
 		uchar* TexData = (uchar*)lockedRect.data;
 
 		for(uint i = 0; i < finalHeight; ++i)

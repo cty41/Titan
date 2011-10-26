@@ -6,7 +6,7 @@
 namespace Titan
 {
 	D3D11VertexDecl::D3D11VertexDecl()
-		:VertexDeclaration(), mNeedRecreate(true), mInputElementDescs(nullptr)
+		:VertexDeclaration(), mNeedRecreate(true)
 	{
 	}
 
@@ -17,8 +17,6 @@ namespace Titan
 			SAFE_RELEASE(itr->second);
 		}
 		mShaderToLayoutMap.clear();
-
-		
 	}
 
 	ID3D11InputLayout* D3D11VertexDecl::getD11InputLayoutByShader(D3D11HLSLShader* shader)
@@ -30,20 +28,18 @@ namespace Titan
 		 }
 		 else
 		 {
-			 //todo
 			 createInputElementDescs();
 
 			ID3D11InputLayout* inputLayout = nullptr;
 			HRESULT hr;
 			ID3D11Device*	pd3dDevice = D3D11Renderer::getSingletonPtr()->__getD3D11Device();
-			hr = pd3dDevice->CreateInputLayout(mInputElementDescs, (UINT)mElementList.size(), 
+			hr = pd3dDevice->CreateInputLayout(&mInputElementDescs[0], (UINT)mElementList.size(), 
 				shader->getCompiledCode()->GetBufferPointer(),
 				shader->getCompiledCode()->GetBufferSize(),
 				&inputLayout);
 			if(FAILED(hr))
 			{
-				String errMsg = DXGetErrorDescription(hr);
-				TITAN_EXCEPT_API("D3DX11 create InputLayout failed: " + errMsg);
+				TITAN_EXCEPT_API_D11(hr, "D3DX11 create InputLayout failed: ");
 				return nullptr;
 			}
 
@@ -56,10 +52,6 @@ namespace Titan
 	{
 		if(mNeedRecreate)
 		{
-			if(mInputElementDescs)
-				TITAN_DELETE_ARRAY_T(mInputElementDescs, D3D11_INPUT_ELEMENT_DESC, mElementList.size(), MEMCATEGORY_GENERAL)
-			
-			mInputElementDescs = TITAN_NEW_ARRAY_T(D3D11_INPUT_ELEMENT_DESC, mElementList.size(), MEMCATEGORY_GENERAL);
 			uint idx = 0;
 			for(auto itr = mElementList.begin(); itr != mElementList.end(); ++itr, ++idx)
 			{

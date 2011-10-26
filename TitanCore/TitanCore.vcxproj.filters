@@ -47,9 +47,6 @@
     <ClCompile Include="src\TiConfigFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TiConsoleDebugger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\TiDataStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -266,6 +263,15 @@
     <ClCompile Include="src\TiPixelBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TiLogMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TiMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TiEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\asm_math.h">
@@ -305,9 +311,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TiConfigFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TiConsoleDebugger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TiDataStream.h">
@@ -623,6 +626,18 @@
       <Filter>Header Files\rapidxml</Filter>
     </ClInclude>
     <ClInclude Include="include\TiPixelBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TiLogMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TiDebugFuncs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TiMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TiEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,10 +16,10 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void D3D9Plugin::install()
 	{
-#if DEBUG
-		HINSTANCE hInst = GetModuleHandle("Plugin_D3D9Render_d.dll");
+#if _DEBUG
+		HINSTANCE hInst = GetModuleHandle("Plugin_D3D9Renderer_d.dll");
 #else
-		HINSTANCE hInst = GetModuleHandle("Plugin_D3D9Render.dll");
+		HINSTANCE hInst = GetModuleHandle("Plugin_D3D9Renderer.dll");
 #endif
 
 		mRenderer = TITAN_NEW D3D9Renderer(hInst);

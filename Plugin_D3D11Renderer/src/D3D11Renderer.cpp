@@ -1,5 +1,6 @@
 #include "TitanStableHeader.h"
 #include "TiViewport.h"
+#include "TiTexture.h"
 
 #include "D3D11Renderer.h"
 #include "D3D11RenderWindow.h"
@@ -10,6 +11,8 @@
 #include "D3D11ShaderMgr.h"
 #include "D3D11VertexBuffer.h"
 #include "D3D11IndexBuffer.h"
+#include "D3D11TextureMgr.h"
+#include "D3D11Texture.h"
 
 namespace Titan
 {
@@ -30,7 +33,8 @@ namespace Titan
 		mpD3dDevice(nullptr), mpDeviceContext(nullptr), mSwapChain(nullptr), 
 		mRenderTargetView(nullptr), mDepthStencilTex(nullptr), mDepthStencilView(nullptr),
 		mStencilRef(0), mFeatureLevel(D3D_FEATURE_LEVEL_9_1), mBoundVertexShader(nullptr), mBoundPixelShader(nullptr),
-		mCachePrimitiveType(OT_TRIANGLE_LIST)
+		mCachePrimitiveType(OT_TRIANGLE_LIST), mMaxUsingTextureStage(0), 
+		mUseBlend(false), mUseRasterizer(false), mUseSampler(false), mUseDepthStencil(false)
 	{
 		mName = "D3D11Renderer";
 
@@ -40,6 +44,7 @@ namespace Titan
 		ZeroMemory(&mSamplerDesc, sizeof(D3D11_SAMPLER_DESC));
 		ZeroMemory(&mRasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
 		ZeroMemory(&mDepthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+		ZeroMemory(&mTextureStageInfos, sizeof(mTextureStageInfos));
 	}
 
 	D3D11Renderer::~D3D11Renderer()
@@ -53,13 +58,37 @@ namespace Titan
 		mHardwareBufferMgr = TITAN_NEW D3D11HardwareBufferMgr();
 
 		mShaderMgr = TITAN_NEW D3D11ShaderMgr();
-		//todo, add new mgrs here,texture...
+		
+		mTextureMgr = TITAN_NEW D3D11TextureMgr();
 
 		return Renderer::initialize();
 	}
 
 	void D3D11Renderer::destroy()
 	{
+		//delete state objects
+		
+		for(auto it = mRasterizerStateMap.begin(); it != mRasterizerStateMap.end(); ++it)
+			SAFE_RELEASE(it->second);
+		mRasterizerStateMap.clear();
+
+		for(auto it = mSamplerStateMap.begin(); it != mSamplerStateMap.end(); ++it)
+			SAFE_RELEASE(it->second);
+		mSamplerStateMap.clear();
+
+		for(auto it = mDepthStencilStateMap.begin(); it != mDepthStencilStateMap.end(); ++it)
+			SAFE_RELEASE(it->second);
+		mDepthStencilStateMap.clear();
+
+		for(auto it = mBlendStateMap.begin(); it != mBlendStateMap.end(); ++it)
+			SAFE_RELEASE(it->second);
+		mBlendStateMap.clear();
+
+		TITAN_SAFE_DELETE(mTextureMgr);
+		TITAN_SAFE_DELETE(mShaderMgr);
+		TITAN_SAFE_DELETE(mHardwareBufferMgr);
+
+		SAFE_RELEASE(mDepthStencilTex);
 		SAFE_RELEASE(mDepthStencilView);
 		SAFE_RELEASE(mRenderTargetView);
 		SAFE_RELEASE(mpDeviceContext);
@@ -105,7 +134,7 @@ namespace Titan
 			D3D_FEATURE_LEVEL_10_0,
 		};
 
-		UINT numFeatureLevels = sizeof( featureLevels );
+		UINT numFeatureLevels = sizeof( featureLevels )/ sizeof(D3D_FEATURE_LEVEL);
 
 		for( uint driverTypeIndex = 0; driverTypeIndex < 2; driverTypeIndex++ )
 		{
@@ -113,7 +142,12 @@ namespace Titan
 			hr = D3D11CreateDeviceAndSwapChain( NULL, mDriverType, NULL, createDeviceFlags,
 				featureLevels, numFeatureLevels,
 				D3D11_SDK_VERSION, &mDesc, &mSwapChain, &mpD3dDevice, &mFeatureLevel, &mpDeviceContext);
-			if( SUCCEEDED( hr ) )
+			if( FAILED(hr))
+			{
+				TITAN_EXCEPT_API_D11(hr, "D3DX11 Create Device Error:");
+				continue;
+			}
+			else
 				break;
 		}
 
@@ -122,7 +156,7 @@ namespace Titan
 		hr = mSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&pBuffer );
 		if( FAILED( hr ) )
 		{
-			TITAN_EXCEPT_API( "Swap Chain getBuffer failed");
+			TITAN_EXCEPT_API_D11(hr, "Swap Chain getBuffer failed");
 		}
 
 		hr = mpD3dDevice->CreateRenderTargetView( pBuffer, NULL, &mRenderTargetView );
@@ -134,11 +168,12 @@ namespace Titan
 
 		// Create depth stencil texture
 		D3D11_TEXTURE2D_DESC descDepth;
+		ZeroMemory(&descDepth, sizeof(D3D11_TEXTURE2D_DESC));
 		descDepth.Width = mWidth;
 		descDepth.Height = mHeight;
 		descDepth.MipLevels = 1;
 		descDepth.ArraySize = 1;
-		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		descDepth.SampleDesc.Count = 1;
 		descDepth.SampleDesc.Quality = 0;
 		descDepth.Usage = D3D11_USAGE_DEFAULT;
@@ -148,18 +183,19 @@ namespace Titan
 		hr = mpD3dDevice->CreateTexture2D( &descDepth, NULL, &mDepthStencilTex );
 		if( FAILED( hr ) )
 		{
-			TITAN_EXCEPT_API("Create Depth texture failed");
+			TITAN_EXCEPT_API_D11(hr, "Create Depth texture failed");
 		}
 
 		// Create the depth stencil view
 		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+		ZeroMemory(&descDSV, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 		descDSV.Format = descDepth.Format;
 		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		descDSV.Texture2D.MipSlice = 0;
 		hr = mpD3dDevice->CreateDepthStencilView( mDepthStencilTex, &descDSV, &mDepthStencilView );
 		if( FAILED( hr ) )
 		{
-			TITAN_EXCEPT_API("CreateDepthStencilView failed");
+			TITAN_EXCEPT_API_D11(hr,"CreateDepthStencilView failed");
 		}
 
 		mpDeviceContext->OMSetRenderTargets( 1, &mRenderTargetView, mDepthStencilView );
@@ -209,59 +245,69 @@ namespace Titan
 	void D3D11Renderer::_setPolygonMode(PolygonMode pm)
 	{
 		mRasterizerDesc.FillMode = D3D11Mappings::convertToD3D11(pm);
+		mUseRasterizer = true;
 	}
 	//-------------------------------------------------------------------------------//
 	void D3D11Renderer::_setCullingMode(CullingMode cm)
 	{
 		mRasterizerDesc.CullMode = D3D11Mappings::convertToD3D11(cm);
+		mUseRasterizer = true;
 	}
 	//----------------------------------------------------------------------------//
 	void D3D11Renderer::_setDepthCheck(bool state)
 	{
 		mDepthStencilDesc.DepthEnable = state;
+		mUseDepthStencil = true;
 	}
 	//----------------------------------------------------------------------------//
 	void D3D11Renderer::_setDepthWrite(bool state)
 	{
+		mUseDepthStencil = true;
 		if(state)
-		{
 			mDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		}
 		else
-		{
 			mDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-		}
 	}
 	//----------------------------------------------------------------------------//
 	void D3D11Renderer::_setDepthFuntion(CompareFunction cf)
 	{
+		mUseDepthStencil = true;
 		mDepthStencilDesc.DepthFunc = D3D11Mappings::convertToD3D11(cf);
 	}
 	//change later
-	void D3D11Renderer::_setSamplerFilter(uint sampler, FilterType type, FilterOptions fo)
+	void D3D11Renderer::_setSamplerFilter(uint stage, FilterType type, FilterOptions fo)
 	{
-		mSamplerDesc.Filter = D3D11Mappings::convertToD3D11(fo);
+		assert(stage < TITAN_MAX_TEXTURE_LAYERS);
+		mUseSampler = true;
+		mTextureStageInfos[stage].samplerDesc.Filter = D3D11Mappings::convertToD3D11(fo);
 	}	
 	//----------------------------------------------------------------------------//
 	void D3D11Renderer::_setTexAddressMode(uint stage, const TexAddressModeSets& tam)
 	{
-		mSamplerDesc.AddressU = D3D11Mappings::convertToD3D11(tam.UTexAddrMode);
-		mSamplerDesc.AddressV = D3D11Mappings::convertToD3D11(tam.VTexAddrMode);
-		mSamplerDesc.AddressW = D3D11Mappings::convertToD3D11(tam.WTexAddrMode);
+		assert(stage < TITAN_MAX_TEXTURE_LAYERS);
+		mUseSampler = true;
+		mTextureStageInfos[stage].samplerDesc.AddressU = D3D11Mappings::convertToD3D11(tam.UTexAddrMode);
+		mTextureStageInfos[stage].samplerDesc.AddressV = D3D11Mappings::convertToD3D11(tam.VTexAddrMode);
+		mTextureStageInfos[stage].samplerDesc.AddressW = D3D11Mappings::convertToD3D11(tam.WTexAddrMode);
 	}
 	//----------------------------------------------------------------------------//
 	void D3D11Renderer::_setTexCoordSet(uint stage, size_t texcoordSet)
 	{
-		//change later
-		//HRESULT hr;
-		//if(FAILED(hr = __SetTexStageState(stage, D3DTSS_TEXCOORDINDEX, texcoordSet)))
-		//{
-		//	String errMsg = DXGetErrorDescription(hr);
-		//	TITAN_EXCEPT_API(
-		//		"Got error:" + errMsg + " when set TexCoordSet",
-		//		"D3D11Renderer::_setTexCoordSet");
-		//}
+		assert(stage < TITAN_MAX_TEXTURE_LAYERS);
+		mUseSampler = true;
+		mTextureStageInfos[stage].coordIdx = texcoordSet;
 	}
+
+	void D3D11Renderer::_setTexture(size_t stage, const TexturePtr& pTex)
+	{
+		assert(stage < TITAN_MAX_TEXTURE_LAYERS);
+		mUseSampler = true;
+		if(mMaxUsingTextureStage < stage) mMaxUsingTextureStage = stage;
+
+		D3D11Texture* pD11Tex = static_cast<D3D11Texture*>(pTex.get());
+		mTextureStageInfos[stage].pSRV = pD11Tex->getSRV();
+	}
+
 	//-------------------------------------------------------------------------------//
 	void D3D11Renderer::_setSceneBlending(SceneBlendFactor sourceFactor, SceneBlendFactor destFactor, SceneBlendOperation op)
 	{
@@ -276,7 +322,9 @@ namespace Titan
 			mBlendDesc.RenderTarget[0].DestBlend = D3D11Mappings::convertToD3D11(destFactor);
 			mBlendDesc.RenderTarget[0].BlendOp = D3D11Mappings::convertToD3D11(op);
 			mBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11Mappings::convertToD3D11(op);
+			mUseBlend = true;
 		}
+
 	}
 
 	const String& D3D11Renderer::getName() const
@@ -286,56 +334,87 @@ namespace Titan
 
 	ID3D11RasterizerState* D3D11Renderer::_getCacheRasterizerState()
 	{
+		ID3D11RasterizerState* pRasterizerState = nullptr;
+		RasterizerState rasterState(mRasterizerDesc);
 #if DO_CACHE_D11STATES
-		
-
+		auto it = mRasterizerStateMap.find(rasterState);
+		if(it != mRasterizerStateMap.end())
+		{
+			pRasterizerState = it->second;
+		}
+		else
 #endif
 		{
-			ID3D11RasterizerState* samplerState = nullptr;
-
-			mpD3dDevice->CreateRasterizerState(&mRasterizerDesc, &samplerState);
-
-			return samplerState;
+			mpD3dDevice->CreateRasterizerState(&mRasterizerDesc, &pRasterizerState);
+#if DO_CACHE_D11STATES
+			mRasterizerStateMap[rasterState] = pRasterizerState;
+#endif
 		}
+
+		return pRasterizerState;
 	}
 
-	ID3D11SamplerState* D3D11Renderer::_getCacheSamplerState()
+	ID3D11SamplerState* D3D11Renderer::_getCacheSamplerState(uint stage)
 	{
+		ID3D11SamplerState* pSamplerState = nullptr;
+		SamplerState samplerState(mTextureStageInfos[stage].samplerDesc);
 #if DO_CACHE_D11STATES
-
-
+		auto it = mSamplerStateMap.find(samplerState);
+		if(it != mSamplerStateMap.end())
+		{
+			pSamplerState = it->second;
+		}
+		else
 #endif
 		{
-			ID3D11SamplerState* samplerState = nullptr;
-			mpD3dDevice->CreateSamplerState(&mSamplerDesc, &samplerState);
-			return samplerState;
+			mpD3dDevice->CreateSamplerState(&mTextureStageInfos[stage].samplerDesc, &pSamplerState);
+#if DO_CACHE_D11STATES
+			mSamplerStateMap[samplerState] = pSamplerState;
+#endif
 		}
+		return pSamplerState;
 	}
 
 	ID3D11BlendState* D3D11Renderer::_getCacheBlendState()
 	{
+		ID3D11BlendState* pBlendState = nullptr;
+		BlendState blendState(mBlendDesc);
 #if DO_CACHE_D11STATES
-
-
+		auto it = mBlendStateMap.find(blendState);
+		if(it != mBlendStateMap.end())
+		{
+			pBlendState = it->second;
+		}
+		else
 #endif
 		{
-			ID3D11BlendState* blendState = nullptr;
-			mpD3dDevice->CreateBlendState(&mBlendDesc, &blendState);
-			return blendState;
+			mpD3dDevice->CreateBlendState(&mBlendDesc, &pBlendState);
+#if DO_CACHE_D11STATES
+			mBlendStateMap[blendState] = pBlendState;
+#endif
 		}
+		return pBlendState;
 	}
 
 	ID3D11DepthStencilState* D3D11Renderer::_getCacheDepthStencilState()
 	{
+		ID3D11DepthStencilState* pDSState = nullptr;
+		DepthStencilState dsState(mDepthStencilDesc);
 #if DO_CACHE_D11STATES
-
-
+		auto it = mDepthStencilStateMap.find(dsState);
+		if(it != mDepthStencilStateMap.end())
+		{
+			pDSState = it->second;
+		}
+		else
 #endif
 		{
-			ID3D11DepthStencilState* dsState = nullptr;
-			mpD3dDevice->CreateDepthStencilState(&mDepthStencilDesc, &dsState);
-			return dsState;
+			mpD3dDevice->CreateDepthStencilState(&mDepthStencilDesc, &pDSState);
+#if DO_CACHE_D11STATES
+			mDepthStencilStateMap[dsState] = pDSState;
+#endif
 		}
+		return pDSState;
 	}
 
 	/// d3d11 render op, and call all real set state object here, is that right? -cty
@@ -347,24 +426,36 @@ namespace Titan
 
 		Renderer::_render(rd);
 
-		mpDeviceContext->RSSetState(_getCacheRasterizerState());
-		mpDeviceContext->OMSetDepthStencilState(_getCacheDepthStencilState(), mStencilRef);
-		mpDeviceContext->OMSetBlendState(_getCacheBlendState(), 0, 0xffffffff);
+		if(mUseRasterizer)
+			mpDeviceContext->RSSetState(_getCacheRasterizerState());
+		if(mUseDepthStencil)
+			mpDeviceContext->OMSetDepthStencilState(_getCacheDepthStencilState(), mStencilRef);
+		if(mUseBlend)
+			mpDeviceContext->OMSetBlendState(_getCacheBlendState(), 0, 0xffffffff);
 
-		//todo, texture and sampler
-		//mpD3dDevice->PSSetSamplers()
+		if(mUseSampler)
+		{
+			ID3D11SamplerState* pSamplerState;
+			for(uint stage = 0; stage < mMaxUsingTextureStage; ++stage)
+			{
+				pSamplerState = _getCacheSamplerState(stage);
+				mpDeviceContext->PSSetShaderResources(stage, 1, &mTextureStageInfos[stage].pSRV);
+				mpDeviceContext->PSSetSamplers(stage, 1,&pSamplerState);
+			}
+		}
+
 
 		DWORD primCount = 0;
-		D3D11_PRIMITIVE_TOPOLOGY primType;
+		D3D10_PRIMITIVE_TOPOLOGY primType;
 
 		switch( rd.operationType )
 		{
 		case OT_TRIANGLE_LIST:
-			primType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			primType = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			primCount = static_cast<DWORD>(rd.useIndex ? rd.indexData->indexCount : rd.vertexData->vertexCount) / 3;
 			break;
 		case OT_TRIANGLE_STRIP:
-			primType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+			primType = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 			primCount = static_cast<DWORD>(rd.useIndex ? rd.indexData->indexCount : rd.vertexData->vertexCount) - 2;
 			break;
 		}
@@ -372,10 +463,10 @@ namespace Titan
 		if (!primCount)
 			return;
 
-		if(mCachePrimitiveType != rd.operationType)
+		//if(mCachePrimitiveType != rd.operationType)
 		{
 			mpDeviceContext->IASetPrimitiveTopology(primType);
-			mCachePrimitiveType = rd.operationType;
+			//mCachePrimitiveType = rd.operationType;
 		}
 
 		//set vertex decl and buffer binding
@@ -397,33 +488,49 @@ namespace Titan
 			mpDeviceContext->Draw(rd.vertexData->vertexCount, rd.vertexData->vertexStart);
 		}
 
+		//after a call of render , we clean the mMaxUsingTextureStage
+		mMaxUsingTextureStage = 0;
+		mUseRasterizer = false;
+		mUseDepthStencil = false;
+		mUseSampler = false;
+		mUseBlend = false;
 	}
 
 	void D3D11Renderer::_beginFrame()
 	{
-		//null for d11
+		//todo for d11, use for multi thread?
+		//mpDeviceContext->Begin()
 	}
 
 	void D3D11Renderer::_endFrame()
 	{
-		//null for d11
+		//todo for d11
 	}
 
 	void D3D11Renderer::_convertProjMatrix(const Matrix4& projSrc, Matrix4& projDst, bool forGpuProgram)
 	{
-		//d11 is right hand system
+		//d11 is right hand system?
 		projDst = projSrc;
+
+		//projDst[2][0] = (projDst[2][0] + projDst[3][0]) / 2;
+		//projDst[2][1] = (projDst[2][1] + projDst[3][1]) / 2;
+		//projDst[2][2] = (projDst[2][2] + projDst[3][2]) / 2;
+		//projDst[2][3] = (projDst[2][3] + projDst[3][3]) / 2;
 	}
 
 	void D3D11Renderer::_setTextureMatrix(size_t unit, const Matrix4& xform)
 	{
-		//to do
+		//todo, tex matrix
 	}
 
 	void D3D11Renderer::setVertexDeclaration(VertexDeclaration* decl)
 	{
 		D3D11VertexDecl* d11Decl = static_cast<D3D11VertexDecl*>(decl);
 		//dx11 is different from d9 which need to bind vertex decl to shader manually to get better performance
+		if(mBoundVertexShader == NULL)
+		{
+			//todo, use simul
+		}
 		ID3D11InputLayout* inputLayout =  d11Decl->getD11InputLayoutByShader(mBoundVertexShader);
 		//do we need cache here?
 		mpDeviceContext->IASetInputLayout(inputLayout);
@@ -464,7 +571,7 @@ namespace Titan
 
 	void D3D11Renderer::_clearShader(ShaderType st)
 	{
-		//fuck off
+		//in d11 ,cleat means we use fix-pipeline simulator
 	}
 
 	void D3D11Renderer::_setShaderParams(ShaderType type,const ShaderParamsPtr& params)
@@ -501,8 +608,5 @@ namespace Titan
 		//todo,simulate fix-pipeline,set world
 	}
 
-	void D3D11Renderer::_setTexture(size_t stage, const TexturePtr& pTex)
-	{
-		//todo,simulate fix-pipeline,set texture
-	}
+
 }

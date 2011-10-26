@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiDynLib.h"
 #include "TiException.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 
 #if WIN32
 #  define WIN32_LEAN_AND_MEAN
@@ -28,7 +28,7 @@ namespace Titan
 	void DynLib::load()
 	{
 		// Log library load
-		ConsoleDebugger::getSingleton().stream()<<"Loading library " << mName;
+		LogMgr::getSingleton().stream()<<"Loading library " << mName;
 
 		String name = mName;
 
@@ -50,7 +50,7 @@ namespace Titan
 	void DynLib::unload()
 	{
 		// Log library unload
-		ConsoleDebugger::getSingleton().stream() << "Unloading library " << mName;
+		LogMgr::getSingleton().stream() << "Unloading library " << mName;
 
 		if( DYNLIB_UNLOAD( m_hInst ) )
 		{

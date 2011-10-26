@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiRoot.h"
 #include "TiFileSystemMgr.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiPlugin.h"
 #include "TiDynLib.h"
 #include "TiSceneMgrSelector.h"
@@ -33,24 +33,35 @@ namespace Titan
 	typedef void (*DLL_STOP_PLUGIN)(void);
 
 	//-------------------------------------------------------------------------------//
-	Root::Root(const String& configName)
-		:mWindow(0), mConsoleDebugger(0), mActiveRenderer(0),
+	Root::Root(const String& configName, const String& logName)
+		:mWindow(0), mLogMgr(0), mActiveRenderer(0),
 		mConfigFileName(configName), mSceneMgrSelector(0), mFileSystemMgr(0),
 		mResourceGroupMgr(0), mFontMgr(0)
 	{
 		mTimer = TITAN_NEW Timer();
 
-		mConsoleDebugger = TITAN_NEW ConsoleDebugger();
+		mLogMgr = TITAN_NEW LogMgr(logName, false);
 
 		mSceneMgrSelector = TITAN_NEW SceneMgrSelector();
 		mSceneMgrSelector->addFactory(TITAN_NEW QuadtreeSceneMgrFactory());
 
 		addSceneObjectFactory(TITAN_NEW ManualObjectFactory());
 
-#ifdef _DEBUG
-		loadPlugin("Plugin_D3D9Renderer_d.dll");
+
+#if TITAN_USE_NEW_D11_RENDERER
+	
+	#ifdef _DEBUG
+			loadPlugin("Plugin_D3D11Renderer_d.dll");
+	#else
+			loadPlugin("Plugin_D3D11Renderer.dll");
+	#endif
 #else
-		loadPlugin("Plugin_D3D9Renderer.dll");
+	#ifdef _DEBUG
+			loadPlugin("Plugin_D3D9Renderer_d.dll");
+	#else
+			loadPlugin("Plugin_D3D9Renderer.dll");
+	#endif
+
 #endif
 		mActiveRenderer = mRendererVector[0];
 
@@ -82,8 +93,24 @@ namespace Titan
 		TITAN_DELETE mSceneMgrSelector;
 		removeAllSceneObjectFactory();
 
+#if TITAN_USE_NEW_D11_RENDERER
+
+#ifdef _DEBUG
+		unloadPlugin("Plugin_D3D11Renderer_d.dll");
+#else
+		unloadPlugin("Plugin_D3D11Renderer.dll");
+#endif
+#else
+
+
+#ifdef _DEBUG
 		unloadPlugin("Plugin_D3D9Renderer_d.dll");
-		TITAN_DELETE mConsoleDebugger;
+#else
+		unloadPlugin("Plugin_D3D9Renderer.dll");
+#endif
+
+#endif
+		TITAN_DELETE mLogMgr;
 		TITAN_DELETE mTimer;
 	}
 	//-------------------------------------------------------------------------------//
@@ -139,6 +166,7 @@ namespace Titan
 		cfg.load(mConfigFileName);
 
 		ConfigFile::SectionMapIterator sit = cfg.getSectionMapIterator();
+
 		while (sit.hasMoreElements())
 		{
 			String group = sit.peekNextKey();
@@ -172,19 +200,19 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void Root::installPlugin(Plugin* plugin)
 	{
-		ConsoleDebugger::getSingleton().stream()
+		LogMgr::getSingleton().stream()
 			<<"Installing plugin: "<<plugin->getName();
 		mPluginVector.push_back(plugin);
 		plugin->install();
 
 		plugin->initialise();
-		ConsoleDebugger::getSingleton().stream()
+		LogMgr::getSingleton().stream()
 			<<"Plugin successfully installed";
 	}
 	//-------------------------------------------------------------------------------//
 	void Root::uninstallPlugin(Plugin* plugin)
 	{
-		ConsoleDebugger::getSingleton().stream()
+		LogMgr::getSingleton().stream()
 			<<"Uninstalling plugin: "<<plugin->getName();
 		PluginVector::iterator i = 
 			std::find(mPluginVector.begin(), mPluginVector.end(), plugin);
@@ -195,7 +223,7 @@ namespace Titan
 			plugin->uninstall();
 			mPluginVector.erase(i);
 		}
-		ConsoleDebugger::getSingleton().stream()
+		LogMgr::getSingleton().stream()
 			<<"Plugin successfully uninstalled";
 
 	}

@@ -73,7 +73,11 @@ namespace Titan
 
 		const Matrix4&	 _getTransformMatrix();
 
-		void		notifyUpdate();
+		inline void	notifyUpdate();
+
+		inline void notifyUpdateAABB(){ mNeedUpdateAABB = true;}
+
+		void  addToChildrenUpdateList(SceneNode* child);
 
 		void		_update();
 
@@ -81,7 +85,7 @@ namespace Titan
 
 		void		_setParent(SceneNode* parent);
 
-		virtual	void _updateAABB();
+		virtual	void _updateWorldBound();
 
 		virtual void _findVisibleObjects(Camera* cam, RenderQueue* queue);
 
@@ -89,25 +93,18 @@ namespace Titan
 
 		const String& getName() const { return mName; }
 
-		const AABB& getAABB() const { return mAABB; }
+		const AABB& getWorldBound();
 
 		float		getSquaredDistance(Camera* cam);
-
-		virtual ObjectIterator 	getAttachedObjectIterator();
-
-		virtual ConstObjectIterator getAttachedConstObjectIterator();
-
-		virtual ChildIterator 	getChildIterator();
-
-		virtual ConstChildIterator getConstChildIterator();
 
 	protected:
 		SceneNode*		mParent;
 		String			mName;
 
 		SceneNodeMap	mChildrenMap;
+		SceneNodeMap	mChildrenNeedToUpdate;
 		SceneObjectMap	mSceneObjects;
-		AABB			mAABB;
+		AABB			mWorldBound;
 		
 
 		static	AutoNamer	msAutoNamer;
@@ -119,12 +116,17 @@ namespace Titan
 		Quaternion		mDerivedQuaternion;
 		Vector3			mDerivedScale;
 		Vector3			mDerivedPosition;
-
+		//final matrix is used for render coordinate translation
 		Matrix4			mTransformMat;
-
+		//The flag indicates whether this node need to update world info(pos, scale, rot. etc..) this frame
 		bool			mNeedUpdate;
+		//The flag indicates whether this node need to calc its final matrix val this frame
 		bool			mNeedUpdateMat;
+		//The flag indicates whether this node need to calc its pos, scale, rot from his parent node this frame
 		bool			mNeedUpdateParent;
+		//The flag indicates whether this node need to update aabb this frame
+		bool			mNeedUpdateAABB;
+
 
 	};
 }

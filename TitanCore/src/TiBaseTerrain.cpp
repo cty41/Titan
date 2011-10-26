@@ -89,7 +89,7 @@ namespace Titan
 		mNormalTable = new Vector3[maxX * maxZ];
 
 		PixelBox	lockedRect;
-		heightMap->lockRect(0, &lockedRect, NULL, HardwareBuffer::HBL_READ_ONLY);
+		heightMap->lockRect(0, NULL, HardwareBuffer::HBL_READ_ONLY, &lockedRect);
 		uint8* pHeightMap = (uint8*)lockedRect.data;
 
 		for(int z=0; z<maxZ; ++z)

@@ -105,7 +105,7 @@ namespace Titan
 
 		ID3D11DeviceContext*	__getD3D11DeviceContext() const { return mpDeviceContext; }
 
-		ID3D11SamplerState*		_getCacheSamplerState();
+		ID3D11SamplerState*		_getCacheSamplerState(uint stage);
 
 		ID3D11BlendState*		_getCacheBlendState();
 
@@ -118,10 +118,17 @@ namespace Titan
 		static D3D11Renderer&	getSingleton();
 
 	public:
-		typedef map<uint32, ID3D11RasterizerState*> RasterizerStateMap;
-		typedef map<uint32, ID3D11SamplerState*> SamplerStateMap;
-		typedef map<uint32, ID3D11BlendState*> BlendStateMap;
-		typedef map<uint32, ID3D11DepthStencilState*> DepthStencilStateMap;
+		typedef map<RasterizerState, ID3D11RasterizerState*>::type RasterizerStateMap;
+		typedef map<SamplerState, ID3D11SamplerState*>::type SamplerStateMap;
+		typedef map<BlendState, ID3D11BlendState*>::type BlendStateMap;
+		typedef map<DepthStencilState, ID3D11DepthStencilState*>::type DepthStencilStateMap;
+		
+		struct D11TextureStageInfo
+		{
+			ID3D11ShaderResourceView*	pSRV;
+			D3D11_SAMPLER_DESC		samplerDesc;
+			uint				coordIdx;
+		};
 		 
 	protected:
 		D3D11HardwareBufferMgr*		mHardwareBufferMgr;
@@ -143,12 +150,19 @@ namespace Titan
 
 		size_t					mLastVertexSourceCount;
 
+		D11TextureStageInfo		mTextureStageInfos[TITAN_MAX_TEXTURE_LAYERS];
+		uint					mMaxUsingTextureStage;	//0 is no texture is used
+
 		//desc cache
 		D3D11_BLEND_DESC		mBlendDesc;
 		D3D11_SAMPLER_DESC		mSamplerDesc;
 		D3D11_RASTERIZER_DESC	mRasterizerDesc;
 		D3D11_DEPTH_STENCIL_DESC mDepthStencilDesc;
 		UINT mStencilRef;
+		bool					mUseBlend;
+		bool					mUseSampler;
+		bool					mUseRasterizer;
+		bool					mUseDepthStencil;
 
 		//manage render state objects in d11
 		RasterizerStateMap		mRasterizerStateMap;

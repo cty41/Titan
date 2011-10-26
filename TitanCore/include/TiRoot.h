@@ -11,14 +11,14 @@
 
 namespace Titan
 {
-	typedef	std::vector<Renderer*>	RendererVector;
-	typedef	std::vector<Plugin*>	PluginVector;
-	typedef	std::vector<DynLib*>	DynLibVector;
+	typedef	vector<Renderer*>::type	RendererVector;
+	typedef	vector<Plugin*>::type	PluginVector;
+	typedef	vector<DynLib*>::type	DynLibVector;
 	
 	class _DllExport Root : public Singleton<Root>, public GeneralAlloc
 	{
 	public:
-		Root(const String& configName = "config.cfg");
+		Root(const String& configName = "config.cfg", const String& logName = "Log.ini");
 
 		~Root();
 		
@@ -71,7 +71,7 @@ namespace Titan
 		PluginVector		mPluginVector;
 		DynLibVector		mDynLibVector;
 		RenderWindow*		mWindow;
-		ConsoleDebugger*	mConsoleDebugger;
+		LogMgr*				mLogMgr;
 		Timer*				mTimer;
 
 		SceneMgrSelector*	mSceneMgrSelector;

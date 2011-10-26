@@ -1,7 +1,7 @@
 //completely copied from ogre
 #include "TitanStableHeader.h"
 #include "TiDataStream.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiException.h"
 
 namespace Titan {
@@ -497,7 +497,7 @@ namespace Titan {
 		}
 		if (delim.size() > 1)
 		{
-			ConsoleDebugger::getSingleton().outputMessage(
+			LogMgr::getSingleton().outputMessage(
 				"WARNING: FileStreamDataStream::readLine - using only first delimeter");
 		}
 		// Deal with both Unix & Windows LFs

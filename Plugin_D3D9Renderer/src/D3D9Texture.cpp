@@ -117,7 +117,7 @@ namespace Titan
 		return pbox;
 	}
 	//-------------------------------------------------------------//
-	void D3D9Texture::lockRect(uint level, PixelBox* lockRect, const Box* rect, LockOptions options)
+	void D3D9Texture::lockRect(uint level, const Box* rect, LockOptions options, PixelBox* lockRect)
 	{
 		assert(lockRect != NULL&& "lockRect should not be zero pointer");
 

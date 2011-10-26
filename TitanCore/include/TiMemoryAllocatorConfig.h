@@ -41,6 +41,7 @@ namespace Titan
 	typedef AllocatedObject<GeneralAllocPolicy> GeneralAllocatedObject;
 
 	typedef GeneralAllocatedObject				GeneralAlloc;
+	//add new allocate policy later, very far future~
 }
 
 namespace Titan
@@ -115,6 +116,9 @@ namespace Titan
 #	define TITAN_NEW new (__FILE__, __LINE__, __FUNCTION__)
 #	define TITAN_DELETE delete
 
+#define TITAN_SAFE_DELETE(p) if(p) { TITAN_DELETE p; p = nullptr;}
+
+
 
 #else // !TITAN_DEBUG_MODE
 
@@ -168,6 +172,8 @@ namespace Titan
 // new / delete for classes deriving from AllocatedObject (alignment determined by per-class policy)
 #	define TITAN_NEW new 
 #	define TITAN_DELETE delete
+
+#define TITAN_SAFE_DELETE(p) if(p) { TITAN_DELETE p; p = nullptr;}
 
 #endif // TITAN_DEBUG_MODE
 

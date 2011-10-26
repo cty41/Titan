@@ -105,7 +105,7 @@ namespace Titan
 	void QuadtreeSceneMgr::addOrUpdateSceneObject(QuadtreeNode* sceneNode)
 	{
 		QuadTreeAABB byteAABB;
-		buildQuadTreeAABB(sceneNode->getAABB(), byteAABB);
+		buildQuadTreeAABB(sceneNode->getWorldBound(), byteAABB);
 
 		Quadtree* quadNode = findQuadtreeNode(byteAABB);
 

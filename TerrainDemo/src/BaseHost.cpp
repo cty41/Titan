@@ -99,8 +99,8 @@ void BaseHost::setup()
 	renderer->_setCullingMode(Titan::CULL_NONE);
 
 
-	mFPSLabel = dynamic_cast<Titan::OverlayTextElement*>(Titan::OverlayMgr::getSingletonPtr()->createElement("OverlayTextElement", "testText"));
-	mFPSLabel->initialise("text", 0, 520, 14, Titan::OverlayTextElement::TA_Left);
+	//mFPSLabel = dynamic_cast<Titan::OverlayTextElement*>(Titan::OverlayMgr::getSingletonPtr()->createElement("OverlayTextElement", "testText"));
+	//mFPSLabel->initialise("text", 0, 520, 14, Titan::OverlayTextElement::TA_Left);
 }
 //-------------------------------------------------------------------------------//
 void BaseHost::Run()
@@ -143,7 +143,7 @@ void BaseHost::updateOneFrame()
 
 	s = oss.str();
 
-	mFPSLabel->setCaption(s);
+	//mFPSLabel->setCaption(s);
 
 
 }

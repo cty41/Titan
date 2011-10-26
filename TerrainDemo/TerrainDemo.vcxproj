@@ -72,7 +72,7 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <Link>
-      <AdditionalDependencies>..\lib\$(Configuration)\TitanCore_d.lib;..\lib\$(Configuration)\Plugin_D3D9Renderer_d.lib;..\Dependencies\lib\$(Configuration)\OIS_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\lib\$(Configuration)\TitanCore_d.lib;..\lib\$(Configuration)\Plugin_D3D11Renderer_d.lib;..\Dependencies\lib\$(Configuration)\OIS_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\bin\$(Configuration)\TerrainDemo_d.exe</OutputFile>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>

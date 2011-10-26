@@ -62,7 +62,7 @@ namespace Titan
 
 		bool	isVisible(const Vector3& pos);
 
-		const AABB& getAABB() const { return mAABB; }
+		const AABB& getLocalBound() const { return mAABB; }
 
 		const AABB& getWorldAABB() { updateWorldSpaceCorners(); return mWorldAABB; }
 	

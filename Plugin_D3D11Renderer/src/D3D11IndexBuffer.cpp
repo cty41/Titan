@@ -11,6 +11,7 @@ namespace Titan
 		mBufferDesc.ByteWidth = mSizeInBytes;
 		mBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		mBufferDesc.Usage = D3D11Mappings::convertToD3D11(usage);
+		mBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		createD3D11Buffer();
 	}
 

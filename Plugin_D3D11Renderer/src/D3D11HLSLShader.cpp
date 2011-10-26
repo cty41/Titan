@@ -24,7 +24,7 @@ namespace Titan
 	void D3D11HLSLShader::unloadImpl()
 	{
 		SAFE_RELEASE(mConstantBuffer);
-		SAFE_DELETE(mReflectionConstantBuffer);
+		//SAFE_DELETE(mReflectionConstantBuffer);
 		SAFE_RELEASE(mReflection);
 		SAFE_RELEASE(mCompiledShader);
 
@@ -39,6 +39,8 @@ namespace Titan
 		//todo, to add inlcude and macro support
 #ifdef _DEBUG
 		flag |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+
+		flag |= D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY;
 #endif
 
 		hr = D3DX11CompileFromMemory(mSource.c_str(), mSource.size(), 
@@ -58,18 +60,17 @@ namespace Titan
 			return ;
 		}
 
-		hr = D3DReflect((void*)mCompiledShader, mCompiledShader->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&mReflection);
+		hr = D3DReflect((void*)mCompiledShader->GetBufferPointer(), mCompiledShader->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&mReflection);
 		if(FAILED(hr))
 		{
-			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT_API("D3Dx11 create Shader Reflection failed : " + errMsg);
+			TITAN_EXCEPT_API_D11(hr, "D3Dx11 create Shader Reflection failed : ");
 			return ;
 		}
 
 		//create shader descs, todo
 		mReflection->GetDesc(&mShaderDesc);
 
-		// I do not support more than one constant buffer, now is no need
+		// I do not support more than one constant buffer, todo..
 		if(mShaderDesc.ConstantBuffers == 1)
 		{
 			mReflectionConstantBuffer = mReflection->GetConstantBufferByIndex(0);
@@ -87,13 +88,12 @@ namespace Titan
 			hr = pd3dDevice->CreateBuffer(&bufferDesc, 0 ,&mConstantBuffer);
 			if(FAILED(hr))
 			{
-				String errMsg = DXGetErrorDescription(hr);
-				TITAN_EXCEPT_API("D3DX11 Shader Constant buffer creation failed: " + errMsg);
+				TITAN_EXCEPT_API_D11(hr, "D3DX11 Shader Constant buffer creation failed: ");
 				return ;
 			}
 
 		}
-		else
+		else if(mShaderDesc.ConstantBuffers > 1)
 		{
 			//error
 			TITAN_EXCEPT_API("D3DX11:now we only support one constant buffer!!");
@@ -175,7 +175,8 @@ namespace Titan
 
 	void D3D11HLSLShader::populateDef(const D3D11_SHADER_TYPE_DESC& desc, ShaderConstantDef& def)
 	{
-		def.arraySize = desc.Elements;
+		//fixme, why the element is 0?
+		def.arraySize = desc.Elements + 1;
 		def.registerIndex = desc.Offset;
 		if(desc.Type == D3D10_SVT_INT)
 		{
@@ -276,7 +277,7 @@ namespace Titan
 			hr = pDeviceContext->Map(mConstantBuffer,0, D3D11_MAP_WRITE_DISCARD, 0 , &pConstData);
 			if(FAILED(hr))
 			{
-				TITAN_EXCEP_API_D11(hr, "D3DX11 Map Shader Constant Buffer failed:");
+				TITAN_EXCEPT_API_D11(hr, "D3DX11 Map Shader Constant Buffer failed:");
 				return nullptr;
 			}
 			ShaderRegisterBufferPtr floatRegs = params->getFloatRegisterBuffer();
@@ -284,7 +285,7 @@ namespace Titan
 			{
 				size_t offset = i->first;
 				void* pFloat = (void*)params->getFloatPtr(i->second.physicalIndex);
-				memcpy((void*)(((char*)pConstData.pData) + offset), pFloat, i->second.currentSize);
+				memcpy((void*)(((char*)pConstData.pData) + offset), pFloat, i->second.currentSize * sizeof(float));
 			}
 
 			ShaderRegisterBufferPtr intRegs = params->getIntRegisterBuffer();
@@ -292,10 +293,12 @@ namespace Titan
 			{
 				size_t offset = i->first;
 				void* pInt = (void*)params->getIntPtr(i->second.physicalIndex);
-				memcpy((void*)(((char*)pConstData.pData) + offset), pInt, i->second.currentSize);
+				memcpy((void*)(((char*)pConstData.pData) + offset), pInt, i->second.currentSize * sizeof(int));
 			}
 
 			pDeviceContext->Unmap(mConstantBuffer, 0);
+
+			return mConstantBuffer;
 		}
 
 		//should we just message a warning?
@@ -334,8 +337,7 @@ namespace Titan
 			&mpVertexShader);
 		if(FAILED(hr))
 		{
-			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT_API("D3D10 Create Vertex Shader Failed: "+ errMsg);
+			TITAN_EXCEPT_API_D11(hr, "D3D10 Create Vertex Shader Failed: ");
 		}
 	}
 
@@ -362,8 +364,7 @@ namespace Titan
 			&mpPixelShader);
 		if(FAILED(hr))
 		{
-			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT_API("D3D10 Create Pixel Shader Failed: "+ errMsg);
+			TITAN_EXCEPT_API_D11(hr, "D3D10 Create Pixel Shader Failed: ");
 		}
 	}
 }

@@ -4,7 +4,7 @@
 
 namespace Titan
 {
-	const String cPluginName = "Direct3D9 Renderer";
+	const String cPluginName = "Direct3D11 Renderer";
 	D3D11Plugin::D3D11Plugin()
 		: mRenderer(0)
 	{
@@ -17,10 +17,10 @@ namespace Titan
 	//-------------------------------------------------------------------------------//
 	void D3D11Plugin::install()
 	{
-#if DEBUG
-		HINSTANCE hInst = GetModuleHandle("Plugin_D3D11Render_d.dll");
+#if _DEBUG
+		HINSTANCE hInst = GetModuleHandle("Plugin_D3D11Renderer_d.dll");
 #else
-		HINSTANCE hInst = GetModuleHandle("Plugin_D3D19Render.dll");
+		HINSTANCE hInst = GetModuleHandle("Plugin_D3D11Renderer.dll");
 #endif
 
 		mRenderer = TITAN_NEW D3D11Renderer(hInst);

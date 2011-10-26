@@ -1,7 +1,7 @@
 #include "TitanStableHeader.h"
 #include "TiRenderer.h"
 #include "TiRenderTarget.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiRenderData.h"
 #include "TiVertexBuffer.h"
 
@@ -47,7 +47,7 @@ namespace Titan
 		}
 		else
 		{
-			ConsoleDebugger::getSingleton().stream()
+			LogMgr::getSingleton().stream()
 				<<"Render Target" << name << "does not be found.";
 			return 0;
 		}
@@ -71,7 +71,7 @@ namespace Titan
 		}
 		else
 		{
-			ConsoleDebugger::getSingleton().stream()
+			LogMgr::getSingleton().stream()
 				<<"Render Target" << name << "does not be found.";
 		}
 	}

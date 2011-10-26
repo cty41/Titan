@@ -11,7 +11,7 @@ namespace Titan
 		mBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		mBufferDesc.ByteWidth = mSizeInBytes;
 		mBufferDesc.Usage = D3D11Mappings::convertToD3D11(usage);
-		//mBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		mBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		createD3D11Buffer();
 	}
 
@@ -27,8 +27,7 @@ namespace Titan
 		hr = pd3dDevice->CreateBuffer(&mBufferDesc, 0, &mBuffer);
 		if(FAILED(hr))
 		{
-			String errMsg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT_API("Create d3d11 vertex buffer failed: " + errMsg);
+			TITAN_EXCEPT_API_D11(hr, "Create d3d11 vertex buffer failed: ");
 		}
 	}
 
@@ -43,8 +42,7 @@ namespace Titan
 		hr = pDeviceContext->Map(mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0 , &mappedSubRes);
 		if(FAILED(hr))
 		{
-			String msg = DXGetErrorDescription(hr);
-			TITAN_EXCEPT_API( "D3D11 Map vertex buffer failed: " + msg);
+			TITAN_EXCEPT_API_D11(hr, "D3D11 Map vertex buffer failed: ");
 		}
 		dstBytes = (void*)mappedSubRes.pData;
 		return dstBytes;

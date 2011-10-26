@@ -7,6 +7,7 @@
 
 namespace Titan
 {
+#define D11_MAX_VERTEX_ELEMENT_NUM 16
 	class _D3D11DllExport D3D11VertexDecl : public VertexDeclaration
 	{
 	public:
@@ -22,7 +23,7 @@ namespace Titan
 	protected:
 		ShaderToLayoutMap	mShaderToLayoutMap;
 
-		D3D11_INPUT_ELEMENT_DESC*	mInputElementDescs;
+		D3D11_INPUT_ELEMENT_DESC	mInputElementDescs[D11_MAX_VERTEX_ELEMENT_NUM];
 		/// the input layout need to recreate?
 		bool mNeedRecreate;
 	};

@@ -14,8 +14,7 @@ TerrainHost::~TerrainHost()
 //-------------------------------------------------------------------------------//
 void TerrainHost::destroy()
 {
-	if(mTerrain)
-		TITAN_DELETE mTerrain;
+	TITAN_SAFE_DELETE(mTerrain);
 
 	BaseHost::destroy();
 }
@@ -47,46 +46,48 @@ void TerrainHost::loadResources()
 #endif
 	//mTerrain = TITAN_NEW Titan::BaseTerrain();
 	//mTerrain->create(mSceneMgr->getRootSceneNode(), pHeightmap, Titan::AABB(-500.0f, 0, -500.0f, 500.0f, 500.0f, 500.0f));
-	//Titan::BaseTerrain::elevationDataVec elevationDatas;
-	//Titan::BaseTerrain::elevationData elevation[3];
 
 
-#if 1
-	//// grass (all elevations and slopes)
-	//elevation[0].minElevation = 0;
-	//elevation[0].maxElevation = 500;
-	//elevation[0].minNormalZ = -1.0f;
-	//elevation[0].maxNormalZ = 1.0f;
-	//elevation[0].strength = 1.0f;
-
-	//// rock (all elevations, steep slopes)
-	//elevation[1].minElevation = 0;
-	//elevation[1].maxElevation = 500;
-	//elevation[1].minNormalZ = 0.0f;
-	//elevation[1].maxNormalZ = 0.7f;
-	//elevation[1].strength = 10.0f;
-
-	//// dirt (high elevation, flat slope)
-	//elevation[2].minElevation = 300;
-	//elevation[2].maxElevation = 500;
-	//elevation[2].minNormalZ = 0.75f;
-	//elevation[2].maxNormalZ = 1.0f;
-	//elevation[2].strength = 20.0f;
-
-	//elevationDatas.push_back(elevation[0]);
-	//elevationDatas.push_back(elevation[1]);
-	//elevationDatas.push_back(elevation[2]);
-
-	//Titan::Image blendImage;
-	//blendImage.setWidth(256);
-	//blendImage.setHeight(256);
-	//blendImage.setFormat(Titan::PF_A8R8G8B8);
-	//blendImage.setBytesPerPixel(4);
-
-	//mTerrain->genBlendImage(blendImage, elevationDatas);
-	//blendImage.randomChannelNoise(3, 200, 255);
 
 #if 0
+
+	Titan::BaseTerrain::elevationDataVec elevationDatas;
+	Titan::BaseTerrain::elevationData elevation[3];
+	// grass (all elevations and slopes)
+	elevation[0].minElevation = 0;
+	elevation[0].maxElevation = 500;
+	elevation[0].minNormalZ = -1.0f;
+	elevation[0].maxNormalZ = 1.0f;
+	elevation[0].strength = 1.0f;
+
+	// rock (all elevations, steep slopes)
+	elevation[1].minElevation = 0;
+	elevation[1].maxElevation = 500;
+	elevation[1].minNormalZ = 0.0f;
+	elevation[1].maxNormalZ = 0.7f;
+	elevation[1].strength = 10.0f;
+
+	// dirt (high elevation, flat slope)
+	elevation[2].minElevation = 300;
+	elevation[2].maxElevation = 500;
+	elevation[2].minNormalZ = 0.75f;
+	elevation[2].maxNormalZ = 1.0f;
+	elevation[2].strength = 20.0f;
+
+	elevationDatas.push_back(elevation[0]);
+	elevationDatas.push_back(elevation[1]);
+	elevationDatas.push_back(elevation[2]);
+
+	Titan::Image blendImage;
+	blendImage.setWidth(256);
+	blendImage.setHeight(256);
+	blendImage.setFormat(Titan::PF_A8R8G8B8);
+	blendImage.setBytesPerPixel(4);
+
+	mTerrain->genBlendImage(blendImage, elevationDatas);
+	blendImage.randomChannelNoise(3, 200, 255);
+
+#if 1
 	Titan::TexturePtr pBlendMap = Titan::TextureMgr::getSingleton().createManually(
 		"blendMap", Titan::ResourceGroupMgr::GENERAL_RESOURCE_GROUP,
 		Titan::TT_2D, 256, 256, 1,Titan::TU_DYNAMIC, Titan::PF_A8R8G8B8);
@@ -99,11 +100,11 @@ void TerrainHost::loadResources()
 	
 
 #endif
-	//mTerrain->setMaterial("terrainBlend");
+	mTerrain->setMaterial("terrainBlend");
 #endif
 
-#if 1
-	//mSceneMgr->setSkybox("skybox1");
+#if 0
+	mSceneMgr->setSkybox("skybox1");
 #endif
 
 #if 1

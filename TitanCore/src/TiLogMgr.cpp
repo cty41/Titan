@@ -1,5 +1,5 @@
 #include "TitanStableHeader.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiException.h"
 #include <fcntl.h>
 #include <io.h>
@@ -8,31 +8,45 @@
 namespace Titan
 {
 
-	template<> ConsoleDebugger* Singleton<ConsoleDebugger>::ms_Singleton = 0;
+	template<> LogMgr* Singleton<LogMgr>::ms_Singleton = 0;
 
-	ConsoleDebugger* ConsoleDebugger::getSingletonPtr()
+	LogMgr* LogMgr::getSingletonPtr()
 	{
 		return ms_Singleton;
 	}
-	ConsoleDebugger& ConsoleDebugger::getSingleton()
+	LogMgr& LogMgr::getSingleton()
 	{
 		assert( ms_Singleton );  return ( *ms_Singleton );
 	}
 	//-------------------------------------------------------------------------------//
-	ConsoleDebugger::ConsoleDebugger()
-		:mConsoleEnable(true)
+	LogMgr::LogMgr(const String& logFile /* = "Log.ini" */, bool enableCon /* = true */, bool enableVS /* = true */)
+		:mLogName(logFile), mConsoleEnable(enableCon), mVSOutput(enableVS), mEnableFileLog(true)
 	{
-		enableConsole();
+		if(mConsoleEnable)
+			enableConsole();
+
+		if(logFile == "")
+			mEnableFileLog = false;
+		if(mEnableFileLog)
+		{
+			fopen_s(&mpFile, mLogName.c_str(), "w");
+		}
 	}
 	//-------------------------------------------------------------------------------//
-	ConsoleDebugger::~ConsoleDebugger()
+	LogMgr::~LogMgr()
 	{
-		disableConsole();
+		if(mConsoleEnable)
+			disableConsole();
+
+		if(mEnableFileLog)
+		{
+			fclose(mpFile);
+		}
+
 	}
 	//-------------------------------------------------------------------------------//
-	void ConsoleDebugger::enableConsole()
+	void LogMgr::enableConsole()
 	{
-#if WIN32
 		static const WORD MAX_CONSOLE_LINES = 500;
 		int hConHandle;
 		long lStdHandle;
@@ -66,36 +80,34 @@ namespace Titan
 		// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog
 		// point to console as well
 		std::ios::sync_with_stdio();
-#endif
 	}
 	//-------------------------------------------------------------------------------//
-	void ConsoleDebugger::disableConsole()
+	void LogMgr::disableConsole()
 	{
 		FreeConsole();
 	}
 	//-------------------------------------------------------------------------------//
-	void ConsoleDebugger::outputMessage(const String& message, ConsoleMessageLevel cml, bool outputTime)
+	void LogMgr::outputMessage(const String& message, LogMessageLevel cml)
 	{
 		if(mConsoleEnable)
 		{
-			if(outputTime)
-			{
-				struct tm *pTime ;
-				time_t ctTime; time(&ctTime);
-				pTime = localtime(&ctTime );
-				std::cout<<std::setw(2) << std::setfill('0') << pTime->tm_hour
-					<< ":" << std::setw(2) << std::setfill('0') << pTime->tm_min
-					<< ":" << std::setw(2) << std::setfill('0') << pTime->tm_sec
-					<< ": ";
-			}
-			std::cout<< message << std::endl;
+			std::cout<< message;
+		}
 
+		if(mVSOutput)
+		{
+			OutputDebugString(message.c_str());
+		}
+
+		if(mEnableFileLog)
+		{
+			fprintf_s(mpFile, "%s", message.c_str());
 		}
 	}
 	//-------------------------------------------------------------------------------//
-	ConsoleDebugger::Stream	ConsoleDebugger::stream(ConsoleMessageLevel cml)
+	LogMgr::Stream	LogMgr::stream(LogMessageLevel cml)
 	{
-		return Stream(cml);
+		return Stream(ms_Singleton, cml);
 	}
 	
 }

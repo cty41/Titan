@@ -8,8 +8,8 @@ namespace Titan
 	AutoNamer SceneNode::msAutoNamer("scenenode_");
 
 	SceneNode::SceneNode(const String& name)
-		:mParent(NULL), mName(name),mNeedUpdate(true),
-		mScale(Vector3::UNIT_SCALE), mNeedUpdateMat(true), mNeedUpdateParent(false),
+		:mParent(NULL), mName(name),mNeedUpdate(true), mNeedUpdateAABB(true),
+		mScale(Vector3::UNIT_SCALE), mNeedUpdateMat(true), mNeedUpdateParent(true),
 		mPosition(Vector3::ZERO), mQuaternion(Quaternion::IDENTITY)
 	{
 
@@ -133,28 +133,55 @@ namespace Titan
 			mChildrenMap.erase(it);
 		}
 	}
-	//-------------------------------------------------------------------------------//
+
 	void SceneNode::notifyUpdate()
 	{
 		mNeedUpdateParent = true;
 		mNeedUpdate = true;
 		mNeedUpdateMat = true;
+		mNeedUpdateAABB = true;
+
+		if(mParent)
+			mParent->addToChildrenUpdateList(this);
 	}
 	//-------------------------------------------------------------------------------//
+	void SceneNode::addToChildrenUpdateList(SceneNode* child)
+	{
+		//because child world infos has changed, so we need to update the parent aabb infos
+		mNeedUpdateAABB = true;
+
+		auto it = mChildrenNeedToUpdate.find(child->getName());
+		if(it == mChildrenNeedToUpdate.end())
+			mChildrenNeedToUpdate.insert(SceneNodeMap::value_type(child->getName(), child));
+	}
+
 	void SceneNode::_update()
 	{
 		if(mNeedUpdate)
+		{
+			//recalc pos,scale, rotation infos from parent node
 			_updateFromParent();
 
-		SceneNodeMap::iterator it = mChildrenMap.begin(), itend = mChildrenMap.end();
-		for(;it != itend ; ++it)
+			//because node has change, so update all his children
+			mChildrenNeedToUpdate.clear();
+			for(auto it = mChildrenMap.begin();it != mChildrenMap.end(); ++it)
+				it->second->_update();
+			mNeedUpdate = false;
+		}
+		else
 		{
-			it->second->_update();
+			//because node has no changes, so only update changed child node
+			for(auto it = mChildrenNeedToUpdate.begin();it != mChildrenNeedToUpdate.end(); ++it)
+				it->second->_update();
+			mChildrenNeedToUpdate.clear();
 		}
 
-		mNeedUpdate = false;
+		if(mNeedUpdateAABB)
+		{
+			_updateWorldBound();
+			mNeedUpdateAABB = false;			
+		}
 
-		_updateAABB();
 	}
 	//-------------------------------------------------------------------------------//
 	void SceneNode::_updateFromParent()
@@ -162,9 +189,7 @@ namespace Titan
 		if(mParent)
 		{
 			mDerivedQuaternion = mParent->_getDerivedOrientation() * mQuaternion;
-
 			mDerivedScale = mParent->_getDerivedScale() * mScale;
-
 			mDerivedPosition = mParent->_getDerivedPosition() + mPosition;
 		}
 		else
@@ -176,27 +201,21 @@ namespace Titan
 		}
 	}
 	//-------------------------------------------------------------------------------//
-	void SceneNode::_updateAABB()
+	void SceneNode::_updateWorldBound()
 	{
-		mAABB.setNull();
-		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
-		while(it != itend)
-		{
-			mAABB.merge(it->second->getAABB());
-			++it;
-		}
+		mWorldBound.setNull();
+		//merge attached scene objects' world bounds
+		for(auto it = mSceneObjects.begin(); it != mSceneObjects.end(); ++it)
+			mWorldBound.merge(it->second->getWorldBound());
 
-		SceneNodeMap::iterator it2 = mChildrenMap.begin(), itend2 = mChildrenMap.end();
-		while(it2 != itend2)
-		{
-			mAABB.merge(it2->second->getAABB());
-			++it2;
-		}
+		//merge attached child scene nodes' world bounds
+		for(auto it = mChildrenMap.begin(); it != mChildrenMap.end(); ++it)
+			mWorldBound.merge(it->second->getWorldBound());
 	}
 	//-------------------------------------------------------------------------------//
 	void SceneNode::_findVisibleObjects(Camera* cam, RenderQueue* queue)
 	{
-		if(!cam->isVisible(mAABB))
+		if(!cam->isVisible(mWorldBound))
 			return;
 
 		SceneObjectMap::iterator it = mSceneObjects.begin(), itend = mSceneObjects.end();
@@ -218,15 +237,20 @@ namespace Titan
 	const Quaternion& SceneNode::_getDerivedOrientation()
 	{
 		if(mNeedUpdateParent)
+		{
 			_updateFromParent();
-
+			mNeedUpdateParent = false;
+		}
 		return mDerivedQuaternion;
 	}
 	//------------------------------------------------------------------------------//
 	const Vector3& SceneNode::_getDerivedPosition()
 	{
 		if(mNeedUpdateParent)
+		{	
 			_updateFromParent();
+			mNeedUpdateParent = false;
+		}
 
 		return mDerivedPosition;
 	}
@@ -234,8 +258,10 @@ namespace Titan
 	const Vector3& SceneNode::_getDerivedScale()
 	{
 		if (mNeedUpdateParent)
+		{
 			_updateFromParent();
-
+			mNeedUpdateParent = false;
+		}
 		return mDerivedScale;
 	}
 	//------------------------------------------------------------------------------//
@@ -249,6 +275,16 @@ namespace Titan
 		}
 
 		return mTransformMat;
+	}
+	
+	const AABB& SceneNode::getWorldBound()
+	{
+		if(mNeedUpdateAABB)
+		{
+			_updateWorldBound();
+			mNeedUpdateAABB = false;
+		}
+		return mWorldBound;
 	}
 	//-------------------------------------------------------------------------------//
 	void SceneNode::scale(float x, float y, float z)
@@ -305,25 +341,4 @@ namespace Titan
 		Vector3 diff = _getDerivedPosition() - cam->getPosition();
 		return diff.squaredLength();
 	}
-	//-------------------------------------------------------------------------------//
-	SceneNode::ObjectIterator SceneNode::getAttachedObjectIterator()
-	{
-		return ObjectIterator(mSceneObjects.begin(), mSceneObjects.end());
-	}
-	//-------------------------------------------------------------------------------//
-	SceneNode::ConstObjectIterator SceneNode::getAttachedConstObjectIterator()
-	{
-		return ConstObjectIterator(mSceneObjects.begin(), mSceneObjects.end());
-	}
-	//-------------------------------------------------------------------------------//
-	SceneNode::ChildIterator SceneNode::getChildIterator()
-	{
-		return ChildIterator(mChildrenMap.begin(), mChildrenMap.end());
-	}
-	//-------------------------------------------------------------------------------//
-	SceneNode::ConstChildIterator SceneNode::getConstChildIterator()
-	{
-		return ConstChildIterator(mChildrenMap.begin(), mChildrenMap.end());
-	}
-
 }

@@ -116,7 +116,8 @@
     <ClCompile Include="src\TiColor.cpp" />
     <ClCompile Include="src\TICommonFileSystem.cpp" />
     <ClCompile Include="src\TiConfigFile.cpp" />
-    <ClCompile Include="src\TiConsoleDebugger.cpp" />
+    <ClCompile Include="src\TiEntity.cpp" />
+    <ClCompile Include="src\TiLogMgr.cpp" />
     <ClCompile Include="src\TiDataStream.cpp" />
     <ClCompile Include="src\TiDataType.cpp" />
     <ClCompile Include="src\TiDynLib.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\TiMemoryNedAlloc.cpp" />
     <ClCompile Include="src\TiMemoryStdAlloc.cpp" />
     <ClCompile Include="src\TiMemoryTracker.cpp" />
+    <ClCompile Include="src\TiMesh.cpp" />
     <ClCompile Include="src\TiMeshLord.cpp" />
     <ClCompile Include="src\TiOverlayElement.cpp" />
     <ClCompile Include="src\TiOverlayMgr.cpp" />
@@ -210,7 +212,9 @@
     <ClInclude Include="include\TiCommon.h" />
     <ClInclude Include="include\TiCommonFileSystem.h" />
     <ClInclude Include="include\TiConfigFile.h" />
-    <ClInclude Include="include\TiConsoleDebugger.h" />
+    <ClInclude Include="include\TiDebugFuncs.h" />
+    <ClInclude Include="include\TiEntity.h" />
+    <ClInclude Include="include\TiLogMgr.h" />
     <ClInclude Include="include\TiDataStream.h" />
     <ClInclude Include="include\TiDataType.h" />
     <ClInclude Include="include\TiDynLib.h" />
@@ -242,6 +246,7 @@
     <ClInclude Include="include\TiMemorySTLAllocator.h" />
     <ClInclude Include="include\TiMemoryTracker.h" />
     <ClInclude Include="include\Timer.h" />
+    <ClInclude Include="include\TiMesh.h" />
     <ClInclude Include="include\TiMeshLord.h" />
     <ClInclude Include="include\TiMeshLordFormat.h" />
     <ClInclude Include="include\TiOverlayElement.h" />

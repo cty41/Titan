@@ -5,7 +5,7 @@
 
 #include "TiSharedPtr.h"
 #include "TiDataStream.h"
-#include "TiConsoleDebugger.h"
+#include "TiLogMgr.h"
 #include "TiColor.h"
 #include "TiMath.h"
 #include "TiResourceGroupMgr.h"

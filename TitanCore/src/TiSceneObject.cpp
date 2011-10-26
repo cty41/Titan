@@ -7,22 +7,29 @@ namespace Titan
 {
 	AutoNamer SceneObject::mAutoNamer("SceneObject_");
 	
-	SceneObject::SceneObject()
+	SceneObject::SceneObject(SceneObjectFactory* creator)
 		: mAttachedNode(0), mRenderQueueID(RGT_SceneObject),
-		mRenderQueuePriority(0)
+		mRenderQueuePriority(0), mCreator(creator)
 	{
 		mName = mAutoNamer.getAutoName();
 	}
 	//-------------------------------------------------------------------------------//
-	SceneObject::SceneObject(const String& name)
-		: mAttachedNode(0), mName(name)
+	SceneObject::SceneObject(SceneObjectFactory* creator, const String& name)
+		: mAttachedNode(0), mName(name), mCreator(creator)
 	{
+	}
+
+	const AABB& SceneObject::getWorldBound()
+	{
+		mWorldBoundBox = getLocalBound();
+		mWorldBoundBox.transformAffine(mAttachedNode->_getTransformMatrix());
+
+		return mWorldBoundBox;
 
 	}
-	//-------------------------------------------------------------------------------//
-	SceneObject::~SceneObject()
+	const String& SceneObject::getType() const
 	{
-
+		return mCreator->getType();
 	}
 	//-------------------------------------------------------------------------------//
 	bool SceneObject::isAttached() const

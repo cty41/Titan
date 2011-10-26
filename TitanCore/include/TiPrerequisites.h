@@ -16,6 +16,10 @@
 
 #   pragma warning (disable : 4251)
 
+////yeah, this is learn from unreal~0~
+//#include "TiDebugFuncs.h"
+//#define check(expr)				{ if(!(expr)) appFailAssert( #expr, __FILE__, __LINE__ ); }
+
 namespace Titan
 {
 	//Forward declaration
@@ -27,13 +31,15 @@ namespace Titan
 	class BaseTerrainSection;
 	class Camera;
 	class Color;
-	class ConsoleDebugger;
+	class LogMgr;
 	class ChunkTerrain;
 	class ChunkTerrainSection;
 	class CommonFileSystem;
 	class CommonFileSystemFactory;
 	class Degree;
 	class DynLib;
+	class Entity;
+	class EntityPrimitive;
 	class Exception;
 	class Font;
 	class FontMgr;
@@ -53,6 +59,7 @@ namespace Titan
 	class MaterialMgr;
 	class ManualObject;
 	class ManualObjectFactory;
+	class Mesh;
 	class OverlayElement;
 	class OverlayElementFactory;
 	class OverlayTextElement;
@@ -96,6 +103,7 @@ namespace Titan
 	class Shader;
 	class ShaderUnit;
 	class ShaderParams;
+	class SubMesh;
 	class Texture;
 	class TextureMgr;
 	class TextureUnit;

@@ -41,6 +41,10 @@ namespace Titan
 		static D3D10_PRIMITIVE_TOPOLOGY convertToD3D11(OperationType ot);
 
 		static DXGI_FORMAT  convertToD3D11(IndexBufferType ibt);
+
+		static DXGI_FORMAT convertToD3D11(PixelFormat pf);
+
+		static PixelFormat convertToTitan(DXGI_FORMAT df);
 	};
 }
 #endif
