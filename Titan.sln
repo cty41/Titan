@@ -7,9 +7,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TitanCore", "TitanCore\Tita
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin_D3D9Renderer", "Plugin_D3D9Renderer\Plugin_D3D9Renderer.vcxproj", "{50174353-C97F-4EC3-B302-9180C6FB87E3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaExporter", "MayaExporter\MayaExporter.vcxproj", "{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Plugin_D3D11Renderer", "Plugin_D3D11Renderer\Plugin_D3D11Renderer.vcxproj", "{73910420-578A-4999-940F-901718C68956}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FBXConverter", "FBXConverter\FBXConverter.vcxproj", "{BD541DF7-D8D9-48CB-94D9-2D24829375B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,21 +29,21 @@ Global
 		{50174353-C97F-4EC3-B302-9180C6FB87E3}.Debug|Win32.Build.0 = Debug|Win32
 		{50174353-C97F-4EC3-B302-9180C6FB87E3}.Release|Win32.ActiveCfg = Release|Win32
 		{50174353-C97F-4EC3-B302-9180C6FB87E3}.Release|Win32.Build.0 = Release|Win32
-		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Debug|Win32.Build.0 = Debug|Win32
-		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Release|Win32.ActiveCfg = Release|Win32
-		{B32485AF-5D58-40BC-97D3-0A86DD58D1DC}.Release|Win32.Build.0 = Release|Win32
 		{73910420-578A-4999-940F-901718C68956}.Debug|Win32.ActiveCfg = Debug|Win32
 		{73910420-578A-4999-940F-901718C68956}.Debug|Win32.Build.0 = Debug|Win32
 		{73910420-578A-4999-940F-901718C68956}.Release|Win32.ActiveCfg = Release|Win32
 		{73910420-578A-4999-940F-901718C68956}.Release|Win32.Build.0 = Release|Win32
+		{BD541DF7-D8D9-48CB-94D9-2D24829375B6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BD541DF7-D8D9-48CB-94D9-2D24829375B6}.Debug|Win32.Build.0 = Debug|Win32
+		{BD541DF7-D8D9-48CB-94D9-2D24829375B6}.Release|Win32.ActiveCfg = Release|Win32
+		{BD541DF7-D8D9-48CB-94D9-2D24829375B6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaPersistentConfig = Debug|Win32
-		AMDCaPersistentStartup = TerrainDemo
 		AMDCaProjectFile = D:\Programmer\Work\Terrain\CodeAnalyst\Titan.caw
+		AMDCaPersistentStartup = TerrainDemo
+		AMDCaPersistentConfig = Debug|Win32
 	EndGlobalSection
 EndGlobal
