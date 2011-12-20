@@ -52,8 +52,6 @@ FBXConverter::FBXConverter(const AcceptArgs& args)
 {
 	InitializeSdkObjects();
 
-
-
 	bool stat = true;
 
 	if(mConvertAll)
@@ -78,6 +76,12 @@ FBXConverter::FBXConverter(const AcceptArgs& args)
 
 FBXConverter::~FBXConverter()
 {
+	if(mpScene)
+	{
+		mpScene->Destroy();
+		mpScene = nullptr;
+	}
+
 	DestroySdkObjects();
 }
 
@@ -705,9 +709,6 @@ void FBXConverter::ExportMesh(TiSubMesh* mesh)
 		}
 		fprintf_s(mpAsciiFile, "}\n");
 	}
-
-
-
 }
 
 KFbxXMatrix FBXConverter::ComputeTotalMatrix(KFbxNode* Node)

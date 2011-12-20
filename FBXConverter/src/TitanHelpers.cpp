@@ -113,7 +113,17 @@ bool parseArgs(AcceptArgs& args, int argc, char** argv)
 	if(args.convertAll || hasInName)
 	{
 		if(!hasOutName)
-			args.dst_file = args.src_file;
+		{
+			if(stringEndsWith(args.src_file, ".fbx"))
+				args.dst_file = args.src_file.substr(0,args.src_file.length() - 4);
+			
+			args.dst_file += ".fcm";
+		}
+		else
+		{
+			if(!stringEndsWith(args.dst_file, ".fcm"))
+				args.dst_file += ".fcm";
+		}
 	}
 	else
 		return false;
