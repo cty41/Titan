@@ -14,14 +14,12 @@ void printHelpInfos()
 
 int main(int argc, char** argv)
 {
-	if(argc < 2)
+	AcceptArgs args;
+	if(!parseArgs(args, argc, argv))
 	{
 		printHelpInfos();
 		return 0;
 	}
-
-	AcceptArgs args;
-	parseArgs(args, argc, argv);
 
 	FBXConverter* pFbxConverter = new FBXConverter(args);
 

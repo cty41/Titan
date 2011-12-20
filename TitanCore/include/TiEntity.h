@@ -30,6 +30,10 @@ namespace Titan
 		virtual bool			IsUseIdentityProj() const;
 		//super class override [End]
 
+	protected:
+		Entity*		mParent;
+		SubMesh*	mMesh;
+
 
 	};
 
@@ -48,9 +52,13 @@ namespace Titan
 
 		void setMaterial(const String& name);
 
+		//
+		const MaterialPtr&	getMaterial() const;
+
 
 	protected:
 		Mesh*	mMesh;
+		MaterialPtr mMaterialPtr;
 	};
 }
 #endif

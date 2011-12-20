@@ -47,7 +47,8 @@ int AddUniqueItem(std::vector<T>& vec, const T& val)
 
 
 FBXConverter::FBXConverter(const AcceptArgs& args)
-	:mpSdkMgr(NULL), mpScene(NULL), mConvertAll(args.convertAll), mConvertAscii(args.convertAscii), mInFileName(args.src_file), mOutFileName(args.dst_file)
+	:mpSdkMgr(NULL), mpScene(NULL), mConvertAll(args.convertAll), mConvertAscii(args.convertAscii), mInFileName(args.src_file), mOutFileName(args.dst_file),
+	mpAsciiFile(nullptr)
 {
 	InitializeSdkObjects();
 
@@ -269,7 +270,7 @@ void FBXConverter::ConvertNode(KFbxNode* pNode)
 void FBXConverter::ConvertMeshData(KFbxNode* pNode)
 {
 	KFbxNodeAttribute* pNodeAtt = pNode->GetNodeAttribute();
-	KFbxMesh* fbxMesh = dynamic_cast<KFbxMesh*>(pNodeAtt);
+	KFbxMesh* fbxMesh = pNode->GetMesh();
 
 	//remove the bad polygons before getting any data from mesh
 	fbxMesh->RemoveBadPolygons();
@@ -448,28 +449,44 @@ void FBXConverter::ConvertMeshData(KFbxNode* pNode)
 
 	int triCount = fbxMesh->GetPolygonCount();
 	std::vector<StaticMeshTriangle> RawTriangles;
-	RawTriangles.reserve(triCount);
+	//RawTriangles.reserve(triCount);
 	int triangleIdx;
 	for(triangleIdx = 0; triangleIdx < triCount; ++triangleIdx)
 	{
-		StaticMeshTriangle* triangle = &(RawTriangles.at(triangleIdx));
+		//StaticMeshTriangle* triangle = &(RawTriangles.at(triangleIdx));
+		StaticMeshTriangle triangle;
 		int vertexIdx;
 		for(vertexIdx = 0; vertexIdx < 3;++vertexIdx)
 		{
+			/*
+			*	Vertex Position
+			*/
 			int controlPointIdx = fbxMesh->GetPolygonVertex(triangleIdx, vertexIdx);
 			KFbxVector4 fbxPos = fbxMesh->GetControlPoints()[controlPointIdx];
 			KFbxVector4 finalPos = TotalMatrix.MultT(fbxPos);
-			triangle->Vertices[vertexIdx].Position = ConvertPos(finalPos);
-		}
-
-		/*
-		*	UVs
-		*/
-		for(int uvLayerIdx = 0; uvLayerIdx < uniqueUVCount;++uvLayerIdx)
-		{
-			if(layerElementUV[uvLayerIdx] != NULL)
+			triangle.Vertices[vertexIdx].Position = ConvertPos(finalPos);
+			/*
+			*	Vertex Color
+			*/
+			if(LayerElementVertexColor)
 			{
-				for(int vertexIdx = 0; vertexIdx < 3;++vertexIdx)
+				int VertexColorMappingIdx = (VertexColorMappingMode == KFbxLayerElement::eBY_CONTROL_POINT)?
+					fbxMesh->GetPolygonVertex(triangleIdx, vertexIdx) : (triangleIdx * 3 + vertexIdx);
+
+				int VertexColorIdx = (VertexColorReferenceMode == KFbxLayerElement::eDIRECT)? 
+					VertexColorMappingIdx : LayerElementVertexColor->GetIndexArray().GetAt(VertexColorMappingIdx);
+
+				KFbxColor vColor = LayerElementVertexColor->GetDirectArray().GetAt(VertexColorIdx);
+
+				Titan::Color tiColor = Titan::Color(vColor.mRed, vColor.mGreen, vColor.mBlue, vColor.mAlpha);
+				triangle.Vertices[vertexIdx].Color = tiColor.getAsRGBA();
+			}
+			/*
+			*	UVs
+			*/
+			for(int uvLayerIdx = 0; uvLayerIdx < uniqueUVCount;++uvLayerIdx)
+			{
+				if(layerElementUV[uvLayerIdx] != NULL)
 				{
 					int controlPointIdx = fbxMesh->GetPolygonVertex(triangleIdx, vertexIdx);
 					int uvMapIdx = (UVMappingMode[uvLayerIdx] == KFbxLayerElement::eBY_CONTROL_POINT)?
@@ -478,58 +495,53 @@ void FBXConverter::ConvertMeshData(KFbxNode* pNode)
 									uvMapIdx: layerElementUV[uvLayerIdx]->GetIndexArray().GetAt(uvMapIdx);
 					KFbxVector2 uvVector = layerElementUV[uvLayerIdx]->GetDirectArray().GetAt(uvIdx);
 
-					triangle->Vertices[vertexIdx].UVs[uvLayerIdx].x = (float)uvVector[0];
-					//fixme? flip V for directX
-					triangle->Vertices[vertexIdx].UVs[uvLayerIdx].y = 1.0f - (float)uvVector[1];
+					Titan::Vector2 uv;
+					uv.x = (float)uvVector[0];
+					//flip V for directX
+					uv.y = 1.0f - (float)uvVector[1];
+					triangle.Vertices[vertexIdx].UVs.push_back(uv);
 				}
 			}
+			/*
+			*	normals
+			*/
+			if(LayerElementNormal)
+			{
+				int normalMapIdx = (NormalMappingMode == KFbxLayerElement::eBY_CONTROL_POINT)?
+					vertexIdx : triangleIdx * 3 + vertexIdx;
+				int normalValIdx = (NormalReferenceMode == KFbxLayerElement::eDIRECT)?
+					normalMapIdx : LayerElementNormal->GetIndexArray().GetAt(normalMapIdx);
+
+				KFbxVector4 fbxNormal = LayerElementNormal->GetDirectArray().GetAt(normalValIdx);
+				fbxNormal = TotalMatrixForNormal.MultT(fbxNormal);
+				fbxNormal = LeftToRightMatrixForNormal.MultT(fbxNormal);
+				triangle.Vertices[vertexIdx].Normal = ConvertNormal(fbxNormal);
+			}
 		}
-
-		/*
-		*	Vertex Color
-		*/
-		if(LayerElementVertexColor)
-		{
-			int VertexColorMappingIdx = (VertexColorMappingMode == KFbxLayerElement::eBY_CONTROL_POINT)?
-				fbxMesh->GetPolygonVertex(triangleIdx, vertexIdx) : (triangleIdx * 3 + vertexIdx);
-
-			int VertexColorIdx = (VertexColorReferenceMode == KFbxLayerElement::eDIRECT)? 
-				VertexColorMappingIdx : LayerElementVertexColor->GetIndexArray().GetAt(VertexColorMappingIdx);
-
-			KFbxColor vColor = LayerElementVertexColor->GetDirectArray().GetAt(VertexColorIdx);
-
-			Titan::Color tiColor = Titan::Color(vColor.mRed, vColor.mGreen, vColor.mBlue, vColor.mAlpha);
-			triangle->Vertices[vertexIdx].Color = tiColor.getAsRGBA();
-		}
-
-		/*
-		*	normals
-		*/
-		if(LayerElementNormal)
-		{
-			int normalMapIdx = (NormalMappingMode == KFbxLayerElement::eBY_CONTROL_POINT)?
-				vertexIdx : triangleIdx * 3 + vertexIdx;
-			int normalValIdx = (NormalReferenceMode == KFbxLayerElement::eDIRECT)?
-				normalMapIdx : LayerElementNormal->GetIndexArray().GetAt(normalMapIdx);
-
-			KFbxVector4 fbxNormal = LayerElementNormal->GetDirectArray().GetAt(normalValIdx);
-			fbxNormal = TotalMatrixForNormal.MultT(fbxNormal);
-			fbxNormal = LeftToRightMatrixForNormal.MultT(fbxNormal);
-			triangle->Vertices[vertexIdx].Normal = ConvertNormal(fbxNormal);
-		}
-
+		RawTriangles.push_back(triangle);
 	}
 
-	for(int triangleIdx = 0;triangleIdx < triCount; ++triangleIdx)
-	{
-		StaticMeshTriangle* triangle = &(RawTriangles.at(triangleIdx));
+	//for(int triangleIdx = 0;triangleIdx < triCount; ++triangleIdx)
+	//{
+	//	StaticMeshTriangle* triangle = &(RawTriangles.at(triangleIdx));
 
-		for(int vertexIdx = 0; vertexIdx < 3;++vertexIdx)
-		{
-			int index = AddUniqueItem(tSubMesh->mVertexData, triangle->Vertices[vertexIdx]);
-			tSubMesh->mIndexes.push_back(index);
-		}
-	}
+	//	for(int vertexIdx = 0; vertexIdx < 3;++vertexIdx)
+	//	{
+	//		int index = AddUniqueItem(tSubMesh->mVertexData, triangle->Vertices[vertexIdx]);
+	//		tSubMesh->mIndexes.push_back(index);
+	//	}
+	//}
+
+	//free up
+	if(layerElementUV)
+		delete [] layerElementUV;
+
+	if(UVReferenceMode)
+		delete [] UVReferenceMode;
+
+	if(UVMappingMode)
+		delete [] UVMappingMode;
+
 }
 
 void FBXConverter::ConvertSkeletonData(KFbxNode* pNode)
@@ -586,6 +598,7 @@ bool FBXConverter::ExportScene(const std::string& outfile)
 		fclose(mpAsciiFile);
 
 	fclose(mpBinaryFile);
+	return true;
 }
 
 void FBXConverter::ExportMesh(TiSubMesh* mesh)

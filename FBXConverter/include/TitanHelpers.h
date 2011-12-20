@@ -39,7 +39,7 @@ typedef std::basic_stringstream<char,std::char_traits<char>,std::allocator<char>
 		 :convertAll(false), convertAscii(false){}
  };
 
- void parseArgs(AcceptArgs& args, int argc, char** argv);
+ bool parseArgs(AcceptArgs& args, int argc, char** argv);
 
 
  typedef unsigned int RGBA;

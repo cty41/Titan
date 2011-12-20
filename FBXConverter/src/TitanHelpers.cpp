@@ -85,8 +85,11 @@ bool stringEndsWith(const std::string& str, const std::string& pattern)
 }
 
 
-void parseArgs(AcceptArgs& args, int argc, char** argv)
+bool parseArgs(AcceptArgs& args, int argc, char** argv)
 {
+
+	bool hasOutName = false, hasInName = false;
+
 	for(int i = 1;i < argc;++i)
 	{
 		if(strcmp(argv[i], "-a") == 0)
@@ -96,15 +99,27 @@ void parseArgs(AcceptArgs& args, int argc, char** argv)
 		}
 		if(stringStartsWith(argv[i], "in:"))
 		{
+			hasInName = true;
 			args.src_file = argv[i];
 			args.src_file = args.src_file.substr(3,std::string::npos);
 		}
 		else if(stringStartsWith(argv[i], "out:"))
 		{
+			hasOutName = true;
 			args.dst_file = argv[i];
 			args.dst_file = args.dst_file.substr(4,std::string::npos);
 		}
 	}
+	if(args.convertAll || hasInName)
+	{
+		if(!hasOutName)
+			args.dst_file = args.src_file;
+	}
+	else
+		return false;
+
+	return true;
+
 }
 
 void TiScene::ClearScene()
