@@ -97,7 +97,11 @@ bool parseArgs(AcceptArgs& args, int argc, char** argv)
 			args.convertAll = true;
 			break;
 		}
-		if(stringStartsWith(argv[i], "in:"))
+		else if(strcmp(argv[i], "-t") == 0)
+		{
+			args.convertAscii = true;
+		}
+		else if(stringStartsWith(argv[i], "in:"))
 		{
 			hasInName = true;
 			args.src_file = argv[i];
@@ -116,13 +120,12 @@ bool parseArgs(AcceptArgs& args, int argc, char** argv)
 		{
 			if(stringEndsWith(args.src_file, ".fbx"))
 				args.dst_file = args.src_file.substr(0,args.src_file.length() - 4);
-			
-			args.dst_file += ".fcm";
 		}
 		else
 		{
-			if(!stringEndsWith(args.dst_file, ".fcm"))
-				args.dst_file += ".fcm";
+			//titan binary mesh, titan ascii mesh
+			if(stringEndsWith(args.dst_file, ".tbm") || stringEndsWith(args.dst_file, ".tam"))
+				args.dst_file = args.dst_file.substr(0,args.dst_file.length() - 4);
 		}
 	}
 	else

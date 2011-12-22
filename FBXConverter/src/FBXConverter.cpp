@@ -37,7 +37,7 @@ int AddUniqueItem(std::vector<T>& vec, const T& val)
 	size_t num = 0;
 	for(auto it = vec.begin();it != vec.end();++it, ++num)
 	{
-		if(memcmp(&(*it), &val, sizeof(T))== 0)
+		if((*it) == val)
 			return num;
 	}
 	vec.push_back(val);
@@ -281,10 +281,7 @@ void FBXConverter::ConvertMeshData(KFbxNode* pNode)
 
 	//triangle mesh
 	if(!fbxMesh->IsTriangleMesh())
-	{
-
 		fbxMesh = mFbxGeometryConverter->TriangulateMesh(fbxMesh);
-	}
 
 	TiSubMesh*	tSubMesh = new TiSubMesh(&mTiScene, fbxMesh->GetName());
 	mTiScene.mSubMeshes.push_back(tSubMesh);
@@ -453,7 +450,7 @@ void FBXConverter::ConvertMeshData(KFbxNode* pNode)
 
 	int triCount = fbxMesh->GetPolygonCount();
 	std::vector<StaticMeshTriangle> RawTriangles;
-	//RawTriangles.reserve(triCount);
+	RawTriangles.reserve(triCount);
 	int triangleIdx;
 	for(triangleIdx = 0; triangleIdx < triCount; ++triangleIdx)
 	{
@@ -509,32 +506,32 @@ void FBXConverter::ConvertMeshData(KFbxNode* pNode)
 			/*
 			*	normals
 			*/
-			if(LayerElementNormal)
-			{
-				int normalMapIdx = (NormalMappingMode == KFbxLayerElement::eBY_CONTROL_POINT)?
-					vertexIdx : triangleIdx * 3 + vertexIdx;
-				int normalValIdx = (NormalReferenceMode == KFbxLayerElement::eDIRECT)?
-					normalMapIdx : LayerElementNormal->GetIndexArray().GetAt(normalMapIdx);
+			//if(LayerElementNormal)
+			//{
+			//	int normalMapIdx = (NormalMappingMode == KFbxLayerElement::eBY_CONTROL_POINT)?
+			//		vertexIdx : triangleIdx * 3 + vertexIdx;
+			//	int normalValIdx = (NormalReferenceMode == KFbxLayerElement::eDIRECT)?
+			//		normalMapIdx : LayerElementNormal->GetIndexArray().GetAt(normalMapIdx);
 
-				KFbxVector4 fbxNormal = LayerElementNormal->GetDirectArray().GetAt(normalValIdx);
-				fbxNormal = TotalMatrixForNormal.MultT(fbxNormal);
-				fbxNormal = LeftToRightMatrixForNormal.MultT(fbxNormal);
-				triangle.Vertices[vertexIdx].Normal = ConvertNormal(fbxNormal);
-			}
+			//	KFbxVector4 fbxNormal = LayerElementNormal->GetDirectArray().GetAt(normalValIdx);
+			//	fbxNormal = TotalMatrixForNormal.MultT(fbxNormal);
+			//	fbxNormal = LeftToRightMatrixForNormal.MultT(fbxNormal);
+			//	triangle.Vertices[vertexIdx].Normal = ConvertNormal(fbxNormal);
+			//}
 		}
 		RawTriangles.push_back(triangle);
 	}
 
-	//for(int triangleIdx = 0;triangleIdx < triCount; ++triangleIdx)
-	//{
-	//	StaticMeshTriangle* triangle = &(RawTriangles.at(triangleIdx));
+	for(int triangleIdx = 0;triangleIdx < triCount; ++triangleIdx)
+	{
+		StaticMeshTriangle* triangle = &(RawTriangles.at(triangleIdx));
 
-	//	for(int vertexIdx = 0; vertexIdx < 3;++vertexIdx)
-	//	{
-	//		int index = AddUniqueItem(tSubMesh->mVertexData, triangle->Vertices[vertexIdx]);
-	//		tSubMesh->mIndexes.push_back(index);
-	//	}
-	//}
+		for(int vertexIdx = 0; vertexIdx < 3;++vertexIdx)
+		{
+			int index = AddUniqueItem(tSubMesh->mVertexData, triangle->Vertices[vertexIdx]);
+			tSubMesh->mIndexes.push_back(index);
+		}
+	}
 
 	//free up
 	if(layerElementUV)
@@ -564,7 +561,7 @@ bool FBXConverter::ExportScene(const std::string& outfile)
 {
 	if(mConvertAscii)
 	{
-		std::string outfile_ascii = outfile + "_ascii.xmesh";
+		std::string outfile_ascii = outfile + ".tam";
 
 		fopen_s(&mpAsciiFile, outfile_ascii.c_str(), "w+");
 
@@ -577,11 +574,12 @@ bool FBXConverter::ExportScene(const std::string& outfile)
 	}
 
 	// binary open
-	fopen_s(&mpBinaryFile, outfile.c_str(), "w+");
+	std::string outfile_bin = outfile + ".tbm";
+	fopen_s(&mpBinaryFile, outfile_bin.c_str(), "w+");
 
 	if(!mpBinaryFile)
 	{
-		printf("create file %s failed\n", outfile.c_str());
+		printf("create file %s failed\n", outfile_bin.c_str());
 		return false;
 	}
 
@@ -602,6 +600,7 @@ bool FBXConverter::ExportScene(const std::string& outfile)
 		fclose(mpAsciiFile);
 
 	fclose(mpBinaryFile);
+
 	return true;
 }
 
@@ -666,13 +665,13 @@ void FBXConverter::ExportMesh(TiSubMesh* mesh)
 			if(semanticIdx != -1)
 			{
 				Titan::Vector3 pos = (*it).Position;
-				fprintf_s(mpAsciiFile, "%f %f %f", pos.x, pos.y, pos.z);
+				fprintf_s(mpAsciiFile, "%f %f %f ", pos.x, pos.y, pos.z);
 			}
 
 			semanticIdx = FindVertexElement(*mesh,  kVDS_COLOR, 0);
 			if(semanticIdx != -1)
 			{
-				fprintf_s(mpAsciiFile, "%d", (*it).Color);
+				fprintf_s(mpAsciiFile, "%d ", (*it).Color);
 			}
 
 			for(int i = 0;i < 8;++i)
@@ -681,7 +680,7 @@ void FBXConverter::ExportMesh(TiSubMesh* mesh)
 				if(semanticIdx != -1)
 				{
 					float u = (*it).UVs.at(i).x, v = (*it).UVs.at(i).y;
-					fprintf_s(mpAsciiFile, "%f %f", u,v);
+					fprintf_s(mpAsciiFile, "%f %f ", u,v);
 				}
 				else
 				{
@@ -702,7 +701,7 @@ void FBXConverter::ExportMesh(TiSubMesh* mesh)
 		/*
 		*	Index Data
 		*/
-		fprintf_s(mpAsciiFile, "Index Data: %d {\n", 2);
+		fprintf_s(mpAsciiFile, "Index Data: %d {\n", mesh->mIndexes.size());
 		for(int i = 0; i < mesh->mIndexes.size();i += 3)
 		{
 			fprintf_s(mpAsciiFile, "%d %d %d\n", mesh->mIndexes[i], mesh->mIndexes[i + 1], mesh->mIndexes[i + 2]);

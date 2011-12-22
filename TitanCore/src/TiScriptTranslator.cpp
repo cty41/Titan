@@ -91,9 +91,7 @@ namespace Titan
 		ResourceMgr::CreatedResource cr = MaterialMgr::getSingleton().create(it->second, group);
 		if(!cr.first)
 		{
-			TITAN_EXCEPT_INTERNALERROR(
-				"We have created a same name material: " + it->second
-				);
+			TITAN_EXCEPT_INTERNALERROR("We have created a same name material: " + it->second);
 			return ;
 		}
 		MaterialPtr pMaterial= cr.second;
@@ -158,9 +156,7 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT_ITEMLOST(
-				"we could not find name node"
-				);
+			TITAN_EXCEPT_ITEMLOST("we could not find name node");
 			return ;
 		}
 
@@ -171,9 +167,7 @@ namespace Titan
 		}
 		else
 		{
-			TITAN_EXCEPT_ITEMLOST(
-				"we could not find val node"
-				);
+			TITAN_EXCEPT_ITEMLOST("we could not find val node");
 			return ;
 		}
 

@@ -7,9 +7,10 @@
 void printHelpInfos()
 {
 	printf("Titan FBX Converter \n");
-	printf("-a convert all fbx file to .xmesh \n");
+	printf("-t aloso convert to .tam file \n");
+	printf("-a convert all fbx file to .tbm \n");
 	printf("[in:] source fbx file\n");
-	printf("[out:] dest xmesh file\n");
+	printf("[out:] dest tbm file\n");
 }
 
 int main(int argc, char** argv)

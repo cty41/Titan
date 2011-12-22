@@ -52,6 +52,42 @@ struct TiVertexData
 	RGBA			Color;
 	std::vector<Titan::Vector2> UVs;
 	Titan::Vector3 Normal;
+	
+	TiVertexData()
+		:Color(0)
+	{
+		Position = Titan::Vector3::ZERO;
+		Normal = Titan::Vector3::ZERO;
+	}
+
+	inline bool operator == ( const TiVertexData& rhs ) const
+	{
+		if(Position == rhs.Position && Color == rhs.Color && Normal == rhs.Normal && UVs.size() == rhs.UVs.size())
+		{
+			for(size_t i = 0; i != UVs.size(); ++i)
+			{
+				if(UVs[i] != rhs.UVs[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	inline bool operator != ( const TiVertexData& rhs ) const
+	{
+		if(Position == rhs.Position && Color == rhs.Color && Normal == rhs.Normal && UVs.size() == rhs.UVs.size())
+		{
+			for(size_t i = 0; i != UVs.size(); ++i)
+			{
+				if(UVs[i] != rhs.UVs[i])
+					return true;
+			}
+			return false;
+		}
+		return true;
+
+	}
 };
 
 struct StaticMeshTriangle
